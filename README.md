@@ -1,1 +1,1 @@
-Blog
+StyleSphere E-commerce store.
