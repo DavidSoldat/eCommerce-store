@@ -1,1 +1,1 @@
-StyleSphere E-commerce store.
+Style Sphere E-commerce store.
