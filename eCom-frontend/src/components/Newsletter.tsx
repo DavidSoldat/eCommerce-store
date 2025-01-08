@@ -1,6 +1,6 @@
 export default function Newsletter() {
   return (
-    <div className='bg-black rounded-20 px-6 py-8 flex flex-col gap-3 max-w-[1024px] mx-auto md:justify-between md:items-center md:flex-row md:px-11'>
+    <div className='bg-black rounded-20 px-6 py-8 flex flex-col gap-3 max-w-[1024px] mx-auto md:justify-between md:items-center md:flex-row md:px-11 mb-10'>
       <h2 className='uppercase text-3xl font-extrabold font-[IntegralCF] md:w-1/2 text-white mb-2'>
         stay up to date about our latest offers
       </h2>

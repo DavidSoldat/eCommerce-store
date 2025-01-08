@@ -45,7 +45,7 @@ export default function Navi() {
       </div>
       {/* desktop */}
       <div className='hidden md:flex pt-5 pb-4 max-w-[1024px] mx-auto items-center justify-between'>
-        <h1 className='text-3xl uppercase font-[IntegralCF] font-bold leading-none'>
+        <h1 className='text-3xl uppercase font-[IntegralCF] font-bold leading-none align-middle block '>
           Velura.Co
         </h1>
         <Button
@@ -54,9 +54,11 @@ export default function Navi() {
           aria-haspopup='true'
           aria-expanded={open ? 'true' : undefined}
           onClick={handleClick}
-          className='py-0'
+          sx={{
+            ':hover': { backgroundColor: '#f0f0f0' },
+          }}
         >
-          <p className='flex items-center text-black capitalize'>
+          <p className='flex items-center text-black capitalize text-base'>
             Shop <MdArrowDropDown />
           </p>
         </Button>
@@ -72,21 +74,47 @@ export default function Navi() {
           <MenuItem>Men</MenuItem>
           <MenuItem>Women</MenuItem>
         </Menu>
-        <button>On Sale</button>
-        <button>New Arrivals</button>
-        <button>Brands</button>
+        <Button
+          sx={{
+            ':hover': {
+              backgroundColor: '#f0f0f0',
+            },
+          }}
+        >
+          <p className='flex items-center text-black capitalize text-base'>
+            On Sale
+          </p>
+        </Button>
+        <Button
+          sx={{
+            ':hover': { backgroundColor: '#f0f0f0' },
+          }}
+        >
+          <p className='flex items-center text-black capitalize text-base'>
+            New Arrivals
+          </p>
+        </Button>
+        <Button
+          sx={{
+            ':hover': { backgroundColor: '#f0f0f0' },
+          }}
+        >
+          <p className='flex items-center text-black capitalize text-base'>
+            Brands
+          </p>
+        </Button>
         <input
           type='search'
-          className='bg-[#f0f0f0] rounded-60 text-black opacity-80 px-4 py-3'
+          className='bg-[#f0f0f0] rounded-60 text-black opacity-90 px-4 py-3'
           placeholder='Search for products...'
         />
 
         <div className='flex gap-3'>
-          <button>
-            <HiOutlineShoppingCart size={22} />
+          <button className='hover:scale-125 transition-transform duration-300 ease-in-out'>
+            <HiOutlineShoppingCart size={24} />
           </button>
-          <button>
-            <HiOutlineUserCircle size={22} />
+          <button className='hover:scale-125 transition-transform duration-300 ease-in-out'>
+            <HiOutlineUserCircle size={24} />
           </button>
         </div>
       </div>
