@@ -43,3 +43,10 @@
 .div5 {
   grid-area: 2 / 4 / 3 / 7;
 }
+
+.hideScroll {
+  scrollbar-width: none;
+}
+.hideScroll::-webkit-scrollbar {
+  display: none;
+}

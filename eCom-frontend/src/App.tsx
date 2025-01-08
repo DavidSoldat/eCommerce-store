@@ -1,3 +1,4 @@
+import Footer from './components/Footer';
 import Navi from './components/Navi';
 import Homepage from './pages/Homepage';
 
@@ -10,6 +11,7 @@ export default function App() {
       </div>
       <Navi /> 
       <Homepage />
+      <Footer />
     </div>
   );
 }
