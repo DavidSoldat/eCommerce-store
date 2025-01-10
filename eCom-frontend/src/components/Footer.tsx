@@ -4,7 +4,7 @@ import { BsFacebook, BsInstagram, BsTwitter } from 'react-icons/bs';
 export default function Footer() {
   return (
     <div className='bg-[#f0f0f0] '>
-      <div className='py-8 px-4 mt-2 flex flex-col gap-3 mx-auto max-w-[1024px]'>
+      <div className='py-8 px-4 mt-2 flex flex-col gap-3 mx-auto max-w-[1240px]'>
         <h2 className='uppercase text-3xl font-extrabold font-[IntegralCF] text-left'>
           Velura.co
         </h2>

@@ -6,7 +6,7 @@ import gym from '../assets/filterImages/gym.png';
 
 export default function BrowseBy() {
   return (
-    <div className='bg-[#f0f0f0] rounded-20 px-6 py-8 max-w-[1024px] md:mx-auto'>
+    <div className='bg-[#f0f0f0] rounded-20 px-6 py-8 max-w-[1240px] md:mx-auto'>
       <h2 className='uppercase text-3xl font-extrabold text-center font-[IntegralCF]'>
         Browse by <br /> dress style
       </h2>

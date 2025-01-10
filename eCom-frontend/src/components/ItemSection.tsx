@@ -2,7 +2,7 @@ import ItemCard from './ItemCard';
 
 export default function ItemsSection({ title }: { title: string }) {
   return (
-    <div className='py-10 flex flex-col w-full md:max-w-[1024px] md:mx-auto gap-5 '>
+    <div className='py-10 flex flex-col w-full md:max-w-[1240px] md:mx-auto gap-5 '>
       <h1 className='uppercase text-3xl font-extrabold text-center font-[IntegralCF]'>
         {title}
       </h1>

@@ -1,7 +1,11 @@
 import { createTheme, ThemeProvider } from '@mui/material';
-import Footer from './components/Footer';
-import Navi from './components/Navi';
 import Homepage from './pages/Homepage';
+import { BrowserRouter, Route, Routes } from 'react-router';
+import Productpage from './pages/Productpage';
+import Layout from './components/Layout';
+import LoginRegister from './pages/LoginRegister';
+import Shoppage from './pages/Shoppage';
+import Cartpage from './pages/Cartpage';
 
 export default function App() {
   const theme = createTheme({
@@ -19,15 +23,18 @@ export default function App() {
   });
   return (
     <ThemeProvider theme={theme}>
-      <div>
-        <div className='bg-black text-white text-center py-2 text-xs font-extralight'>
-          Sign up and get 20% off to your first order.{' '}
-          <button className='underline font-normal'>Sign Up Now</button>
-        </div>
-        <Navi />
-        <Homepage />
-        <Footer />
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path='/' element={<Homepage />} />
+            <Route path='/product' element={<Productpage />} />
+            <Route path='/register' element={<LoginRegister />} />
+            <Route path='/login' element={<LoginRegister />} />
+            <Route path='/shop' element={<Shoppage />} />
+            <Route path='/cart' element={<Cartpage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }
