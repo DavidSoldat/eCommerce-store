@@ -27,7 +27,10 @@ export default function Navi() {
           <button>
             <HiOutlineMenu size={22} />
           </button>
-          <Link to='/' className='text-2xl uppercase font-medium '>
+          <Link
+            to='/'
+            className='text-2xl uppercase font-bold font-[IntegralCF] leading-none align-middle block mb-[-5px]'
+          >
             Velura.Co
           </Link>
         </div>
@@ -47,7 +50,7 @@ export default function Navi() {
       <div className='hidden md:flex pt-5 pb-4 px-2 max-w-[1240px] mx-auto items-center justify-between'>
         <Link
           to='/'
-          className='text-3xl uppercase font-[IntegralCF] font-bold leading-none align-middle block '
+          className='text-3xl uppercase font-[IntegralCF] font-bold leading-none align-middle block mb-[-5px]'
         >
           Velura.Co
         </Link>
