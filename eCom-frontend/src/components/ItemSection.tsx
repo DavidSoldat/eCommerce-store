@@ -1,30 +1,44 @@
-import ItemCard from './ItemCard';
+import { Link } from "react-router";
+import ItemCard from "./ItemCard";
 
-export default function ItemsSection({ title }: { title: string }) {
+export default function ItemsSection({
+  title,
+  small,
+}: {
+  title: string;
+  small?: boolean;
+}) {
   return (
-    <div className='py-10 flex flex-col w-full md:max-w-[1240px] md:mx-auto gap-5 '>
-      <h1 className='uppercase text-3xl font-extrabold text-center font-[IntegralCF]'>
+    <div
+      className={`flex w-full flex-col gap-5 py-10 md:mx-auto md:max-w-[1240px] ${small ? "py-0" : ""}`}
+    >
+      <h1
+        className={`text-center font-[IntegralCF] text-3xl font-extrabold uppercase ${small ? "text-xl font-semibold md:text-3xl" : ""}`}
+      >
         {title}
       </h1>
 
-      <div className='md:flex md:flex-col md:items-center md:gap-5'>
-        <div className='container md:w-full md:mx-0 mx-auto'>
-          <div className='flex overflow-x-auto space-x-4 scrollbar-hide md:hidden'>
+      <div className="flex flex-col gap-5 md:items-center">
+        <div className="container mx-auto md:mx-0 md:w-full">
+          <div className="scrollbar-hide flex space-x-4 overflow-x-auto md:hidden">
             <ItemCard />
             <ItemCard />
             <ItemCard />
             <ItemCard />
           </div>
-          <div className='hidden md:flex md:flex-wrap justify-around '>
+          <div className="hidden justify-around md:flex md:flex-wrap">
             <ItemCard />
             <ItemCard />
             <ItemCard />
             <ItemCard />
           </div>
         </div>
-        <button className='w-full text-sm py-3 border rounded-full md:w-fit md:px-10 justify-self-center '>
+        <Link
+          to={`/shop/${title}`}
+          className="w-full justify-self-center rounded-full border py-3 text-sm hover:bg-[#f0f0f0] md:w-fit md:px-10"
+        >
           View All
-        </button>
+        </Link>
       </div>
     </div>
   );

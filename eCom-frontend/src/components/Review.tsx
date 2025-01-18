@@ -2,11 +2,15 @@ import { useState } from 'react';
 import { Box, Rating } from '@mui/material';
 import { RiVerifiedBadgeFill } from 'react-icons/ri';
 
-export default function Review() {
+export default function Review({ wide }: { wide?: string }) {
   const [value] = useState<number | null>(5.0);
 
   return (
-    <div className='max-w-96 min-w-80 border rounded-20 p-6 flex flex-col gap-2 bg-[#f0f0f0]'>
+    <div
+      className={`${
+        wide == 'wide' ? 'max-w-[600px]' : 'max-w-96'
+      } min-w-80 border rounded-20 p-6 flex flex-col gap-2`}
+    >
       <Box sx={{ '& > legend': { mt: 2 } }} className='flex items-center gap-3'>
         <Rating
           name='read-only'

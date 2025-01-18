@@ -1,27 +1,28 @@
-import { Box, Rating } from '@mui/material';
-import { useState } from 'react';
-import item from '../assets/items/item.png';
+import { Box, Rating } from "@mui/material";
+import { useState } from "react";
+import item from "../assets/items/item.png";
+import { Link } from "react-router";
 
 export default function ItemCard() {
   const [value] = useState<number | null>(4.5);
 
   return (
-    <div className='w-fit flex flex-col gap-1'>
-      <img src={item} alt='product' className='rounded-13 w-full' />
-      <h3 className='text-base font-bold truncate mt-1'>
+    <Link to="/shop/product" className="flex w-fit flex-col gap-1 md:w-72">
+      <img src={item} alt="product" className="w-full rounded-13" />
+      <h3 className="mt-1 truncate text-base font-bold">
         T-shirt with Tape Details
       </h3>
-      <Box sx={{ '& > legend': { mt: 2 } }} className='flex items-center gap-3'>
+      <Box sx={{ "& > legend": { mt: 2 } }} className="flex items-center gap-3">
         <Rating
-          name='read-only'
+          name="read-only"
           precision={0.5}
           value={value}
-          size='small'
+          size="small"
           readOnly
         />
-        <span className='text-xs text-black opacity-60'>{value}/5</span>
+        <span className="text-xs text-black opacity-60">{value}/5</span>
       </Box>
-      <p className='text-xl font-bold pb-2'>$120</p>
-    </div>
+      <p className="pb-2 text-xl font-bold">$120</p>
+    </Link>
   );
 }

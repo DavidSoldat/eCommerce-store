@@ -11,7 +11,7 @@ export default function Newsletter() {
           className='rounded-60 bg-white text-black py-3 text-sm font-medium w-full px-4'
           placeholder=' Enter your email address'
         />
-        <button className='bg-white rounded-60 text-black w-full py-3 text-sm font-medium'>
+        <button className='bg-white rounded-60 text-black w-full py-3 text-sm font-medium hover:bg-[#f0f0f0]'>
           Subscribe to Newsletter
         </button>
       </div>

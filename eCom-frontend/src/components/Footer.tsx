@@ -14,9 +14,15 @@ export default function Footer() {
         </p>
         <div className='flex justify-between'>
           <div className='flex gap-4 my-2'>
-            <BsFacebook size={24} />
-            <BsInstagram size={24} />
-            <BsTwitter size={24} />
+            <a href='https://www.facebook.com/' target='_blank'>
+              <BsFacebook size={24} />
+            </a>
+            <a href='https://www.instagram.com/' target='_blank'>
+              <BsInstagram size={24} />
+            </a>
+            <a href='https://www.twitter.com/' target='_blank'>
+              <BsTwitter size={24} />
+            </a>
           </div>
           <a
             href='https://github.com/DavidSoldat'

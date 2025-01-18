@@ -23,7 +23,7 @@ export default function Hero() {
           </p>
           <Link
             to='/shop'
-            className='text-base text-white bg-black w-full rounded-60 py-4 md:w-fit text-center md:px-12'
+            className='text-base text-white bg-black w-full rounded-60 py-4 md:w-fit text-center md:px-12 hover:bg-opacity-80'
           >
             Shop Now
           </Link>

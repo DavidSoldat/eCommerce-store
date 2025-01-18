@@ -8,13 +8,13 @@ export default function ImagesGallery() {
   const images = [image1, image2, image1];
 
   return (
-    <div className='flex flex-col items-center w-full'>
-      <div className='w-full '>
+    <div className='flex flex-col items-center w-full md:w-2/5 '>
+      <div className='w-full md:max-h-[480px]'>
         <div className='w-full'>
           <img
             src={selectedImage || images[0]}
             alt='big image'
-            className='rounded-20 object-cover w-full aspect-square'
+            className='rounded-20 object-cover w-full max-h-80 aspect-square'
             onClick={() => setSelectedImage(images[0])}
           />
         </div>
