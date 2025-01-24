@@ -122,9 +122,9 @@ export default function Navi() {
           >
             <HiOutlineShoppingCart size={24} />
           </Link>
-          <button className='hover:scale-125 transition-transform duration-300 ease-in-out'>
+          <Link to='/login' className='hover:scale-125 transition-transform duration-300 ease-in-out'>
             <HiOutlineUserCircle size={24} />
-          </button>
+          </Link>
         </div>
       </div>
     </div>

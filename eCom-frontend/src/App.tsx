@@ -5,10 +5,11 @@ import Layout from "./components/Layout";
 import LoginRegister from "./pages/LoginRegister";
 
 import ScrollToTop from "./components/ScrollTop";
-import Homepage from "./pages/HomePage";
-import Shoppage from "./pages/ShopPage";
-import Productpage from "./pages/ProductPage";
-import Cartpage from "./pages/CartPage";
+import Homepage from './pages/Homepage';
+import Shoppage from './pages/Shoppage';
+import Productpage from './pages/Productpage';
+import Cartpage from './pages/Cartpage';
+
 
 export default function App() {
   const theme = createTheme({
