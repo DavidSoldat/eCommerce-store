@@ -1,4 +1,4 @@
-package com.davidBlog.blog_backend;
+package com.eCommerce.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
