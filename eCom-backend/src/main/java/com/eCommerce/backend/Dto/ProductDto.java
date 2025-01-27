@@ -1,17 +1,9 @@
-package com.eCommerce.backend.model;
+package com.eCommerce.backend.Dto;
 
-import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "products")
 @Data
-@NoArgsConstructor
-public class Product {
-    @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private Long id;
+public class ProductDto {
     private String productName;
     private Double productPrice;
     private String productDescription;

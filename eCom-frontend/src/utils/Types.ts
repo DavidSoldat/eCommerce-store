@@ -6,3 +6,4 @@ export type Color = {
 export enum logReg {
   'login' , 'register'
 }
+

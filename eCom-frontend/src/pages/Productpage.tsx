@@ -6,23 +6,20 @@ import ImageGallery from "../components/ImageGallery";
 import ItemCard from "../components/ItemCard";
 import Review from "../components/Review";
 import { discount } from "../utils/helpers";
+import { Product } from "../utils/Models";
 
 export default function Productpage() {
-  const colors = [
-    { id: 1, color: "#4F4631" },
-    { id: 2, color: "#314F4A" },
-    { id: 3, color: "#31344F" },
-  ];
-  const sizes = ["small", "medium", "large"];
-  const product = {
-    title: "one life graphic t shirt",
-    images: [],
-    rating: 4.5,
-    price: 300,
-    quantity: 1,
-    discount: 40,
-    about:
+  const product: Product = {
+    productName: "one life graphic t shirt",
+    productImages: [],
+    productRating: 4.5,
+    productPrice: 300,
+    productQuantity: 1,
+    productDiscount: 40,
+    productDescription:
       "This graphic t-shirt which is perfect for any occasion. Crafted from a soft and breathable fabric, it offers superior comfort and style.",
+    productColors: ["#4F4631", "#314F4A", "#31344F"],
+    productSizes: ["small", "medium", "large"],
   };
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -48,11 +45,11 @@ export default function Productpage() {
     setSelectedQuantity((prev) => prev + 1);
   }
 
-  const [selectedColor, setSelectedColor] = useState<number>(colors[0].id);
-  const [selectedSize, setSelectedSize] = useState<string>(sizes[0]);
+  const [selectedSize, setSelectedSize] = useState(product.productSizes[0]);
   const [selectedQuantity, setSelectedQuantity] = useState<number>(
-    product.quantity,
+    product.productQuantity || 1,
   );
+  const [selectedColor, setSelectedColor] = useState(product.productColors[0]);
 
   return (
     <div className="mx-auto max-w-[1240px] px-4">
@@ -66,7 +63,7 @@ export default function Productpage() {
             <div className="flex flex-col gap-4 md:w-3/5">
               <div className="flex flex-col gap-3">
                 <h2 className="font-[IntegralCF] text-2xl font-bold uppercase">
-                  {product.title}
+                  {product.productName}
                 </h2>
                 <Box
                   sx={{ "& > legend": { mt: 2 } }}
@@ -75,24 +72,30 @@ export default function Productpage() {
                   <Rating
                     name="read-only"
                     precision={0.5}
-                    value={product.rating}
+                    value={product.productRating}
                     size="medium"
                     readOnly
                   />
                   <span className="text-base text-black opacity-60">
-                    {product.rating}/5
+                    {product.productRating}/5
                   </span>
                 </Box>
                 <div className="flex gap-3 text-2xl font-bold text-black">
-                  <p>${discount(product.price, product.discount)}</p>
-                  <p className="line-through opacity-30">${product.price}</p>
+                  <p>
+                    ${discount(product.productPrice, product.productDiscount)}
+                  </p>
+                  <p className="line-through opacity-30">
+                    ${product.productPrice}
+                  </p>
                   <div className="flex items-center rounded-60 bg-red-50 px-3">
                     <span className="text-sm font-medium text-red-500">
-                      -{product.discount}%
+                      -{product.productDiscount}%
                     </span>
                   </div>
                 </div>
-                <p className="text-black opacity-60">{product.about}</p>
+                <p className="text-black opacity-60">
+                  {product.productDescription}
+                </p>
               </div>
 
               <Divider />
@@ -100,16 +103,16 @@ export default function Productpage() {
               <div className="flex flex-col gap-3">
                 <h4 className="text-black opacity-60">Choose Colors</h4>
                 <div className="flex gap-x-3">
-                  {colors.map((color) => (
+                  {product.productColors.map((color, i) => (
                     <div
-                      key={color.id}
+                      key={i}
                       className={`flex h-10 w-10 cursor-pointer items-center justify-center rounded-full ring-1 ring-gray-300 ${
-                        selectedColor === color.id ? "ring-4 ring-gray-300" : ""
+                        selectedColor === color[i] ? "ring-4 ring-gray-300" : ""
                       }`}
-                      style={{ backgroundColor: color.color }}
-                      onClick={() => setSelectedColor(color.id)}
+                      style={{ backgroundColor: color }}
+                      onClick={() => setSelectedColor(color[i])}
                     >
-                      {selectedColor === color.id && (
+                      {selectedColor === color[i] && (
                         <span className="font-bold text-white">&#10003;</span>
                       )}
                     </div>
@@ -122,9 +125,9 @@ export default function Productpage() {
               <div className="flex flex-col gap-3">
                 <h4 className="text-black opacity-60">Choose Size</h4>
                 <div className="flex flex-wrap gap-x-3">
-                  {sizes.map((size) => (
+                  {product.productSizes.map((size, i) => (
                     <button
-                      key={size}
+                      key={i}
                       className={`rounded-60 bg-[#f0f0f0] px-5 py-3 capitalize ${
                         selectedSize === size ? "bg-black text-white" : ""
                       }`}
