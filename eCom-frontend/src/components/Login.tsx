@@ -1,16 +1,66 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { loginSchema } from "../utils/zodSchemas";
+
 export default function Login() {
+  type FormData = z.infer<typeof loginSchema>;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = (data: FormData) => {
+    console.log("Form submitted:", data);
+  };
+
   return (
-    <div className='border p-5 rounded-13 flex flex-col gap-3 items-end'> 
-      <div className='flex gap-3 items-center'>
-        <label htmlFor='email'>Email</label>
-        <input type="email" name='email' placeholder='Enter email' className='rounded-13 border px-3 py-1 hover:ml-1 hover:transition-all' />
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col items-end gap-3 rounded-13 border p-5"
+    >
+      <div className="flex flex-col">
+        <div className="flex items-center gap-3">
+          <label htmlFor="email">Email</label>
+          <input
+            {...register("email")}
+            type="email"
+            id="email"
+            placeholder="Enter email"
+            autoComplete="off"
+            className={`rounded-13 border px-3 py-1 ${errors.email ? "border-red-500 text-sm" : ""}`}
+          />
+        </div>
+        {errors.email && (
+          <span className="self-end text-xs text-red-500">
+            {errors.email.message}
+          </span>
+        )}
       </div>
-      <div className='flex gap-3 items-center'>
-        <label htmlFor='password'>Password</label>
-        <input type="password" name='password' placeholder='Enter password' className='rounded-13 border px-3 py-1 hover:ml-1 hover:transition-all' />
+      <div className="flex flex-col">
+        <div className="flex items-center gap-3">
+          <label htmlFor="password">Password</label>
+          <input
+            {...register("password")}
+            type="password"
+            id="password"
+            placeholder="Enter password"
+            className={`rounded-13 border px-3 py-1 ${errors.password ? "border-red-500" : ""}`}
+            autoComplete="new-password"
+          />
+        </div>
+        {errors.password && (
+          <span className="self-end text-xs text-red-500">
+            {errors.password.message}
+          </span>
+        )}
       </div>
-      <button className='bg-black text-white m
-      ax-w- px-4 py-2 w-full rounded-60 mx-auto hover:bg-gray-800'>Login</button>
-    </div>
-  )
+      <button className="m ax-w- mx-auto w-full rounded-60 bg-black px-4 py-2 text-white hover:bg-gray-800">
+        Login
+      </button>
+    </form>
+  );
 }

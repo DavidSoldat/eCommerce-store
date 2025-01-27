@@ -4,6 +4,10 @@ export type Color = {
 };
 
 export enum logReg {
-  'login' , 'register'
+  "login",
+  "register",
 }
+export type FormErrors = {
+  [key: string]: string;
+};
 

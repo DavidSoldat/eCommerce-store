@@ -15,7 +15,7 @@ public class Review {
     private String reviewAuthor;
     private String reviewText;
     private double reviewRating;
-//    @OneToMany()
-//    @JoinColumn(name = "product_id", nullable = false)
-//    private Product product;
+    @ManyToOne()
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 }

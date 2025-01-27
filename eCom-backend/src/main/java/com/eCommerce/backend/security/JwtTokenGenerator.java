@@ -19,12 +19,12 @@ public class JwtTokenGenerator {
     private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
     public String generateToken(Authentication authentication) {
-        String username = authentication.getName();
+        String email = authentication.getName();
         Date currDate = new Date();
 
         Date expireDate = new Date(currDate.getTime() + SecurityConstants.JWT_EXPIRATION);
         String token = Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)
                 .setIssuedAt(currDate)
                 .setExpiration(expireDate)
                 .signWith(key)
@@ -32,8 +32,7 @@ public class JwtTokenGenerator {
         return token;
     }
 
-
-    public String getUsernameFromJWT(String token) {
+    public String getEmailFromJWT(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(key)
                 .parseClaimsJws(token)
@@ -48,7 +47,6 @@ public class JwtTokenGenerator {
             return true;
         } catch (Exception exception) {
             throw new AuthenticationCredentialsNotFoundException("JWT was expired or incorrect");
-
         }
     }
 }

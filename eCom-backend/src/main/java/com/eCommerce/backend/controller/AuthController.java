@@ -44,11 +44,14 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
-        if(userRepository.existsByUsername(registerDto.getUsername())) {
-            return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
+        if(userRepository.existsByEmail(registerDto.getEmail())) {
+            return new ResponseEntity<>("User with this email already exists!", HttpStatus.BAD_REQUEST);
         }
         UserEntity user = new UserEntity();
-        user.setUsername(registerDto.getUsername());
+        String email = registerDto.getEmail();
+        String username = email.split("@")[0];
+        user.setEmail(email);
+        user.setUsername(username);
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
         Role roles = roleRepository.findByName("USER").get();
@@ -62,7 +65,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginDto.getUsername(),
+                new UsernamePasswordAuthenticationToken(loginDto.getEmail(),
                         loginDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
