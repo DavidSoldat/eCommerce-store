@@ -11,3 +11,7 @@ export type FormErrors = {
   [key: string]: string;
 };
 
+export interface RegisterResponse {
+  data: string;
+  status: number;
+}

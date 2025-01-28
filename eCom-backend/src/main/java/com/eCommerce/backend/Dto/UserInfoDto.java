@@ -3,7 +3,7 @@ package com.eCommerce.backend.Dto;
 import lombok.Data;
 
 @Data
-public class LoginDto {
+public class UserInfoDto {
+    private String username;
     private String email;
-    private String password;
 }

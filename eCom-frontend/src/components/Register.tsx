@@ -1,9 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import { z } from "zod";
+import { RegisterResponse } from "../utils/Types";
 import { registerSchema } from "../utils/zodSchemas";
 
 export default function Register() {
+  const navigate = useNavigate();
   type FormData = z.infer<typeof registerSchema>;
   const {
     register,
@@ -13,7 +17,42 @@ export default function Register() {
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = (data: FormData) => {
+  async function registerUser(
+    email: string,
+    password: string,
+    confirmPassword: string,
+  ) {
+    try {
+      const response: RegisterResponse = await axios.post(
+        "http://localhost:8080/api/auth/register",
+        {
+          email,
+          password,
+          confirmPassword,
+        },
+      );
+
+      if (response.status >= 200 && response.status < 300) {
+        console.log(response.data);
+        navigate("/login");
+      } else {
+        throw new Error(response.data || "Registration failed");
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "Error during registering: ",
+          error.response?.data?.message || error.message,
+        );
+      } else {
+        console.error("Error during registering", error);
+      }
+    }
+  }
+
+  const onSubmit = async (data: FormData) => {
+    const { email, password, confirmPassword } = data;
+    registerUser(email, password, confirmPassword);
     console.log("Form submitted:", data);
   };
 

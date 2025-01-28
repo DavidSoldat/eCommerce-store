@@ -21,9 +21,12 @@ public class Product {
     private Double productRating;
     private Double productDiscount;
     @ElementCollection
+    @CollectionTable(name = "product_colors")
     private List<String> productColors;
+    @CollectionTable(name = "product_sizes")
     @ElementCollection
     private List<String> productSizes;
+    @CollectionTable(name = "product_images")
     @ElementCollection
     private List<String> productImages;
     private Integer productQuantity;

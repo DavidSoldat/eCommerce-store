@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "reviews")
 public class Review {
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
+    @SequenceGenerator(name = "review_sequence", sequenceName = "review_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_sequence")
     private long id;
     private String reviewAuthor;
     private String reviewText;

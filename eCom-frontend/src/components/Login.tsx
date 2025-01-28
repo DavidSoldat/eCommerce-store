@@ -1,9 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios, { AxiosResponse } from "axios";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { loginSchema } from "../utils/zodSchemas";
+import { useNavigate } from "react-router";
 
 export default function Login() {
+  const navigate = useNavigate();
+
   type FormData = z.infer<typeof loginSchema>;
   const {
     register,
@@ -13,7 +17,41 @@ export default function Login() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: FormData) => {
+  async function login(email: string, password: string) {
+    try {
+      const response: AxiosResponse = await axios.post(
+        "http://localhost:8080/api/auth/login",
+        {
+          email,
+          password,
+        },
+      );
+
+      console.log(response);
+
+      if (response.data.accessToken) {
+        localStorage.setItem("token", response.data.accessToken);
+        console.log("Login successfull!");
+        navigate("/");
+        return response.data;
+      } else {
+        throw new Error("No token received");
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "Error during login: ",
+          error.response?.data?.message || error.message,
+        );
+      } else {
+        console.error("Error during loign", error);
+      }
+    }
+  }
+
+  const onSubmit = async (data: FormData) => {
+    const { password, email } = data;
+    await login(email, password);
     console.log("Form submitted:", data);
   };
 

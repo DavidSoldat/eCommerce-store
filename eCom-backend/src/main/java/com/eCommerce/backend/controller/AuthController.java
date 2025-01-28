@@ -3,6 +3,7 @@ package com.eCommerce.backend.controller;
 import com.eCommerce.backend.Dto.AuthResponseDto;
 import com.eCommerce.backend.Dto.LoginDto;
 import com.eCommerce.backend.Dto.RegisterDto;
+import com.eCommerce.backend.Dto.UserInfoDto;
 import com.eCommerce.backend.model.Role;
 import com.eCommerce.backend.model.UserEntity;
 import com.eCommerce.backend.repository.RoleRepository;
@@ -16,10 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 
@@ -46,6 +44,9 @@ public class AuthController {
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
         if(userRepository.existsByEmail(registerDto.getEmail())) {
             return new ResponseEntity<>("User with this email already exists!", HttpStatus.BAD_REQUEST);
+        }
+        if(!registerDto.getPassword().equals(registerDto.getConfirmPassword())) {
+            return new ResponseEntity<>("Passwords do not match", HttpStatus.BAD_REQUEST);
         }
         UserEntity user = new UserEntity();
         String email = registerDto.getEmail();
