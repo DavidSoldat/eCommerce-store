@@ -3,13 +3,14 @@ import { BrowserRouter, Route, Routes } from "react-router";
 
 import Layout from "./components/Layout";
 import LoginRegister from "./pages/LoginRegister";
-
 import ScrollToTop from "./components/ScrollTop";
-import Homepage from './pages/Homepage';
-import Shoppage from './pages/Shoppage';
-import Productpage from './pages/Productpage';
-import Cartpage from './pages/Cartpage';
+import Productpage from "./pages/Productpage";
+import Homepage from "./pages/HomePage";
+import Shoppage from "./pages/ShopPage";
+import Cartpage from "./pages/CartPage";
 
+import { Toaster } from "react-hot-toast";
+import { UserProvider } from "./context/UserProvider";
 
 export default function App() {
   const theme = createTheme({
@@ -29,16 +30,19 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <ScrollToTop />
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<Homepage />} />
-            <Route path="/register" element={<LoginRegister />} />
-            <Route path="/login" element={<LoginRegister />} />
-            <Route path="/shop" element={<Shoppage />} />
-            <Route path="/shop/product" element={<Productpage />} />
-            <Route path="/cart" element={<Cartpage />} />
-          </Route>
-        </Routes>
+        <UserProvider>
+          <Toaster />
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<Homepage />} />
+              <Route path="/register" element={<LoginRegister />} />
+              <Route path="/login" element={<LoginRegister />} />
+              <Route path="/shop" element={<Shoppage />} />
+              <Route path="/shop/product" element={<Productpage />} />
+              <Route path="/cart" element={<Cartpage />} />
+            </Route>
+          </Routes>
+        </UserProvider>
       </BrowserRouter>
     </ThemeProvider>
   );

@@ -1,12 +1,23 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { AxiosResponse } from "axios";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 import { z } from "zod";
 import { loginSchema } from "../utils/zodSchemas";
-import { useNavigate } from "react-router";
+import { jwtDecode } from "jwt-decode";
+import { User } from "../utils/Types";
+import { useEffect } from "react";
 
 export default function Login() {
   const navigate = useNavigate();
+  const user = localStorage.getItem("user");
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [navigate, user]);
 
   type FormData = z.infer<typeof loginSchema>;
   const {
@@ -27,24 +38,38 @@ export default function Login() {
         },
       );
 
-      console.log(response);
-
       if (response.data.accessToken) {
         localStorage.setItem("token", response.data.accessToken);
-        console.log("Login successfull!");
+
+        const decodedToken = jwtDecode<{ sub?: string }>(
+          response.data.accessToken,
+        );
+        const email = decodedToken.sub || "velura@user.com";
+        const name = email.split("@")[0] || "Velura user";
+
+        const user: User = { email, name };
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("user", JSON.stringify(user));
+        console.log("Login successful!");
         navigate("/");
+        toast.success("Login successful!");
         return response.data;
       } else {
         throw new Error("No token received");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        toast.error(
+          "Error during login: ",
+          error.response?.data?.message || error.message,
+        );
         console.error(
           "Error during login: ",
           error.response?.data?.message || error.message,
         );
       } else {
         console.error("Error during loign", error);
+        toast.error("Error during loign");
       }
     }
   }
@@ -52,7 +77,6 @@ export default function Login() {
   const onSubmit = async (data: FormData) => {
     const { password, email } = data;
     await login(email, password);
-    console.log("Form submitted:", data);
   };
 
   return (

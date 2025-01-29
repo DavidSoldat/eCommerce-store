@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import { z } from "zod";
 import { RegisterResponse } from "../utils/Types";
 import { registerSchema } from "../utils/zodSchemas";
+import { useEffect } from "react";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -16,6 +17,14 @@ export default function Register() {
   } = useForm<FormData>({
     resolver: zodResolver(registerSchema),
   });
+
+  const user = localStorage.getItem("user");
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [navigate, user]);
 
   async function registerUser(
     email: string,
@@ -53,7 +62,6 @@ export default function Register() {
   const onSubmit = async (data: FormData) => {
     const { email, password, confirmPassword } = data;
     registerUser(email, password, confirmPassword);
-    console.log("Form submitted:", data);
   };
 
   return (

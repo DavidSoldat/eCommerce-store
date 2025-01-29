@@ -13,9 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +45,11 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            return new ResponseEntity<>("You are already logged in.", HttpStatus.FORBIDDEN);
+        }
+
         if(userRepository.existsByEmail(registerDto.getEmail())) {
             return new ResponseEntity<>("User with this email already exists!", HttpStatus.BAD_REQUEST);
         }
@@ -65,12 +73,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto loginDto) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginDto.getEmail(),
-                        loginDto.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = tokenGenerator.generateToken(authentication);
-        return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword())
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String token = tokenGenerator.generateToken(authentication);
+            return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
+        } catch (BadCredentialsException e) {
+            return new ResponseEntity<>(new AuthResponseDto("Invalid email or password"), HttpStatus.UNAUTHORIZED);
+        }
     }
 }
