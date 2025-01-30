@@ -12,5 +12,7 @@ export default function AdminDashboard() {
       navigate("/");
     }
   }, [isAdmin, navigate]);
-  return <div>AdminDashboard</div>;
+  return (
+    <div className="mx-auto h-full max-w-[1240px] px-4">AdminDashboard</div>
+  );
 }

@@ -7,7 +7,7 @@ export default function Layout() {
   const { user } = useUser();
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="mt-20 flex min-h-screen flex-col md:mt-0">
       {!user && (
         <div className="bg-black py-2 text-center text-xs font-extralight text-white">
           Sign up and get 20% off to your first order.{" "}

@@ -17,7 +17,7 @@ export default function Productpage() {
     productQuantity: 1,
     productDiscount: 40,
     productDescription:
-      "This graphic t-shirt which is perfect for any occasion. Crafted from a soft and breathable fabric, it offers superior comfort and style.",
+      "Lorem ipsum, dolor sit amet consectetur adipisicing elit.Voluptate similique ut debitis. Rem dicta vitae harum veniam totam incidunt mnis nemo rerum molestias nobis aliquid reiciendisfugiat, pariatur, iure sequi. Lorem ipsum, dolor sit ametconsectetur adipisicing elit. Natus quos molestiae iste repellat quae quia odit dolor adipisci earum nostrum. Cupiditate dolorum nisi molestias eligendi hic et commodi dolores perspiciatis! Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis, asperiores nostrum? Provident, dolores sapiente temporibus  suscipit reprehenderit molestiae commodi ab blanditiis voluptate corrupti iusto corporis ea voluptatibus unde quidem fuga. Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum nostrum, fuga excepturi quam harum, temporibus fugit optio ipsa quod iste distinctio. Fugit magni sequi saepe obcaecati similique, quo asperiores laudantium.",
     productColors: ["#4F4631", "#314F4A", "#31344F"],
     productSizes: ["small", "medium", "large"],
   };
@@ -44,6 +44,23 @@ export default function Productpage() {
   function handleIncrease() {
     setSelectedQuantity((prev) => prev + 1);
   }
+
+  const [showAllReviews, setShowAllReviews] = useState(false);
+  const [showFullText, setShowFullText] = useState(false);
+
+  const toggleShowAllReviews = () => {
+    setShowAllReviews(!showAllReviews);
+  };
+
+  const truncatedText = product.productDescription.slice(0, 130) + "...";
+
+  const toggleShowFullText = () => {
+    setShowFullText(!showFullText);
+  };
+
+  const totalReviews = 6;
+
+  const initialReviewsToShow = 4;
 
   const [selectedSize, setSelectedSize] = useState(product.productSizes[0]);
   const [selectedQuantity, setSelectedQuantity] = useState<number>(
@@ -94,7 +111,7 @@ export default function Productpage() {
                   </div>
                 </div>
                 <p className="text-black opacity-60">
-                  {product.productDescription}
+                  {product.productDescription.slice(0, 100)}
                 </p>
               </div>
 
@@ -169,15 +186,41 @@ export default function Productpage() {
           <Divider />
 
           <div className="flex flex-col gap-3">
+            <h4 className="text-black opacity-60">Product details</h4>
+            <p className="hidden md:block">{product.productDescription}</p>
+
+            <p className="md:hidden">
+              {showFullText ? product.productDescription : truncatedText}
+            </p>
+
+            <button
+              onClick={toggleShowFullText}
+              className="self-start text-sm font-medium text-blue-600 hover:text-blue-800 focus:outline-none md:hidden"
+            >
+              {showFullText ? "Show Less" : "Show More"}
+            </button>
+          </div>
+
+          <Divider />
+
+          <div className="flex flex-col gap-3">
             <h4 className="text-black opacity-60">Rating & Reviews</h4>
             <div className="grid grid-rows-1 justify-center gap-5 md:grid-cols-2 md:grid-rows-2">
-              <Review wide="wide" />
-              <Review wide="wide" />
-              <Review wide="wide" />
-              <Review wide="wide" />
-              <Review wide="wide" />
-              <Review wide="wide" />
+              {Array.from({
+                length: showAllReviews ? totalReviews : initialReviewsToShow,
+              }).map((_, index) => (
+                <Review key={index} wide="wide" />
+              ))}
             </div>
+
+            {!showAllReviews && totalReviews > initialReviewsToShow && (
+              <button
+                onClick={toggleShowAllReviews}
+                className="mt-4 block w-full max-w-44 self-center rounded-lg bg-gray-200 py-2 text-center text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none"
+              >
+                Show More
+              </button>
+            )}
           </div>
 
           <div className="mt-10 flex flex-col gap-2">

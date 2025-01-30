@@ -10,6 +10,7 @@ import {
 import { Link, useNavigate } from "react-router";
 import { useUser } from "../context/UserProvider";
 import { isUserAdmin } from "../utils/helpers";
+import { RiAdminLine } from "react-icons/ri";
 
 export default function UserMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -83,7 +84,7 @@ export default function UserMenu() {
                 className="flex justify-center gap-2"
               >
                 <span>
-                  <HiOutlineLogout />
+                  <RiAdminLine />
                 </span>
                 Admin Panel
               </MenuItem>
