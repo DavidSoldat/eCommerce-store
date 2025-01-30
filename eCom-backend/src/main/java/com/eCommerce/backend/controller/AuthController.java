@@ -45,11 +45,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            return new ResponseEntity<>("You are already logged in.", HttpStatus.FORBIDDEN);
-        }
-
         if(userRepository.existsByEmail(registerDto.getEmail())) {
             return new ResponseEntity<>("User with this email already exists!", HttpStatus.BAD_REQUEST);
         }

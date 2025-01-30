@@ -6,6 +6,7 @@ import { z } from "zod";
 import { RegisterResponse } from "../utils/Types";
 import { registerSchema } from "../utils/zodSchemas";
 import { useEffect } from "react";
+import toast from "react-hot-toast";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -41,8 +42,11 @@ export default function Register() {
         },
       );
 
+      console.log("this is response: " + response);
+
       if (response.status >= 200 && response.status < 300) {
         console.log(response.data);
+        toast.success("User registered successfully!");
         navigate("/login");
       } else {
         throw new Error(response.data || "Registration failed");
@@ -51,8 +55,9 @@ export default function Register() {
       if (axios.isAxiosError(error)) {
         console.error(
           "Error during registering: ",
-          error.response?.data?.message || error.message,
+          error.response?.data || error.message,
         );
+        toast.error(error.response?.data);
       } else {
         console.error("Error during registering", error);
       }

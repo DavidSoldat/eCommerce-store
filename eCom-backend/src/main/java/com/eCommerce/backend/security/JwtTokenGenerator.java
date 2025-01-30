@@ -4,13 +4,13 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Collection;
 import java.util.Date;
 
 @Component
@@ -21,15 +21,16 @@ public class JwtTokenGenerator {
     public String generateToken(Authentication authentication) {
         String email = authentication.getName();
         Date currDate = new Date();
+        Collection<? extends GrantedAuthority> userRole = authentication.getAuthorities();
 
         Date expireDate = new Date(currDate.getTime() + SecurityConstants.JWT_EXPIRATION);
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setSubject(email)
+                .claim("roles", userRole)
                 .setIssuedAt(currDate)
                 .setExpiration(expireDate)
                 .signWith(key)
                 .compact();
-        return token;
     }
 
     public String getEmailFromJWT(String token) {

@@ -35,7 +35,7 @@ export default function ItemsSection({
         </div>
         <Link
           to={`/shop/${title}`}
-          className="w-full justify-self-center rounded-full border py-3 text-sm hover:bg-[#f0f0f0] hover:drop-shadow-sm md:w-fit md:px-10"
+          className="flex w-full justify-center rounded-full border py-3 text-sm hover:bg-[#f0f0f0] hover:drop-shadow-sm md:w-fit md:px-10"
         >
           View All
         </Link>

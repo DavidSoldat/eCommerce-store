@@ -2,31 +2,48 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
-import { HiOutlineUserCircle } from "react-icons/hi";
+import {
+  HiOutlineCog,
+  HiOutlineLogout,
+  HiOutlineUserCircle,
+} from "react-icons/hi";
 import { Link, useNavigate } from "react-router";
+import { useUser } from "../context/UserProvider";
+import { isUserAdmin } from "../utils/helpers";
 
 export default function UserMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
+  const { user, setUser } = useUser();
+
+  const token = localStorage.getItem("token");
+  const isAdmin = isUserAdmin(token as string);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleCloseAdmin = () => {
+    navigate("/adminDashboard");
+    setAnchorEl(null);
+  };
+
   const handleCloseLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    setUser(null);
     navigate("/login");
     setAnchorEl(null);
   };
 
+  const handleCloseToProfile = () => {
+    navigate("/profile");
+    setAnchorEl(null);
+  };
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const user = localStorage.getItem("user");
-  console.log(user);
 
   return (
     <div>
@@ -51,8 +68,35 @@ export default function UserMenu() {
               "aria-labelledby": "basic-button",
             }}
           >
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={handleCloseLogout}>Logout</MenuItem>
+            <MenuItem
+              onClick={handleCloseToProfile}
+              className="flex justify-center gap-2 capitalize"
+            >
+              <span>
+                <HiOutlineCog />
+              </span>
+              {user?.name || "Velura user"}
+            </MenuItem>
+            {isAdmin && (
+              <MenuItem
+                onClick={handleCloseAdmin}
+                className="flex justify-center gap-2"
+              >
+                <span>
+                  <HiOutlineLogout />
+                </span>
+                Admin Panel
+              </MenuItem>
+            )}
+            <MenuItem
+              onClick={handleCloseLogout}
+              className="flex justify-center gap-2"
+            >
+              <span>
+                <HiOutlineLogout />
+              </span>
+              Logout
+            </MenuItem>
           </Menu>
         </div>
       ) : (

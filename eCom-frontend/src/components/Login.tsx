@@ -1,23 +1,25 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { AxiosResponse } from "axios";
+import { jwtDecode } from "jwt-decode";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { z } from "zod";
-import { loginSchema } from "../utils/zodSchemas";
-import { jwtDecode } from "jwt-decode";
+import { useUser } from "../context/UserProvider";
 import { User } from "../utils/Types";
-import { useEffect } from "react";
+import { loginSchema } from "../utils/zodSchemas";
 
 export default function Login() {
   const navigate = useNavigate();
-  const user = localStorage.getItem("user");
+  const userLocal = localStorage.getItem("user");
+  const { setUser } = useUser();
 
   useEffect(() => {
-    if (user) {
+    if (userLocal) {
       navigate("/");
     }
-  }, [navigate, user]);
+  }, [navigate, userLocal]);
 
   type FormData = z.infer<typeof loginSchema>;
   const {
@@ -47,9 +49,12 @@ export default function Login() {
         const email = decodedToken.sub || "velura@user.com";
         const name = email.split("@")[0] || "Velura user";
 
-        const user: User = { email, name };
+        const user: User = {
+          name: name,
+          email: email,
+        };
         localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("user", JSON.stringify(user));
+        setUser(user);
         console.log("Login successful!");
         navigate("/");
         toast.success("Login successful!");
@@ -59,13 +64,10 @@ export default function Login() {
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        toast.error(
-          "Error during login: ",
-          error.response?.data?.message || error.message,
-        );
+        toast.error(error.response?.data?.accessToken || error.message);
         console.error(
           "Error during login: ",
-          error.response?.data?.message || error.message,
+          error.response?.data?.accessToken || error.message,
         );
       } else {
         console.error("Error during loign", error);

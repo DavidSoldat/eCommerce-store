@@ -1,3 +1,5 @@
+import { JwtPayload } from "jwt-decode";
+
 export type Color = {
   id: number;
   color: string;
@@ -24,4 +26,11 @@ export interface User {
 export interface UserContextType {
   user: User | null;
   setUser: (user: User | null) => void;
+}
+export type Role = {
+  authority: string;
+};
+
+export interface CustomJwtPayload extends JwtPayload {
+  roles: Role[];
 }

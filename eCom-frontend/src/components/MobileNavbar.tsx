@@ -5,7 +5,7 @@ import {
   HiOutlineSearch,
   HiOutlineShoppingCart,
 } from "react-icons/hi";
-import UserMenu from "./UserMenu"; // Assuming you have a UserMenu component
+import UserMenu from "./UserMenu";
 import { Link } from "react-router";
 
 const MobileNavBar = () => {
@@ -14,7 +14,7 @@ const MobileNavBar = () => {
 
   const handleSearchClick = () => {
     setIsSearchExpanded(true);
-    setTimeout(() => searchInputRef.current?.focus(), 0); // Focus the input after expansion
+    setTimeout(() => searchInputRef.current?.focus(), 0); 
   };
 
   const handleSearchClose = () => {
@@ -23,7 +23,6 @@ const MobileNavBar = () => {
 
   const handleSearchSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    // Handle search logic
     console.log("Search submitted:", searchInputRef.current?.value);
     handleSearchClose();
   };
