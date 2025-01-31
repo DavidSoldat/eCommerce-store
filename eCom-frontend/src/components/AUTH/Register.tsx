@@ -3,10 +3,11 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { z } from "zod";
-import { RegisterResponse } from "../utils/Types";
-import { registerSchema } from "../utils/zodSchemas";
+
 import { useEffect } from "react";
 import toast from "react-hot-toast";
+import { registerSchema } from "../../utils/zodSchemas";
+import { RegisterResponse } from "../../utils/Types";
 
 export default function Register() {
   const navigate = useNavigate();

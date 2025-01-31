@@ -1,7 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router";
 
-import Layout from "./components/Layout";
+import Layout from "./components/UI/Layout";
 import ScrollToTop from "./components/ScrollTop";
 import Cartpage from "./pages/Cartpage";
 import Homepage from "./pages/Homepage";

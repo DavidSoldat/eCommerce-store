@@ -1,10 +1,10 @@
 import { Box, Divider, Rating } from "@mui/material";
 import { useRef, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import BreadCrumbs from "../components/BreadCrumbs";
-import ImageGallery from "../components/ImageGallery";
-import ItemCard from "../components/ItemCard";
-import Review from "../components/Review";
+import BreadCrumbs from "../components/UI/BreadCrumbs";
+import ImageGallery from "../components/PRODUCT/ImageGallery";
+import ItemCard from "../components/PRODUCT/ItemCard";
+import Review from "../components/UI/Review";
 import { discount } from "../utils/helpers";
 import { Product } from "../utils/Models";
 

@@ -18,14 +18,14 @@ export interface RegisterResponse {
   status: number;
 }
 
-export interface User {
+export interface UserInStorage {
   name: string;
   email: string;
 }
 
 export interface UserContextType {
-  user: User | null;
-  setUser: (user: User | null) => void;
+  user: UserInStorage | null;
+  setUser: (user: UserInStorage | null) => void;
 }
 export type Role = {
   authority: string;

@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -13,7 +16,9 @@ public class Review {
     @SequenceGenerator(name = "review_sequence", sequenceName = "review_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_sequence")
     private long id;
-    private String reviewAuthor;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity reviewAuthor;
     private String reviewText;
     private double reviewRating;
     @ManyToOne()

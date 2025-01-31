@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import image1 from '../assets/items/itemPage1.png';
-import image2 from '../assets/items/item.png';
+import image1 from '../../assets/items/itemPage1.png';
+import image2 from '../../assets/items/item.png';
 
 export default function ImagesGallery() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);

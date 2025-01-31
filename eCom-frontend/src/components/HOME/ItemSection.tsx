@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import ItemCard from "./ItemCard";
+import ItemCard from '../PRODUCT/ItemCard';
 
 export default function ItemsSection({
   title,

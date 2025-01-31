@@ -1,7 +1,7 @@
 import { Link, Outlet } from "react-router";
-import Footer from "./Footer";
-import Navi from "./Navi";
-import { useUser } from "../context/UserProvider";
+import Footer from "../HOME/Footer";
+import Navi from "../HOME/Navi";
+import { useUser } from "../../context/UserProvider";
 
 export default function Layout() {
   const { user } = useUser();

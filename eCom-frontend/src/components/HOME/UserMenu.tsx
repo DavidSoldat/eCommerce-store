@@ -8,8 +8,8 @@ import {
   HiOutlineUserCircle,
 } from "react-icons/hi";
 import { Link, useNavigate } from "react-router";
-import { useUser } from "../context/UserProvider";
-import { isUserAdmin } from "../utils/helpers";
+import { useUser } from "../../context/UserProvider";
+import { isUserAdmin } from "../../utils/helpers";
 import { RiAdminLine } from "react-icons/ri";
 
 export default function UserMenu() {

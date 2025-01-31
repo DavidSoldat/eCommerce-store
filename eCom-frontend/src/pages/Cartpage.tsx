@@ -3,9 +3,9 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import cartItem from "../assets/items/cartItem.png";
 import cartItem1 from "../assets/items/cartItem1.png";
 import cartItem2 from "../assets/items/cartItem2.png";
-import BreadCrumbs from "../components/BreadCrumbs";
-import CartItem from "../components/CartItem";
-import Newsletter from "../components/Newsletter";
+import BreadCrumbs from "../components/UI/BreadCrumbs";
+import CartItem from "../components/UI/CartItem";
+import Newsletter from "../components/UI/Newsletter";
 
 export default function Cartpage() {
   return (

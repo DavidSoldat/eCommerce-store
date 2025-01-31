@@ -1,7 +1,7 @@
 import { Divider } from "@mui/material";
-import BreadCrumbs from "../components/BreadCrumbs";
-import ItemsSection from "../components/ItemSection";
-import Newsletter from "../components/Newsletter";
+import BreadCrumbs from "../components/UI/BreadCrumbs";
+import Newsletter from "../components/UI/Newsletter";
+import ItemsSection from "../components/HOME/ItemSection";
 
 export default function Shoppage() {
   return (

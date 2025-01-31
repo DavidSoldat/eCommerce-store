@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "products")
@@ -30,4 +32,6 @@ public class Product {
     @ElementCollection
     private List<String> productImages;
     private Integer productQuantity;
+    @OneToMany(mappedBy = "product")
+    private Set<Review> reviews = new HashSet<>();
 }

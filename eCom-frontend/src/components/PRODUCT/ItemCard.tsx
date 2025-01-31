@@ -1,6 +1,6 @@
 import { Box, Rating } from "@mui/material";
 import { useState } from "react";
-import item from "../assets/items/item.png";
+import item from "../../assets/items/item.png";
 import { Link } from "react-router";
 
 export default function ItemCard() {

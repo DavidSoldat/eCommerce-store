@@ -1,11 +1,11 @@
-import heroImg from "../assets/hero.png";
-import vector from "../assets/brandLogos/Vector.png";
-import vectorSm from "../assets/brandLogos/Vector-sm.png";
-import calivnKlein from "../assets/brandLogos/calvinKlein.png";
-import gucci from "../assets/brandLogos/gucci.png";
-import prada from "../assets/brandLogos/prada.png";
-import zara from "../assets/brandLogos/zara.png";
-import versace from "../assets/brandLogos/versace.png";
+import heroImg from "../../assets/hero.png";
+import vector from "../../assets/brandLogos/Vector.png";
+import vectorSm from "../../assets/brandLogos/Vector-sm.png";
+import calivnKlein from "../../assets/brandLogos/calvinKlein.png";
+import gucci from "../../assets/brandLogos/gucci.png";
+import prada from "../../assets/brandLogos/prada.png";
+import zara from "../../assets/brandLogos/zara.png";
+import versace from "../../assets/brandLogos/versace.png";
 import { Link } from "react-router";
 
 export default function Hero() {

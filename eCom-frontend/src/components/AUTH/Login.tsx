@@ -6,9 +6,9 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { z } from "zod";
-import { useUser } from "../context/UserProvider";
-import { User } from "../utils/Types";
-import { loginSchema } from "../utils/zodSchemas";
+import { useUser } from "../../context/UserProvider";
+import { loginSchema } from "../../utils/zodSchemas";
+import { UserInStorage } from "../../utils/Types";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ export default function Login() {
         const email = decodedToken.sub || "velura@user.com";
         const name = email.split("@")[0] || "Velura user";
 
-        const user: User = {
+        const user: UserInStorage = {
           name: name,
           email: email,
         };
