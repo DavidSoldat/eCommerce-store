@@ -1,5 +1,5 @@
 import { Divider } from "@mui/material";
-import BrowseBy from "../components/HOME/BrowseBy";
+import BrowseBy from "../components/HOME/Categories";
 import Hero from "../components/HOME/Hero";
 import Newsletter from "../components/UI/Newsletter";
 import Reviews from '../components/HOME/Reviews';

@@ -69,16 +69,7 @@ export default function UserMenu() {
               "aria-labelledby": "basic-button",
             }}
           >
-            <MenuItem
-              onClick={handleCloseToProfile}
-              className="flex justify-center gap-2 capitalize"
-            >
-              <span>
-                <HiOutlineCog />
-              </span>
-              {user?.name || "Velura user"}
-            </MenuItem>
-            {isAdmin && (
+            {isAdmin ? (
               <MenuItem
                 onClick={handleCloseAdmin}
                 className="flex justify-center gap-2"
@@ -87,6 +78,16 @@ export default function UserMenu() {
                   <RiAdminLine />
                 </span>
                 Admin Panel
+              </MenuItem>
+            ) : (
+              <MenuItem
+                onClick={handleCloseToProfile}
+                className="flex justify-center gap-2 capitalize"
+              >
+                <span>
+                  <HiOutlineCog />
+                </span>
+                {user?.name || "Velura user"}
               </MenuItem>
             )}
             <MenuItem

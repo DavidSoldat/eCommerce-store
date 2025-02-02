@@ -4,7 +4,7 @@ import { HiOutlineShoppingCart } from "react-icons/hi";
 import { MdArrowDropDown } from "react-icons/md";
 import { Link } from "react-router";
 import MobileNavBar from "./MobileNavbar";
-import UserMenu from "./UserMenu";
+import UserMenu from "../UI/UserMenu";
 
 export default function Navi() {
   const [anchorE1, setAnchorE1] = useState<null | HTMLElement>(null);

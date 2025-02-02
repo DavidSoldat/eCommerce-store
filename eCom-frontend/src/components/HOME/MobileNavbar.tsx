@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { HiOutlineSearch, HiOutlineShoppingCart } from "react-icons/hi";
 import { Link } from "react-router";
 import HamburgerMenu from "../UI/HamburgerMenu";
-import UserMenu from "./UserMenu";
+import UserMenu from "../UI/UserMenu";
 
 const MobileNavBar = () => {
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
