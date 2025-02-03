@@ -2,9 +2,8 @@ import { Divider } from "@mui/material";
 import BrowseBy from "../components/HOME/Categories";
 import Hero from "../components/HOME/Hero";
 import Newsletter from "../components/UI/Newsletter";
-import Reviews from '../components/HOME/Reviews';
-import ItemsSection from '../components/HOME/ItemSection';
-
+import Reviews from "../components/HOME/Reviews";
+import ItemsSection from "../components/UI/ItemSection";
 
 export default function Homepage() {
   return (

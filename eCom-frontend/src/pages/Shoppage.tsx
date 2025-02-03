@@ -1,7 +1,7 @@
 import { Divider } from "@mui/material";
+import ItemsSection from "../components/UI/ItemSection";
 import BreadCrumbs from "../components/UI/BreadCrumbs";
 import Newsletter from "../components/UI/Newsletter";
-import ItemsSection from "../components/HOME/ItemSection";
 
 export default function Shoppage() {
   return (
@@ -9,7 +9,7 @@ export default function Shoppage() {
       <Divider />
       <div className="my-4">
         <BreadCrumbs />
-        <div className="flex flex-col gap-5 py-5">
+        <div className="flex flex-col py-5">
           <ItemsSection title={"casual"} small={true} />
           <Divider />
           <ItemsSection title={"formal"} small={true} />

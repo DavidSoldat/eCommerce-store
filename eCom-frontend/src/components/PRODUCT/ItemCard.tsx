@@ -3,13 +3,19 @@ import { useState } from "react";
 import item from "../../assets/items/item.png";
 import { Link } from "react-router";
 
-export default function ItemCard() {
+export default function ItemCard({
+  category,
+  small = false,
+}: {
+  category: string;
+  small?: boolean;
+}) {
   const [value] = useState<number | null>(4.5);
 
   return (
     <Link
-      to="/shop/product"
-      className="flex w-fit flex-col gap-1 rounded-13 hover:border hover:shadow-sm md:w-72"
+      to={`/shop/${category}/product`}
+      className={`flex w-fit ${small === true ? "max-w-40" : ""} flex-col gap-1 rounded-13 border border-transparent hover:border hover:shadow-md md:max-w-fit`}
     >
       <img src={item} alt="product" className="w-full rounded-13" />
       <div className="px-2 pb-2">

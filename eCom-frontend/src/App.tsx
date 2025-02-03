@@ -14,6 +14,7 @@ import { UserProvider } from "./context/UserProvider";
 import Profilepage from "./pages/Profilepage";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFoundpage from "./pages/NotFoundpage";
+import CategoryPage from "./pages/Categorypage";
 
 export default function App() {
   const theme = createTheme({
@@ -43,7 +44,8 @@ export default function App() {
               <Route path="/register" element={<LoginRegister />} />
               <Route path="/login" element={<LoginRegister />} />
               <Route path="/shop" element={<Shoppage />} />
-              <Route path="/shop/product" element={<Productpage />} />
+              <Route path="/shop/:category" element={<CategoryPage />} />
+              <Route path="/shop/:category/product" element={<Productpage />} />
               <Route path="/cart" element={<Cartpage />} />
               <Route path="*" element={<NotFoundpage />} />
             </Route>

@@ -1,6 +1,6 @@
 package com.eCommerce.backend.controller;
 
-import com.eCommerce.backend.model.Product;
+import com.eCommerce.backend.model.Product.Product;
 import com.eCommerce.backend.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,11 +1,9 @@
 package com.eCommerce.backend.model;
 
+import com.eCommerce.backend.model.Product.Product;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Data

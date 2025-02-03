@@ -11,10 +11,10 @@ export default function Categories() {
         Browse by <br /> dress style
       </h2>
       <div className="mt-6 flex flex-col gap-4 md:grid md:grid-cols-2 md:grid-rows-2">
-        <FilterCard title="Casual" image={casual} />
-        <FilterCard title="Formal" image={formal} />
-        <FilterCard title="Night Out" image={party} />
-        <FilterCard title="Sportswear" image={gym} />
+        <FilterCard title="casual" image={casual} />
+        <FilterCard title="formal" image={formal} />
+        <FilterCard title="night out" image={party} />
+        <FilterCard title="sportswear" image={gym} />
       </div>
     </div>
   );

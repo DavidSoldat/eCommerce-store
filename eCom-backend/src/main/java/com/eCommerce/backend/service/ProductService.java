@@ -1,6 +1,6 @@
 package com.eCommerce.backend.service;
 
-import com.eCommerce.backend.model.Product;
+import com.eCommerce.backend.model.Product.Product;
 import com.eCommerce.backend.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
