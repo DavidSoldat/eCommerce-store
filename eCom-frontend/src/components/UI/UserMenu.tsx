@@ -7,19 +7,21 @@ import {
   HiOutlineLogout,
   HiOutlineUserCircle,
 } from "react-icons/hi";
-import { Link, useNavigate } from "react-router";
-import { useUser } from "../../context/UserProvider";
-import { isUserAdmin } from "../../utils/helpers";
 import { RiAdminLine } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router";
+import { RootState } from "../../redux/store";
+import { setUser } from "../../redux/userSlice";
+import { isUserAdmin } from "../../utils/helpers";
 
 export default function UserMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
-  const { user, setUser } = useUser();
-
+  const user = useSelector((state: RootState) => state.user.user);
+  const dispatch = useDispatch();
   const token = localStorage.getItem("token");
-  const isAdmin = isUserAdmin(token as string);
+  const isAdmin = token && isUserAdmin(token);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -33,7 +35,7 @@ export default function UserMenu() {
   const handleCloseLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
-    setUser(null);
+    dispatch(setUser(null));
     navigate("/login");
     setAnchorEl(null);
   };
@@ -42,6 +44,7 @@ export default function UserMenu() {
     navigate("/profile");
     setAnchorEl(null);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -58,7 +61,7 @@ export default function UserMenu() {
             aria-expanded={open ? "true" : undefined}
             onClick={handleClick}
           >
-            {<HiOutlineUserCircle size={24} />}
+            <HiOutlineUserCircle size={24} />
           </Button>
           <Menu
             id="basic-menu"
@@ -74,9 +77,7 @@ export default function UserMenu() {
                 onClick={handleCloseAdmin}
                 className="flex justify-center gap-2"
               >
-                <span>
-                  <RiAdminLine />
-                </span>
+                <RiAdminLine />
                 Admin Panel
               </MenuItem>
             ) : (
@@ -84,9 +85,7 @@ export default function UserMenu() {
                 onClick={handleCloseToProfile}
                 className="flex justify-center gap-2 capitalize"
               >
-                <span>
-                  <HiOutlineCog />
-                </span>
+                <HiOutlineCog />
                 {user?.name || "Velura user"}
               </MenuItem>
             )}
@@ -94,9 +93,7 @@ export default function UserMenu() {
               onClick={handleCloseLogout}
               className="flex justify-center gap-2"
             >
-              <span>
-                <HiOutlineLogout />
-              </span>
+              <HiOutlineLogout />
               Logout
             </MenuItem>
           </Menu>

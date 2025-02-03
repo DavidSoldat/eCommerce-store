@@ -4,18 +4,22 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import BreadCrumbs from "../components/UI/BreadCrumbs";
 import ImageGallery from "../components/PRODUCT/ImageGallery";
 import ItemCard from "../components/PRODUCT/ItemCard";
-import Review from "../components/UI/Review";
 import { discount } from "../utils/helpers";
 import { Product } from "../utils/Models";
+import { useParams } from "react-router";
+import Review from "../components/UI/Review";
 
 export default function Productpage() {
+  const { category } = useParams();
   const product: Product = {
     productName: "one life graphic t shirt",
     productImages: [],
     productRating: 4.5,
     productPrice: 300,
     productQuantity: 1,
+    productCategory: category as string,
     productDiscount: 40,
+    reviews: [],
     productDescription:
       "Lorem ipsum, dolor sit amet consectetur adipisicing elit.Voluptate similique ut debitis. Rem dicta vitae harum veniam totam incidunt mnis nemo rerum molestias nobis aliquid reiciendisfugiat, pariatur, iure sequi. Lorem ipsum, dolor sit ametconsectetur adipisicing elit. Natus quos molestiae iste repellat quae quia odit dolor adipisci earum nostrum. Cupiditate dolorum nisi molestias eligendi hic et commodi dolores perspiciatis! Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis, asperiores nostrum? Provident, dolores sapiente temporibus  suscipit reprehenderit molestiae commodi ab blanditiis voluptate corrupti iusto corporis ea voluptatibus unde quidem fuga. Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum nostrum, fuga excepturi quam harum, temporibus fugit optio ipsa quod iste distinctio. Fugit magni sequi saepe obcaecati similique, quo asperiores laudantium.",
     productColors: ["#4F4631", "#314F4A", "#31344F"],
@@ -239,13 +243,13 @@ export default function Productpage() {
             </div>
             <div
               ref={containerRef}
-              className="scrollbar-hide hideScroll flex space-x-4 overflow-x-auto"
+              className="scrollbar-hide hideScroll flex space-x-4 overflow-x-auto md:justify-center"
             >
-              <ItemCard />
-              <ItemCard />
-              <ItemCard />
-              <ItemCard />
-              <ItemCard />
+              <ItemCard category={category as string} />
+              <ItemCard category={category as string} />
+              <ItemCard category={category as string} />
+              <ItemCard category={category as string} />
+              <ItemCard category={category as string} />
             </div>
           </div>
         </div>

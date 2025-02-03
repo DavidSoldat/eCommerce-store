@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useUser } from "../context/UserProvider";
 import { isUserAdmin } from "../utils/helpers";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 export default function Profilepage() {
-  const { user } = useUser();
+  const user = useSelector((state: RootState) => state.user.user);
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token");

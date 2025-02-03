@@ -18,19 +18,24 @@ export interface RegisterResponse {
   status: number;
 }
 
-export interface UserInStorage {
+export interface UserRedux {
   name: string;
   email: string;
 }
 
-export interface UserContextType {
-  user: UserInStorage | null;
-  setUser: (user: UserInStorage | null) => void;
+export interface UserState {
+  user: UserRedux | null;
 }
+
 export type Role = {
   authority: string;
 };
 
 export interface CustomJwtPayload extends JwtPayload {
   roles: Role[];
+}
+export interface CountUpProps {
+  target: number;
+  duration?: number;
+  start?: number;
 }

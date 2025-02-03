@@ -6,6 +6,10 @@ export function discount(price: number, discountPercentage: number) {
   return price - discountAmount;
 }
 
+export function formatNumber(num: number) {
+  return num.toLocaleString();
+}
+
 export function isUserAdmin(token: string) {
   if (!token) return null;
   try {

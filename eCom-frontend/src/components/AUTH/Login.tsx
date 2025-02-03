@@ -4,16 +4,17 @@ import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { z } from "zod";
-import { useUser } from "../../context/UserProvider";
+import { setUser } from "../../redux/userSlice";
+import { UserRedux } from "../../utils/Types";
 import { loginSchema } from "../../utils/zodSchemas";
-import { UserInStorage } from "../../utils/Types";
 
 export default function Login() {
   const navigate = useNavigate();
   const userLocal = localStorage.getItem("user");
-  const { setUser } = useUser();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (userLocal) {
@@ -49,12 +50,12 @@ export default function Login() {
         const email = decodedToken.sub || "velura@user.com";
         const name = email.split("@")[0] || "Velura user";
 
-        const user: UserInStorage = {
+        const user: UserRedux = {
           name: name,
           email: email,
         };
         localStorage.setItem("user", JSON.stringify(user));
-        setUser(user);
+        dispatch(setUser(user));
         console.log("Login successful!");
         navigate("/");
         toast.success("Login successful!");

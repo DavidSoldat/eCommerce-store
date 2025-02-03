@@ -10,11 +10,12 @@ import Productpage from "./pages/Productpage";
 import Shoppage from "./pages/Shoppage";
 
 import { Toaster } from "react-hot-toast";
-import { UserProvider } from "./context/UserProvider";
+import { Provider } from "react-redux";
 import Profilepage from "./pages/Profilepage";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFoundpage from "./pages/NotFoundpage";
-import CategoryPage from "./pages/Categorypage";
+import { store } from "./redux/store";
+import CategoryPage from "./pages/CategoryPage";
 
 export default function App() {
   const theme = createTheme({
@@ -34,7 +35,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <ScrollToTop />
-        <UserProvider>
+        <Provider store={store}>
           <Toaster />
           <Routes>
             <Route element={<Layout />}>
@@ -50,7 +51,7 @@ export default function App() {
               <Route path="*" element={<NotFoundpage />} />
             </Route>
           </Routes>
-        </UserProvider>
+        </Provider>
       </BrowserRouter>
     </ThemeProvider>
   );

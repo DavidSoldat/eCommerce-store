@@ -7,6 +7,7 @@ import prada from "../../assets/brandLogos/prada.png";
 import zara from "../../assets/brandLogos/zara.png";
 import versace from "../../assets/brandLogos/versace.png";
 import { Link } from "react-router";
+import { CountUp } from "../UI/CountUp";
 
 export default function Hero() {
   return (
@@ -31,7 +32,7 @@ export default function Hero() {
           <div className="container mx-auto grid grid-cols-2 gap-x-6 gap-y-6 text-center md:grid-cols-3">
             <div className="relative md:flex md:flex-col md:items-start">
               <h2 className="text-2xl font-extrabold text-black md:text-3xl">
-                200+
+                <CountUp start={0} target={200} duration={1000} />+
               </h2>
               <p className="text-xs font-normal text-black opacity-60">
                 International Brands
@@ -40,7 +41,7 @@ export default function Hero() {
             </div>
             <div className="relative md:flex md:flex-col md:items-start">
               <h2 className="text-2xl font-extrabold text-black md:text-3xl">
-                2,000+
+                <CountUp start={0} target={2000} duration={1000} />+
               </h2>
               <p className="text-xs font-normal text-black opacity-60">
                 High-Quality Products
@@ -49,7 +50,7 @@ export default function Hero() {
             </div>
             <div className="col-span-2 md:col-span-1 md:flex md:flex-col md:items-start">
               <h2 className="text-2xl font-extrabold text-black md:text-3xl">
-                30,000+
+                <CountUp start={0} target={30000} duration={1000} />+
               </h2>
               <p className="text-xs font-normal text-black opacity-60">
                 Happy Customers

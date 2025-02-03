@@ -1,10 +1,11 @@
+import { useSelector } from "react-redux";
 import { Link, Outlet } from "react-router";
+import { RootState } from "../../redux/store";
 import Footer from "../HOME/Footer";
 import Navi from "../HOME/Navi";
-import { useUser } from "../../context/UserProvider";
 
 export default function Layout() {
-  const { user } = useUser();
+  const user = useSelector((state: RootState) => state.user.user);
 
   return (
     <div className="mt-20 flex min-h-screen flex-col md:mt-0">
