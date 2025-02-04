@@ -1,8 +1,8 @@
 import { createTheme, ThemeProvider } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router";
 
-import Layout from "./components/UI/Layout";
 import ScrollToTop from "./components/ScrollTop";
+import Layout from "./components/UI/Layout";
 import Cartpage from "./pages/Cartpage";
 import Homepage from "./pages/Homepage";
 import LoginRegister from "./pages/LoginRegister";
@@ -11,11 +11,12 @@ import Shoppage from "./pages/Shoppage";
 
 import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
-import Profilepage from "./pages/Profilepage";
 import AdminDashboard from "./pages/AdminDashboard";
+import Brandspage from "./pages/Brandspage";
 import NotFoundpage from "./pages/NotFoundpage";
+import Profilepage from "./pages/Profilepage";
 import { store } from "./redux/store";
-import CategoryPage from "./pages/CategoryPage";
+import CategoryPage from "./pages/Categorypage";
 
 export default function App() {
   const theme = createTheme({
@@ -41,6 +42,7 @@ export default function App() {
             <Route element={<Layout />}>
               <Route path="/" element={<Homepage />} />
               <Route path="/profile" element={<Profilepage />} />
+              <Route path="/brands" element={<Brandspage />} />
               <Route path="/adminDashboard" element={<AdminDashboard />} />
               <Route path="/register" element={<LoginRegister />} />
               <Route path="/login" element={<LoginRegister />} />

@@ -23,6 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -78,5 +80,14 @@ public class AuthController {
         } catch (BadCredentialsException e) {
             return new ResponseEntity<>(new AuthResponseDto("Invalid email or password"), HttpStatus.UNAUTHORIZED);
         }
+    }
+    @GetMapping("/users")
+    public List<UserInfoDto> getAllUsers() {
+        List<UserEntity> users =  userRepository.findAll();
+        List<UserInfoDto> userInfoDtos = users.stream().map(
+                user -> new UserInfoDto(
+                        user.getEmail(), user.getUsername()))
+                .toList();
+        return userInfoDtos;
     }
 }

@@ -67,12 +67,13 @@ export default function Hero() {
             className="absolute bottom-1/3 left-8"
           />
         </div>
-        <div className="w-full bg-cover md:hidden">
+        <div className="relative mt-2 w-full bg-cover md:hidden">
           <img
             src={heroImg}
             alt="hero image"
-            className="h-auto w-full object-cover"
+            className="h-auto max-h-[420px] w-full object-cover"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60"></div>
         </div>
       </div>
 

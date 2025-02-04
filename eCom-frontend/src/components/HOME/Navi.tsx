@@ -3,18 +3,41 @@ import { MouseEvent, useState } from "react";
 import { HiOutlineShoppingCart } from "react-icons/hi";
 import { MdArrowDropDown } from "react-icons/md";
 import { Link } from "react-router";
-import MobileNavBar from "./MobileNavbar";
 import UserMenu from "../UI/UserMenu";
+import MobileNavBar from "./MobileNavbar";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { setGenderCategory } from "../../redux/genderSlice";
 
 export default function Navi() {
   const [anchorE1, setAnchorE1] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorE1);
+  const dispatch = useDispatch();
+  const curUrl = new URL(window.location.href);
+  const genderCategory = useSelector(
+    (state: RootState) => state.genderCategory.genderCategory,
+  );
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorE1(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorE1(null);
+  };
+
+  const handleManClose = () => {
+    setAnchorE1(null);
+    dispatch(setGenderCategory("man"));
+    curUrl.searchParams.set("gender", genderCategory);
+    history.pushState(null, "", curUrl);
+  };
+
+  const handleWomanClose = () => {
+    setAnchorE1(null);
+    dispatch(setGenderCategory("woman"));
+    curUrl.searchParams.set("gender", genderCategory);
+    history.pushState(null, "", curUrl);
   };
 
   return (
@@ -55,8 +78,16 @@ export default function Navi() {
             "aria-labelledby": "basic-button",
           }}
         >
-          <MenuItem>Men</MenuItem>
-          <MenuItem>Women</MenuItem>
+          <MenuItem>
+            <Link to={"/shop"} onClick={handleManClose}>
+              Man
+            </Link>
+          </MenuItem>
+          <MenuItem>
+            <Link to={"/shop"} onClick={handleWomanClose}>
+              Woman
+            </Link>
+          </MenuItem>
         </Menu>
         <Button
           sx={{
@@ -93,13 +124,16 @@ export default function Navi() {
             paddingX: "10px",
           }}
         >
-          <p className="flex items-center rounded-20 text-base capitalize text-black">
+          <Link
+            to="/brands"
+            className="flex items-center rounded-20 text-base capitalize text-black"
+          >
             Brands
-          </p>
+          </Link>
         </Button>
         <input
           type="search"
-          className="rounded-60 bg-[#f0f0f0] px-4 py-3 text-black opacity-90"
+          className="rounded-60 bg-[#f0f0f0] px-4 py-2 text-black opacity-90"
           placeholder="Search for products..."
         />
 

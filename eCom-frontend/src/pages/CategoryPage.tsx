@@ -3,9 +3,17 @@ import { useParams } from "react-router";
 import BreadCrumbs from "../components/UI/BreadCrumbs";
 import Newsletter from "../components/UI/Newsletter";
 import ItemCard from "../components/PRODUCT/ItemCard";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 export default function CategoryPage() {
   const { category } = useParams();
+  const curUrl = new URL(window.location.href);
+  const genderCategory = useSelector(
+    (state: RootState) => state.genderCategory.genderCategory,
+  );
+  curUrl.searchParams.set("gender", genderCategory);
+  history.pushState(null, "", curUrl);
   return (
     <div className="mx-auto max-w-[1240px] px-4">
       <Divider />

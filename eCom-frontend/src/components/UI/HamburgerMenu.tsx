@@ -2,15 +2,28 @@ import { Divider } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { HiOutlineMenu, HiOutlineMinus, HiOutlinePlus } from "react-icons/hi";
 import { IoCloseOutline } from "react-icons/io5";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router";
+import { setGenderCategory } from "../../redux/genderSlice";
 
 const HamburgerMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isShopOpen, setIsShopOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleMan = () => {
+    setIsOpen(!isOpen);
+    dispatch(setGenderCategory("man"));
+  };
+
+  const handleWoman = () => {
+    setIsOpen(!isOpen);
+    dispatch(setGenderCategory("woman"));
   };
 
   const toggleShopSubmenu = () => {
@@ -80,14 +93,14 @@ const HamburgerMenu = () => {
             </button>
 
             {isShopOpen && (
-              <ul className="mt-2 space-y-2 pl-4">
+              <ul className="mt-3 space-y-3 pl-4">
                 <li>
-                  <Link to="#" onClick={toggleMenu} className="block">
+                  <Link to="/shop" onClick={handleMan} className="block">
                     Man
                   </Link>
                 </li>
                 <li>
-                  <Link to="#" onClick={toggleMenu} className="block">
+                  <Link to="/shop" onClick={handleWoman} className="block">
                     Woman
                   </Link>
                 </li>
@@ -109,7 +122,7 @@ const HamburgerMenu = () => {
           </li>
           <Divider />
           <li>
-            <Link to="/" onClick={toggleMenu} className="block">
+            <Link to="/brands" onClick={toggleMenu} className="block">
               Brands
             </Link>
           </li>
