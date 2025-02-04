@@ -1,9 +1,6 @@
 package com.eCommerce.backend.controller;
 
-import com.eCommerce.backend.Dto.AuthResponseDto;
-import com.eCommerce.backend.Dto.LoginDto;
-import com.eCommerce.backend.Dto.RegisterDto;
-import com.eCommerce.backend.Dto.UserInfoDto;
+import com.eCommerce.backend.Dto.*;
 import com.eCommerce.backend.model.Role;
 import com.eCommerce.backend.model.UserEntity;
 import com.eCommerce.backend.repository.RoleRepository;
@@ -12,6 +9,8 @@ import com.eCommerce.backend.security.JwtTokenGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -46,7 +46,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<String> register(@Validated @RequestBody RegisterDto registerDto) {
         if(userRepository.existsByEmail(registerDto.getEmail())) {
             return new ResponseEntity<>("User with this email already exists!", HttpStatus.BAD_REQUEST);
         }
@@ -60,7 +60,7 @@ public class AuthController {
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
-        Role roles = roleRepository.findByName("USER").get();
+        Role roles = roleRepository.findByName("ROLE_USER").get();
         user.setRoles(Collections.singletonList(roles));
 
         userRepository.save(user);
@@ -78,16 +78,21 @@ public class AuthController {
             String token = tokenGenerator.generateToken(authentication);
             return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(new AuthResponseDto("Invalid email or password"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new AuthResponseDto("Invalid email or password"),
+                    HttpStatus.UNAUTHORIZED);
         }
     }
+
     @GetMapping("/users")
-    public List<UserInfoDto> getAllUsers() {
-        List<UserEntity> users =  userRepository.findAll();
-        List<UserInfoDto> userInfoDtos = users.stream().map(
-                user -> new UserInfoDto(
-                        user.getEmail(), user.getUsername()))
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<UsersResponseDto> getAllUsers() {
+        List<UserEntity> users = userRepository.findAll();
+        List<UserInfoDto> userInfoDtos = users.stream()
+                .map(user -> new UserInfoDto(user.getEmail(), user.getUsername()))
                 .toList();
-        return userInfoDtos;
+        return new ResponseEntity<>(
+                new UsersResponseDto("Users retrieved successfully!", true, userInfoDtos),
+                HttpStatus.OK
+        );
     }
 }
