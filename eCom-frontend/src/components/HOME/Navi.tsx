@@ -2,21 +2,16 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import { MouseEvent, useState } from "react";
 import { HiOutlineShoppingCart } from "react-icons/hi";
 import { MdArrowDropDown } from "react-icons/md";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router";
+import { setGenderCategory } from "../../redux/genderSlice";
 import UserMenu from "../UI/UserMenu";
 import MobileNavBar from "./MobileNavbar";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
-import { setGenderCategory } from "../../redux/genderSlice";
 
 export default function Navi() {
   const [anchorE1, setAnchorE1] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorE1);
   const dispatch = useDispatch();
-  const curUrl = new URL(window.location.href);
-  const genderCategory = useSelector(
-    (state: RootState) => state.genderCategory.genderCategory,
-  );
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorE1(event.currentTarget);
@@ -29,15 +24,11 @@ export default function Navi() {
   const handleManClose = () => {
     setAnchorE1(null);
     dispatch(setGenderCategory("man"));
-    curUrl.searchParams.set("gender", genderCategory);
-    history.pushState(null, "", curUrl);
   };
 
   const handleWomanClose = () => {
     setAnchorE1(null);
     dispatch(setGenderCategory("woman"));
-    curUrl.searchParams.set("gender", genderCategory);
-    history.pushState(null, "", curUrl);
   };
 
   return (

@@ -27,15 +27,30 @@ export interface UserState {
   user: UserRedux | null;
 }
 
-export type Role = {
-  authority: string;
-};
-
 export interface CustomJwtPayload extends JwtPayload {
-  roles: Role[];
+  roles: string[];
 }
 export interface CountUpProps {
   target: number;
   duration?: number;
   start?: number;
+}
+
+export interface RolesRep {
+  id: number;
+  name: string;
+}
+
+export interface UserRep {
+  id: number;
+  email: string;
+  username: string;
+  roles: RolesRep[];
+}
+
+export interface FlattenedUserRep {
+  id: number;
+  email: string;
+  username: string;
+  roles: string;
 }

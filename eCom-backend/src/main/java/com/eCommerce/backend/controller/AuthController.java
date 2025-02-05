@@ -88,7 +88,7 @@ public class AuthController {
     public ResponseEntity<UsersResponseDto> getAllUsers() {
         List<UserEntity> users = userRepository.findAll();
         List<UserInfoDto> userInfoDtos = users.stream()
-                .map(user -> new UserInfoDto(user.getEmail(), user.getUsername()))
+                .map(user -> new UserInfoDto(user.getId(),user.getEmail(), user.getUsername(), user.getRoles()))
                 .toList();
         return new ResponseEntity<>(
                 new UsersResponseDto("Users retrieved successfully!", true, userInfoDtos),
