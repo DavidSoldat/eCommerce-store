@@ -25,5 +25,4 @@ public class ProductController {
     public void addProduct(@RequestBody Product product) {
         productService.addProduct(product);
     }
-
 }

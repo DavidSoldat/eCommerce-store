@@ -64,7 +64,7 @@ const HamburgerMenu = () => {
       <div
         ref={menuRef}
         className={`fixed left-0 top-0 z-20 h-full w-64 transform border-r bg-[#f0f0f0] text-black transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          isOpen ? "translate-x-0 shadow-lg" : "-translate-x-full"
         }`}
       >
         <button
