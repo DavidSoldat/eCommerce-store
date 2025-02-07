@@ -35,7 +35,7 @@ export default function ItemsSection({
           </div>
         </div>
         <Link
-          to={`/shop/${title}`}
+          to={`/shop/${title.split(" ").join("")}`}
           className="flex w-full justify-center rounded-full border py-3 text-sm hover:bg-[#f0f0f0] hover:drop-shadow-md md:w-fit md:px-10"
         >
           View All
@@ -44,4 +44,3 @@ export default function ItemsSection({
     </div>
   );
 }
-

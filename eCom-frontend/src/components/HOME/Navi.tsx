@@ -124,7 +124,7 @@ export default function Navi() {
         </Button>
         <input
           type="search"
-          className="rounded-60 bg-[#f0f0f0] px-4 py-2 text-black opacity-90"
+          className="w-96 rounded-60 bg-[#f0f0f0] px-4 py-2 text-black opacity-90"
           placeholder="Search for products..."
         />
 

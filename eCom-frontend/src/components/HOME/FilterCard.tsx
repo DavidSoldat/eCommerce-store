@@ -9,7 +9,7 @@ export default function FilterCard({
 }) {
   return (
     <Link
-      to={`/shop/${title}`}
+      to={`/shop/${title.split(" ").join("")}`}
       className="group relative cursor-pointer rounded-20 bg-cover"
     >
       <h2 className="absolute left-6 top-4 z-10 transform rounded-20 bg-white/30 py-1 pr-2 text-2xl font-bold capitalize text-black transition-transform duration-300 group-hover:scale-110">

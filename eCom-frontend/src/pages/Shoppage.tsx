@@ -42,9 +42,9 @@ export default function Shoppage() {
           <Divider />
           <ItemsSection title={"formal"} small={true} />
           <Divider />
-          <ItemsSection title={"party"} small={true} />
+          <ItemsSection title={"night out"} small={true} />
           <Divider />
-          <ItemsSection title={"gym"} small={true} />
+          <ItemsSection title={"sportswear"} small={true} />
         </div>
       </div>
       <Newsletter />

@@ -35,7 +35,15 @@ export default function ItemCard({
           />
           <span className="text-xs text-black opacity-60">{value}/5</span>
         </Box>
-        <p className="pb-2 text-xl font-bold">$120</p>
+        <div className="flex items-center gap-3">
+          <p className="pb-2 text-xl font-bold">$120</p>
+          <p className="pb-2 text-lg font-semibold line-through opacity-50">
+            $180
+          </p>
+          <p className="mb-2 rounded-13 bg-red-50 px-1 text-lg font-extrabold text-red-400">
+            -20%
+          </p>
+        </div>
       </div>
     </Link>
   );
