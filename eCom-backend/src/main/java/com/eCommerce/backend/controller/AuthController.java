@@ -6,8 +6,14 @@ import com.eCommerce.backend.model.UserEntity;
 import com.eCommerce.backend.repository.RoleRepository;
 import com.eCommerce.backend.repository.UserRepository;
 import com.eCommerce.backend.security.JwtTokenGenerator;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +29,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -69,17 +77,24 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = tokenGenerator.generateToken(authentication);
-            return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
+            Cookie cookie = new Cookie("token", token);
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true);
+            cookie.setPath("/");
+            cookie.setDomain("localhost");
+
+            response.addCookie(cookie);
+
+            return new ResponseEntity<>("Login successfull", HttpStatus.OK);
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(new AuthResponseDto("Invalid email or password"),
-                    HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Invalid email or password", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -94,5 +109,18 @@ public class AuthController {
                 new UsersResponseDto("Users retrieved successfully!", true, userInfoDtos),
                 HttpStatus.OK
         );
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getUserInfo(@CookieValue(name = "token", required = false) String token) {
+        if (token == null || !tokenGenerator.validateToken(token)) {
+            return new ResponseEntity<>("Invalid or missing token", HttpStatus.UNAUTHORIZED);
+        }
+
+        Claims claims = tokenGenerator.getClaimsFromToken(token);
+        String email = claims.getSubject();
+        UserInfoDto userInfo = new UserInfoDto(userRepository.findByEmail(email));
+
+        return new ResponseEntity<>(userInfo, HttpStatus.OK);
     }
 }

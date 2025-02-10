@@ -227,7 +227,7 @@ export default function Productpage() {
             )}
           </div>
 
-          <div className="mt-10 flex flex-col gap-2">
+          <div className="mt-10 flex flex-col items-center gap-2">
             <div className="flex items-center justify-between">
               <h2 className="font-[IntegralCF] text-3xl font-bold">
                 you might also like
@@ -243,7 +243,7 @@ export default function Productpage() {
             </div>
             <div
               ref={containerRef}
-              className="scrollbar-hide hideScroll flex space-x-4 overflow-x-auto md:justify-center"
+              className="scrollbar-hide hideScroll flex space-x-4 overflow-x-auto py-2 md:justify-center"
             >
               <ItemCard category={category as string} />
               <ItemCard category={category as string} />

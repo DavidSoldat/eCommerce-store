@@ -89,9 +89,12 @@ export default function Navi() {
             paddingX: "10px",
           }}
         >
-          <p className="flex items-center text-base capitalize text-black">
+          <Link
+            to="/shop/sale"
+            className="flex items-center text-base capitalize text-black"
+          >
             On Sale
-          </p>
+          </Link>
         </Button>
         <Button
           sx={{
@@ -102,9 +105,12 @@ export default function Navi() {
             paddingX: "10px",
           }}
         >
-          <p className="flex items-center text-base capitalize text-black">
+          <Link
+            to="/shop/newarrivals"
+            className="flex items-center text-base capitalize text-black"
+          >
             New Arrivals
-          </p>
+          </Link>
         </Button>
         <Button
           sx={{

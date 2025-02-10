@@ -1,20 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios, { AxiosResponse } from "axios";
-import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { z } from "zod";
+import { login } from "../../utils/auth";
+import { loginSchema } from "../../utils/zodSchemas";
+import toast from "react-hot-toast";
 import { setUser } from "../../redux/userSlice";
 import { UserRedux } from "../../utils/Types";
-import { loginSchema } from "../../utils/zodSchemas";
+import { useDispatch } from "react-redux";
 
 export default function Login() {
   const navigate = useNavigate();
-  const userLocal = localStorage.getItem("user");
   const dispatch = useDispatch();
+  const userLocal = localStorage.getItem("user");
 
   useEffect(() => {
     if (userLocal) {
@@ -31,55 +30,19 @@ export default function Login() {
     resolver: zodResolver(loginSchema),
   });
 
-  async function login(email: string, password: string) {
-    try {
-      const response: AxiosResponse = await axios.post(
-        "http://localhost:8080/api/auth/login",
-        {
-          email,
-          password,
-        },
-      );
-
-      if (response.data.accessToken) {
-        localStorage.setItem("token", response.data.accessToken);
-
-        const decodedToken = jwtDecode<{ sub?: string }>(
-          response.data.accessToken,
-        );
-        const email = decodedToken.sub || "velura@user.com";
-        const name = email.split("@")[0] || "Velura user";
-
-        const user: UserRedux = {
-          name: name,
-          email: email,
-        };
-        localStorage.setItem("user", JSON.stringify(user));
-        dispatch(setUser(user));
-        console.log("Login successful!");
-        navigate("/");
-        toast.success("Login successful!");
-        return response.data;
-      } else {
-        throw new Error("No token received");
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.accessToken || error.message);
-        console.error(
-          "Error during login: ",
-          error.response?.data?.accessToken || error.message,
-        );
-      } else {
-        console.error("Error during loign", error);
-        toast.error("Error during loign");
-      }
-    }
-  }
-
   const onSubmit = async (data: FormData) => {
     const { password, email } = data;
-    await login(email, password);
+    const { email: userEmail, username, roles } = await login(email, password);
+    const user: UserRedux = {
+      name: username,
+      email: userEmail,
+      role: roles[0].name,
+    };
+
+    localStorage.setItem("user", JSON.stringify(user));
+    dispatch(setUser(user));
+    navigate("/");
+    toast.success("Login successful!");
   };
 
   return (

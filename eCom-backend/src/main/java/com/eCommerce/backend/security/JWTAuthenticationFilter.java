@@ -3,6 +3,7 @@ package com.eCommerce.backend.security;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        String token = getJWTFromRequest(request);
+        String token = getJWTFromCookie(request);
 
         if (StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
             Claims claims = tokenGenerator.getClaimsFromToken(token);
@@ -54,10 +55,15 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String getJWTFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+    private String getJWTFromCookie(HttpServletRequest request) {
+        // Retrieve cookies from the request
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("token".equals(cookie.getName())) { // The cookie name is assumed to be 'token'
+                    return cookie.getValue();
+                }
+            }
         }
         return null;
     }

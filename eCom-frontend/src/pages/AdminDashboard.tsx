@@ -1,34 +1,28 @@
 import { useNavigate } from "react-router";
-import { flattenUser, isUserAdmin } from "../utils/helpers";
-import { useEffect, useState } from "react";
+import { getUsers } from "../utils/auth";
+
 import { Divider } from "@mui/material";
-import Table from "../components/UI/UsersTable";
-import axios, { AxiosResponse } from "axios";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import Table from "../components/UI/UsersTable";
+import { RootState } from "../redux/store";
 import { UserRep } from "../utils/Types";
+import { flattenUser } from "../utils/helpers";
 
 export default function AdminDashboard() {
-  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [panel, setPanel] = useState("stats");
   const [data, setData] = useState([]);
+  const user = useSelector((state: RootState) => state.user.user);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response: AxiosResponse = await axios.get(
-          "http://localhost:8080/api/auth/users",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
+        const response = await getUsers();
         const users = response.data.data.map((user: UserRep) =>
           flattenUser(user),
         );
-        console.log(users);
-        console.log(response.data.data);
         setData(users);
       } catch (error) {
         console.error("Error fetching users", error);
@@ -37,14 +31,14 @@ export default function AdminDashboard() {
     };
 
     fetchData();
-  }, [token]);
+  }, []);
 
   useEffect(() => {
-    const isAdmin = isUserAdmin(token as string);
+    const isAdmin = user?.role === "ROLE_ADMIN";
     if (!isAdmin) {
       navigate("/");
     }
-  }, [navigate, token]);
+  }, [navigate, user?.role]);
   return (
     <div className="mx-auto min-h-screen max-w-[1240px] px-4">
       <Divider />

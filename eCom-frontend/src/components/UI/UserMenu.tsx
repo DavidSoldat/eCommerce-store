@@ -11,8 +11,8 @@ import { RiAdminLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router";
 import { RootState } from "../../redux/store";
-import { setUser } from "../../redux/userSlice";
-import { isUserAdmin } from "../../utils/helpers";
+import { removeToken } from "../../redux/tokenSlice";
+import { removeUser } from "../../redux/userSlice";
 
 export default function UserMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -20,8 +20,7 @@ export default function UserMenu() {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.user);
   const dispatch = useDispatch();
-  const token = localStorage.getItem("token");
-  const isAdmin = token && isUserAdmin(token);
+  const isAdmin = user?.role === "ROLE_ADMIN";
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -34,8 +33,8 @@ export default function UserMenu() {
 
   const handleCloseLogout = () => {
     localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    dispatch(setUser(null));
+    dispatch(removeToken());
+    dispatch(removeUser());
     navigate("/login");
     setAnchorEl(null);
   };

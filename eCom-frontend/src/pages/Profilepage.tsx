@@ -1,15 +1,13 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router";
-import { isUserAdmin } from "../utils/helpers";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import { RootState } from "../redux/store";
 
 export default function Profilepage() {
   const user = useSelector((state: RootState) => state.user.user);
   const navigate = useNavigate();
 
-  const token = localStorage.getItem("token");
-  const role = isUserAdmin(token as string);
+  const role = user?.role === "ROLE_ADMIN";
 
   useEffect(() => {
     if (user === null || role === true) {

@@ -21,10 +21,15 @@ export interface RegisterResponse {
 export interface UserRedux {
   name: string;
   email: string;
+  role: string;
 }
 
 export interface UserState {
   user: UserRedux | null;
+}
+
+export interface Token {
+  token: string | null;
 }
 
 export interface CustomJwtPayload extends JwtPayload {
