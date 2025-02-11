@@ -89,6 +89,9 @@ export default function Login() {
       <button className="m ax-w- mx-auto w-full rounded-60 bg-black px-4 py-2 text-white hover:bg-gray-800">
         Login
       </button>
+      <button className="m ax-w- mx-auto w-full rounded-60 border px-4 py-2 hover:bg-blue-50">
+        Login with Google
+      </button>
     </form>
   );
 }

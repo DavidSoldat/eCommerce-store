@@ -22,9 +22,11 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -79,11 +81,19 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
         try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword())
-            );
+            Authentication authentication;
+            if (loginDto.getPassword() == null || loginDto.getPassword().isEmpty()) {
+                authentication = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), null);
+            } else {
+                authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword())
+                );
+            }
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = tokenGenerator.generateToken(authentication);
+
+            // Store JWT in cookie
             Cookie cookie = new Cookie("token", token);
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
@@ -92,7 +102,7 @@ public class AuthController {
 
             response.addCookie(cookie);
 
-            return new ResponseEntity<>("Login successfull", HttpStatus.OK);
+            return new ResponseEntity<>("Login successful", HttpStatus.OK);
         } catch (BadCredentialsException e) {
             return new ResponseEntity<>("Invalid email or password", HttpStatus.BAD_REQUEST);
         }
@@ -119,8 +129,55 @@ public class AuthController {
 
         Claims claims = tokenGenerator.getClaimsFromToken(token);
         String email = claims.getSubject();
-        UserInfoDto userInfo = new UserInfoDto(userRepository.findByEmail(email));
+
+        UserEntity user = userRepository.findByEmail(email).orElse(null);
+        if (user == null) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+
+        UserInfoDto userInfo = new UserInfoDto(user.getId(), user.getEmail(), user.getUsername(), user.getRoles());
 
         return new ResponseEntity<>(userInfo, HttpStatus.OK);
     }
+
+
+    @GetMapping("/oauth2/callback")
+    public ResponseEntity<String> oauth2Callback(@AuthenticationPrincipal OAuth2User oauthUser, HttpServletResponse response) {
+        if (oauthUser == null) {
+            return new ResponseEntity<>("OAuth2 authentication failed", HttpStatus.UNAUTHORIZED);
+        }
+
+        String email = oauthUser.getAttribute("email");
+        String username = oauthUser.getAttribute("name");
+
+        UserEntity user = userRepository.findByEmail(email).orElse(null);
+
+        if (user == null) {
+            // Register new user
+            user = new UserEntity();
+            user.setEmail(email);
+            user.setUsername(username);
+            user.setPassword(""); // No password needed for OAuth users
+
+            Role userRole = roleRepository.findByName("ROLE_USER").orElseThrow();
+            user.setRoles(Collections.singletonList(userRole));
+
+            userRepository.save(user);
+        }
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getRoles(), user, null);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = tokenGenerator.generateToken(authentication);
+
+        Cookie cookie = new Cookie("token", token);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setDomain("localhost");
+
+        response.addCookie(cookie);
+
+        return new ResponseEntity<>("OAuth2 Login successful", HttpStatus.OK);
+    }
+
 }
