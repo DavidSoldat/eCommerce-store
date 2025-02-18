@@ -99,7 +99,6 @@ public class AuthController {
     }
 
     @GetMapping("/users")
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<UsersResponseDto> getAllUsers() {
         List<UserEntity> users = userRepository.findAll();
         List<UserInfoDto> userInfoDtos = users.stream()

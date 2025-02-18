@@ -5,14 +5,136 @@ import { Divider } from "@mui/material";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import Table from "../components/UI/UsersTable";
+import ProductsTable from "../components/UI/ProductsTable";
+import UsersTable from "../components/UI/UsersTable";
 import { RootState } from "../redux/store";
+import { Product } from "../utils/Models";
 import { UserRep } from "../utils/Types";
 import { flattenUser } from "../utils/helpers";
 
 export default function AdminDashboard() {
+  const prods: Product[] = [
+    {
+      id: 1,
+      productName: "Jon",
+      productDescription: "davidsoldat00@gmail.com",
+      productSizes: ["s", "l"],
+      productQuantity: 20,
+      productColors: ["red", "green", "blue"],
+      productDiscount: 10,
+      productRating: 4.3,
+      productCategory: "man",
+      productPrice: 120,
+      reviews: [],
+    },
+    {
+      id: 2,
+      productDescription: "Lannister",
+      productName: "Cersei",
+      productSizes: ["s", "l"],
+      productQuantity: 20,
+      productColors: ["red", "green", "blue"],
+      productDiscount: 10,
+      productRating: 4.3,
+      productCategory: "woman",
+      productPrice: 120,
+      reviews: [],
+    },
+    {
+      id: 3,
+      productDescription: "Lannister",
+      productName: "Jaime",
+      productSizes: ["s", "l"],
+      productQuantity: 20,
+      productColors: ["red", "green", "blue"],
+      productDiscount: 10,
+      productRating: 4.3,
+      productCategory: "man",
+      productPrice: 120,
+      reviews: [],
+    },
+    {
+      id: 4,
+      productDescription: "Stark",
+      productName: "Arya",
+      productSizes: ["s", "l"],
+      productQuantity: 20,
+      productColors: ["red", "green", "blue"],
+      productDiscount: 10,
+      productRating: 4.3,
+      productCategory: "man",
+      productPrice: 120,
+      reviews: [],
+    },
+    {
+      id: 5,
+      productDescription: "Targaryen",
+      productName: "Daenerys",
+      productSizes: ["s", "l"],
+      productQuantity: 20,
+      productColors: ["red", "green", "blue"],
+      productDiscount: 10,
+      productRating: 4.3,
+      productCategory: "man",
+      productPrice: 120,
+      reviews: [],
+    },
+    {
+      id: 6,
+      productDescription: "Melisandre",
+      productName: "some name",
+      productSizes: ["s", "l"],
+      productQuantity: 20,
+      productColors: ["red", "green", "blue"],
+      productDiscount: 10,
+      productRating: 4.3,
+      productCategory: "woman",
+      productPrice: 120,
+      reviews: [],
+    },
+    {
+      id: 7,
+      productDescription: "Clifford",
+      productName: "Ferrara",
+      productSizes: ["s", "l"],
+      productQuantity: 20,
+      productColors: ["red", "green", "blue"],
+      productDiscount: 10,
+      productRating: 4.3,
+      productCategory: "man",
+      productPrice: 120,
+      reviews: [],
+    },
+    {
+      id: 8,
+      productDescription: "Frances",
+      productName: "Rossini",
+      productSizes: ["s", "l"],
+      productQuantity: 20,
+      productColors: ["red", "green", "blue"],
+      productDiscount: 10,
+      productRating: 4.3,
+      productCategory: "man",
+      productPrice: 120,
+      reviews: [],
+    },
+    {
+      id: 9,
+      productDescription: "Roxie",
+      productName: "Harvey",
+      productSizes: ["s", "l"],
+      productQuantity: 20,
+      productColors: ["red", "green", "blue"],
+      productDiscount: 10,
+      productRating: 4.3,
+      productCategory: "woman",
+      productPrice: 120,
+      reviews: [],
+    },
+  ];
   const navigate = useNavigate();
   const [panel, setPanel] = useState("stats");
+  const [products, setProducts] = useState(prods);
   const [data, setData] = useState([]);
   const user = useSelector((state: RootState) => state.user.user);
 
@@ -66,22 +188,11 @@ export default function AdminDashboard() {
             </button>
           </div>
           <div className="w-full bg-[#f0f0f0] p-10">
-            {panel === "users" && <Table data={data} />}
+            {panel === "products" && <ProductsTable products={products} />}
+            {panel === "users" && <UsersTable data={data} />}
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-// [
-//     { id: 1, email: "davidsoldat00@gmail.com", username: "Jon", role: "user" },
-//     { id: 2, email: "Lannister", username: "Cersei", role: "user" },
-//     { id: 3, email: "Lannister", username: "Jaime", role: "user" },
-//     { id: 4, email: "Stark", username: "Arya", role: "user" },
-//     { id: 5, email: "Targaryen", username: "Daenerys", role: "user" },
-//     { id: 6, email: "Melisandre", username: null, role: "user" },
-//     { id: 7, email: "Clifford", username: "Ferrara", role: "user" },
-//     { id: 8, email: "Frances", username: "Rossini", role: "user" },
-//     { id: 9, email: "Roxie", username: "Harvey", role: "user" },
-//   ]

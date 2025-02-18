@@ -32,7 +32,6 @@ export const login = async (email: string, password: string) => {
 export const getUserInfo = async () => {
   try {
     const response = await api.get("http://localhost:8080/api/auth/me");
-    console.log(response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

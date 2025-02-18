@@ -6,7 +6,7 @@ import gym from "../../assets/filterImages/gym.png";
 
 export default function Categories() {
   return (
-    <div className="max-w-[1240px] rounded-20 bg-[#f0f0f0] px-6 py-8 md:mx-auto">
+    <div className="max-w-[1240px] rounded-20 bg-[#f0f0f0] px-6 py-7 md:mx-auto">
       <h2 className="text-center font-[IntegralCF] text-3xl font-extrabold uppercase">
         Browse by <br /> dress style
       </h2>

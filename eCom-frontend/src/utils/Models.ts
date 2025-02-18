@@ -17,8 +17,8 @@ export interface Product {
   productRating: number;
   productColors: string[];
   productSizes: string[];
-  productImages: string[] | [];
-  productQuantity?: number;
+  productImages?: string[] | [];
+  productQuantity: number;
   reviews: Review[] | [];
 }
 
