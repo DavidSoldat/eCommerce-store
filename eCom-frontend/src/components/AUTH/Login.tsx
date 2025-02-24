@@ -1,14 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { z } from "zod";
-import { login } from "../../utils/auth";
-import { loginSchema } from "../../utils/zodSchemas";
-import toast from "react-hot-toast";
 import { setUser } from "../../redux/userSlice";
+import { login, loginGoogle } from "../../utils/auth";
 import { UserRedux } from "../../utils/Types";
-import { useDispatch } from "react-redux";
+import { loginSchema } from "../../utils/zodSchemas";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -34,15 +34,23 @@ export default function Login() {
     const { password, email } = data;
     const { email: userEmail, username, roles } = await login(email, password);
     const user: UserRedux = {
-      name: username,
+      username: username,
       email: userEmail,
       role: roles[0].name,
     };
-
     localStorage.setItem("user", JSON.stringify(user));
     dispatch(setUser(user));
     navigate("/");
     toast.success("Login successful!");
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      loginGoogle();
+    } catch (error) {
+      toast.error("Failed to initiate Google login.");
+      console.error(error);
+    }
   };
 
   return (
@@ -86,10 +94,14 @@ export default function Login() {
           </span>
         )}
       </div>
-      <button className="m ax-w- mx-auto w-full rounded-60 bg-black px-4 py-2 text-white hover:bg-gray-800">
+      <button className="mx-auto w-full rounded-60 bg-black px-4 py-2 text-white hover:bg-gray-800">
         Login
       </button>
-      <button className="m ax-w- mx-auto w-full rounded-60 border px-4 py-2 hover:bg-blue-50">
+      <button
+        className="mx-auto w-full rounded-60 border px-4 py-2 hover:bg-blue-50"
+        type="button"
+        onClick={handleGoogleLogin}
+      >
         Login with Google
       </button>
     </form>

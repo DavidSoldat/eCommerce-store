@@ -2,8 +2,8 @@ import { Button, IconButton, Paper } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
-import { MdDeleteForever } from "react-icons/md";
 import { UserRep } from "../../utils/Types";
+import { deleteUser } from "../../utils/auth";
 
 export default function UsersTable({ data }: { data: UserRep[] }) {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
@@ -19,8 +19,8 @@ export default function UsersTable({ data }: { data: UserRep[] }) {
       flex: 1,
     },
     {
-      field: "action",
-      headerName: "Action",
+      field: "edit",
+      headerName: "Edit",
       width: 90,
       sortable: false,
       filterable: false,
@@ -33,13 +33,11 @@ export default function UsersTable({ data }: { data: UserRep[] }) {
           <IconButton
             onClick={(event) => {
               console.log("Edit", params.row.id);
+              handleDelete(params.row.id);
               event.stopPropagation();
             }}
           >
             <FaEdit size={20} />
-          </IconButton>
-          <IconButton onClick={() => handleDelete(params.row.id)}>
-            <MdDeleteForever color="red" size={20} />
           </IconButton>
         </div>
       ),
@@ -47,7 +45,12 @@ export default function UsersTable({ data }: { data: UserRep[] }) {
   ];
 
   const handleDelete = (id: number) => {
-    setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+    try {
+      deleteUser(id);
+      setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const paginationModel = { page: 0, pageSize: 5 };

@@ -134,7 +134,7 @@ export default function AdminDashboard() {
   ];
   const navigate = useNavigate();
   const [panel, setPanel] = useState("stats");
-  const [products, setProducts] = useState(prods);
+  const [products] = useState(prods);
   const [data, setData] = useState([]);
   const user = useSelector((state: RootState) => state.user.user);
 
@@ -161,6 +161,7 @@ export default function AdminDashboard() {
       navigate("/");
     }
   }, [navigate, user?.role]);
+
   return (
     <div className="mx-auto min-h-screen max-w-[1240px] px-4">
       <Divider />

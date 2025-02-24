@@ -13,10 +13,11 @@ import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 import AdminDashboard from "./pages/AdminDashboard";
 import Brandspage from "./pages/Brandspage";
+import CategoryPage from "./pages/CategoryPage";
 import NotFoundpage from "./pages/NotFoundpage";
 import Profilepage from "./pages/Profilepage";
 import { store } from "./redux/store";
-import CategoryPage from "./pages/Categorypage";
+import OAuthHandler from "./pages/OAuthHandler";
 
 export default function App() {
   const theme = createTheme({
@@ -46,6 +47,7 @@ export default function App() {
               <Route path="/adminDashboard" element={<AdminDashboard />} />
               <Route path="/register" element={<LoginRegister />} />
               <Route path="/login" element={<LoginRegister />} />
+              <Route path="/oauth-callback" element={<OAuthHandler />} />
               <Route path="/shop" element={<Shoppage />} />
               <Route path="/shop/:category" element={<CategoryPage />} />
               <Route path="/shop/:category/product" element={<Productpage />} />

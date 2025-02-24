@@ -50,3 +50,17 @@ export const getUserInfo = async () => {
 export const getUsers = async () => {
   return await api.get("/users", { withCredentials: true });
 };
+
+export const deleteUser = async (userId: number) => {
+  try {
+    const response = await api.delete(`/delete/${userId}`);
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export function loginGoogle() {
+  window.location.href =
+    "http://localhost:8080/api/auth/oauth2/authorization/google";
+}

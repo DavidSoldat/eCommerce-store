@@ -9,7 +9,6 @@ export function formatNumber(num: number) {
   return num.toLocaleString();
 }
 
-
 export function flattenUser(user: UserRep): FlattenedUserRep {
   return {
     id: user.id,

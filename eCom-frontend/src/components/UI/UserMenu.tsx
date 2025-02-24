@@ -19,9 +19,9 @@ export default function UserMenu() {
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.user);
+
   const dispatch = useDispatch();
   const isAdmin = user?.role === "ROLE_ADMIN";
-
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -85,7 +85,7 @@ export default function UserMenu() {
                 className="flex justify-center gap-2 capitalize"
               >
                 <HiOutlineCog />
-                {user?.name || "Velura user"}
+                {user?.username || "Velura user"}
               </MenuItem>
             )}
             <MenuItem

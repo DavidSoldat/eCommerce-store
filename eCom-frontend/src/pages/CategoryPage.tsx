@@ -1,9 +1,10 @@
 import { Divider } from "@mui/material";
 
+import { useEffect } from "react";
 import { GiSettingsKnobs } from "react-icons/gi";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 import ItemCard from "../components/PRODUCT/ItemCard";
 import BreadCrumbs from "../components/UI/BreadCrumbs";
 import Newsletter from "../components/UI/Newsletter";
@@ -11,12 +12,40 @@ import { RootState } from "../redux/store";
 
 export default function CategoryPage() {
   const { category } = useParams();
-  const curUrl = new URL(window.location.href);
+  const [searchParams, setSearchParams] = useSearchParams();
   const genderCategory = useSelector(
     (state: RootState) => state.genderCategory.genderCategory,
   );
-  curUrl.searchParams.set("gender", genderCategory);
-  history.pushState(null, "", curUrl);
+
+  useEffect(() => {
+    setSearchParams((prevParams) => {
+      const newParams = new URLSearchParams(prevParams);
+      newParams.set("gender", genderCategory);
+      return newParams;
+    });
+  }, [genderCategory, setSearchParams]);
+
+  function handleClick(itemCategory: string) {
+    setSearchParams((prevParams) => {
+      const newParams = new URLSearchParams(prevParams);
+      newParams.set("category", itemCategory);
+      return newParams;
+    });
+  }
+
+  const manCategories = [
+    "T-shirts",
+    "Sweaters",
+    "Hoodies",
+    "Jeans",
+    "Trousers",
+    "Jackets",
+  ];
+  const womanCategories = ["Skrits", "Leggings", "Dresses", ...manCategories];
+
+  const itemCategories =
+    genderCategory === "man" ? manCategories : womanCategories;
+
   return (
     <div className="mx-auto max-w-[1240px] px-4">
       <Divider />
@@ -32,30 +61,18 @@ export default function CategoryPage() {
             </div>
             <Divider />
             <div className="my-5 px-5">
-              <button className="flex w-full justify-between p-2 text-gray-500 hover:bg-[#f0f0f0] hover:text-black">
-                T-shirts{" "}
-                <span>
-                  <MdOutlineKeyboardArrowRight size={22} />
-                </span>
-              </button>
-              <button className="flex w-full justify-between p-2 text-gray-500 hover:bg-[#f0f0f0] hover:text-black">
-                T-shirts{" "}
-                <span>
-                  <MdOutlineKeyboardArrowRight size={22} />
-                </span>
-              </button>
-              <button className="flex w-full justify-between p-2 text-gray-500 hover:bg-[#f0f0f0] hover:text-black">
-                T-shirts{" "}
-                <span>
-                  <MdOutlineKeyboardArrowRight size={22} />
-                </span>
-              </button>
-              <button className="flex w-full justify-between p-2 text-gray-500 hover:bg-[#f0f0f0] hover:text-black">
-                T-shirts{" "}
-                <span>
-                  <MdOutlineKeyboardArrowRight size={22} />
-                </span>
-              </button>
+              {itemCategories.map((category, i) => (
+                <button
+                  className={`flex w-full justify-between p-2 text-gray-500 ${searchParams.get("category") === category ? "bg-gray-200" : "hover:bg-[#f0f0f0] hover:text-black"}`}
+                  key={i}
+                  onClick={() => handleClick(category)}
+                >
+                  {category}
+                  <span>
+                    <MdOutlineKeyboardArrowRight size={22} />
+                  </span>
+                </button>
+              ))}
             </div>
             <div className="px-5">
               <Divider />

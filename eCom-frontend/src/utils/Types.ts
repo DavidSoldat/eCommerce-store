@@ -19,7 +19,7 @@ export interface RegisterResponse {
 }
 
 export interface UserRedux {
-  name: string;
+  username: string;
   email: string;
   role: string;
 }
@@ -52,8 +52,6 @@ export interface UserRep {
   username: string;
   roles: RolesRep[];
 }
-
-
 
 export interface FlattenedUserRep {
   id: number;

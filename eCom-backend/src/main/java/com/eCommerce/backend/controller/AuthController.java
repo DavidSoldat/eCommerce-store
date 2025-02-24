@@ -1,6 +1,9 @@
 package com.eCommerce.backend.controller;
 
-import com.eCommerce.backend.Dto.*;
+import com.eCommerce.backend.Dto.LoginDto;
+import com.eCommerce.backend.Dto.RegisterDto;
+import com.eCommerce.backend.Dto.UserInfoDto;
+import com.eCommerce.backend.Dto.UsersResponseDto;
 import com.eCommerce.backend.model.Role;
 import com.eCommerce.backend.model.UserEntity;
 import com.eCommerce.backend.repository.RoleRepository;
@@ -8,34 +11,26 @@ import com.eCommerce.backend.repository.UserRepository;
 import com.eCommerce.backend.security.JwtTokenGenerator;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.coyote.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -134,49 +129,18 @@ public class AuthController {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
 
-        UserInfoDto userInfo = new UserInfoDto(user.getId(), user.getEmail(), user.getUsername(), user.getRoles());
+        UserInfoDto userInfo = new UserInfoDto(user.getId(), user.getUsername(), user.getEmail(), user.getRoles());
 
         return new ResponseEntity<>(userInfo, HttpStatus.OK);
     }
 
-
-    @GetMapping("/oauth2/callback")
-    public ResponseEntity<String> oauth2Callback(@AuthenticationPrincipal OAuth2User oauthUser, HttpServletResponse response) {
-        if (oauthUser == null) {
-            return new ResponseEntity<>("OAuth2 authentication failed", HttpStatus.UNAUTHORIZED);
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
+        try{
+            userRepository.deleteById(userId);
+            return new ResponseEntity<>("User successfully deleted!", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Unable to delete user", HttpStatus.NOT_FOUND);
         }
-
-        String email = oauthUser.getAttribute("email");
-        String username = oauthUser.getAttribute("name");
-
-        UserEntity user = userRepository.findByEmail(email).orElse(null);
-
-        if (user == null) {
-            // Register new user
-            user = new UserEntity();
-            user.setEmail(email);
-            user.setUsername(username);
-            user.setPassword(""); // No password needed for OAuth users
-
-            Role userRole = roleRepository.findByName("ROLE_USER").orElseThrow();
-            user.setRoles(Collections.singletonList(userRole));
-
-            userRepository.save(user);
-        }
-
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getRoles(), user, null);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = tokenGenerator.generateToken(authentication);
-
-        Cookie cookie = new Cookie("token", token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setDomain("localhost");
-
-        response.addCookie(cookie);
-
-        return new ResponseEntity<>("OAuth2 Login successful", HttpStatus.OK);
     }
-
 }

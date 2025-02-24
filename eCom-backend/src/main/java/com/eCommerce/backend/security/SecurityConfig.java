@@ -22,18 +22,14 @@ public class SecurityConfig {
     private final JwtAuthEntryPoint authEntryPoint;
     private final CustomUserDetailsService userDetailsService;
     private final CorsConfigurationSource corsConfigurationSource;
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
-    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final Oauth2SuccessHandler oauth2SuccessHandler;
 
     @Autowired
-    public SecurityConfig(JwtAuthEntryPoint authEntryPoint, CustomUserDetailsService userDetailsService, CorsConfigurationSource corsConfigurationSource, CustomOAuth2UserService customOAuth2UserService, OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler, OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler) {
+    public SecurityConfig(JwtAuthEntryPoint authEntryPoint, CustomUserDetailsService userDetailsService, CorsConfigurationSource corsConfigurationSource, Oauth2SuccessHandler oAuth2SuccessHandler) {
         this.authEntryPoint = authEntryPoint;
         this.userDetailsService = userDetailsService;
         this.corsConfigurationSource = corsConfigurationSource;
-        this.customOAuth2UserService = customOAuth2UserService;
-        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
-        this.oAuth2AuthenticationFailureHandler = oAuth2AuthenticationFailureHandler;
+        this.oauth2SuccessHandler = oAuth2SuccessHandler;
     }
 
     @Bean
@@ -44,17 +40,17 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login", "/api/auth/register", "api/auth/me").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/auth/register", "api/auth/oauth2/**", "api/auth/me").permitAll()
                         .requestMatchers("/api/auth/users").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .authorizationEndpoint(auth -> auth.baseUri("/oauth2/authorize"))
-                        .redirectionEndpoint(redir -> redir.baseUri("/oauth2/callback/*"))
-                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-                        .successHandler(oAuth2AuthenticationSuccessHandler)
-                        .failureHandler(oAuth2AuthenticationFailureHandler)
-                ).httpBasic(Customizer.withDefaults());
+                        .loginPage("/api/auth/loginGoogle")
+                        .authorizationEndpoint(authz -> authz.baseUri("/api/auth/oauth2/authorization"))
+                        .redirectionEndpoint(redir -> redir.baseUri("/api/auth/oauth2/code/*"))
+                        .successHandler(oauth2SuccessHandler)
+                )
+               .httpBasic(Customizer.withDefaults());
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
