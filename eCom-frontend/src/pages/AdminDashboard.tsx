@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import { getUsers } from "../utils/auth";
 
-import { Divider } from "@mui/material";
+import { Divider, Modal } from "@mui/material";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
@@ -9,8 +9,9 @@ import ProductsTable from "../components/UI/ProductsTable";
 import UsersTable from "../components/UI/UsersTable";
 import { RootState } from "../redux/store";
 import { Product } from "../utils/Models";
-import { UserRep } from "../utils/Types";
+import { FlattenedUserRep, UserRep } from "../utils/Types";
 import { flattenUser } from "../utils/helpers";
+import { EditModal } from "../components/UI/EditModal";
 
 export default function AdminDashboard() {
   const prods: Product[] = [
@@ -135,23 +136,31 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const [panel, setPanel] = useState("stats");
   const [products] = useState(prods);
-  const [data, setData] = useState([]);
-  const user = useSelector((state: RootState) => state.user.user);
+  const [users, setUsers] = useState<FlattenedUserRep[]>([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedEdit, setSelectedEdit] = useState<FlattenedUserRep | null>(
+    null,
+  );
+  const user = useSelector((state: RootState) => state?.user?.user);
+
+  const fetchData = async () => {
+    try {
+      const response = await getUsers();
+      const users = response.data.data.map((user: UserRep) =>
+        flattenUser(user),
+      );
+      setUsers(users);
+    } catch (error) {
+      console.error("Error fetching users", error);
+      toast.error("Error fetching users");
+    }
+  };
+
+  function handleUpdateUser() {
+    fetchData();
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getUsers();
-        const users = response.data.data.map((user: UserRep) =>
-          flattenUser(user),
-        );
-        setData(users);
-      } catch (error) {
-        console.error("Error fetching users", error);
-        toast.error("Error fetching users");
-      }
-    };
-
     fetchData();
   }, []);
 
@@ -161,6 +170,14 @@ export default function AdminDashboard() {
       navigate("/");
     }
   }, [navigate, user?.role]);
+
+  function handleOpenModal() {
+    setOpenModal(true);
+  }
+
+  function handleCloseModal() {
+    setOpenModal(false);
+  }
 
   return (
     <div className="mx-auto min-h-screen max-w-[1240px] px-4">
@@ -190,10 +207,24 @@ export default function AdminDashboard() {
           </div>
           <div className="w-full bg-[#f0f0f0] p-10">
             {panel === "products" && <ProductsTable products={products} />}
-            {panel === "users" && <UsersTable data={data} />}
+            {panel === "users" && (
+              <UsersTable
+                data={users}
+                handleOpenModal={handleOpenModal}
+                setSelectedEdit={setSelectedEdit}
+              />
+            )}
           </div>
         </div>
       </div>
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <EditModal user={selectedEdit} handleUpdateUser={handleUpdateUser} />
+      </Modal>
     </div>
   );
 }

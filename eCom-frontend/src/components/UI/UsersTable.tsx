@@ -2,10 +2,18 @@ import { Button, IconButton, Paper } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
-import { UserRep } from "../../utils/Types";
+import { FlattenedUserRep } from "../../utils/Types";
 import { deleteUser } from "../../utils/auth";
 
-export default function UsersTable({ data }: { data: UserRep[] }) {
+export default function UsersTable({
+  data,
+  handleOpenModal,
+  setSelectedEdit,
+}: {
+  data: FlattenedUserRep[] | [];
+  handleOpenModal: () => void;
+  setSelectedEdit: (user: FlattenedUserRep) => void;
+}) {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [rows, setRows] = useState(data);
 
@@ -32,8 +40,10 @@ export default function UsersTable({ data }: { data: UserRep[] }) {
         >
           <IconButton
             onClick={(event) => {
-              console.log("Edit", params.row.id);
-              handleDelete(params.row.id);
+              // console.log("Edit", params.row.id);
+              // console.log("Edit", params.row);
+              setSelectedEdit(params.row);
+              handleOpenModal();
               event.stopPropagation();
             }}
           >
@@ -44,10 +54,12 @@ export default function UsersTable({ data }: { data: UserRep[] }) {
     },
   ];
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (ids: number[]) => {
     try {
-      deleteUser(id);
-      setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+      deleteUser(ids);
+      setRows((prevRows) =>
+        prevRows.filter((row) => !selectedRows.includes(row.id)),
+      );
     } catch (error) {
       console.error(error);
     }
@@ -76,11 +88,7 @@ export default function UsersTable({ data }: { data: UserRep[] }) {
         color="error"
         sx={{ width: 200, marginTop: 2 }}
         disabled={selectedRows.length === 0}
-        onClick={() =>
-          setRows((prevRows) =>
-            prevRows.filter((row) => !selectedRows.includes(row.id)),
-          )
-        }
+        onClick={() => handleDelete(selectedRows)}
       >
         Delete Selected
       </Button>

@@ -36,6 +36,7 @@ public class JwtTokenGenerator {
                 .toList();
 
         Date expireDate = new Date(currDate.getTime() + SecurityConstants.JWT_EXPIRATION);
+
         return Jwts.builder()
                 .setSubject(email)
                 .claim("roles", roles)

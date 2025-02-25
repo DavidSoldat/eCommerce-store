@@ -40,8 +40,8 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login", "/api/auth/register", "api/auth/oauth2/**", "api/auth/me").permitAll()
-                        .requestMatchers("/api/auth/users").hasRole("ADMIN")
+                        .requestMatchers("/api/auth/login", "/api/auth/register", "/api/auth/oauth2/**", "/api/auth/me").permitAll()
+                        .requestMatchers("/api/auth/users", "/api/auth/users/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2

@@ -1,5 +1,6 @@
 import axios from "axios";
 import toast from "react-hot-toast";
+import { FlattenedUserRep } from "./Types";
 
 const api = axios.create({
   baseURL: "http://localhost:8080/api/auth",
@@ -51,10 +52,20 @@ export const getUsers = async () => {
   return await api.get("/users", { withCredentials: true });
 };
 
-export const deleteUser = async (userId: number) => {
+export const deleteUser = async (users: number[]) => {
   try {
-    const response = await api.delete(`/delete/${userId}`);
+    const response = await api.delete(`/users/delete/${users}`);
     return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const editUser = async (userData: FlattenedUserRep) => {
+  const userId = userData.id;
+  try {
+    console.log("User id: ", userId);
+    console.log("User: ", userData);
   } catch (error) {
     console.error(error);
   }

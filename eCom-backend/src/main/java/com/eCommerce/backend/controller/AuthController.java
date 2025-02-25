@@ -9,12 +9,14 @@ import com.eCommerce.backend.model.UserEntity;
 import com.eCommerce.backend.repository.RoleRepository;
 import com.eCommerce.backend.repository.UserRepository;
 import com.eCommerce.backend.security.JwtTokenGenerator;
+import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,11 +26,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.List;
+import java.lang.reflect.Field;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -107,7 +110,7 @@ public class AuthController {
     public ResponseEntity<UsersResponseDto> getAllUsers() {
         List<UserEntity> users = userRepository.findAll();
         List<UserInfoDto> userInfoDtos = users.stream()
-                .map(user -> new UserInfoDto(user.getId(),user.getEmail(), user.getUsername(), user.getRoles()))
+                    .map(user -> new UserInfoDto(user.getId(),user.getUsername(), user.getEmail(), user.getRoles()))
                 .toList();
         return new ResponseEntity<>(
                 new UsersResponseDto("Users retrieved successfully!", true, userInfoDtos),
@@ -134,13 +137,33 @@ public class AuthController {
         return new ResponseEntity<>(userInfo, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
+    @DeleteMapping("/users/{userIds}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long[] userIds) {
         try{
-            userRepository.deleteById(userId);
+            userRepository.deleteAllById(Arrays.asList(userIds));
             return new ResponseEntity<>("User successfully deleted!", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Unable to delete user", HttpStatus.NOT_FOUND);
         }
     }
+
+    @PatchMapping("/users/{userId}")
+    public ResponseEntity<UserInfoDto> editUser(@PathVariable Long userId, @RequestBody UserInfoDto userInfoDto) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (userInfoDto.getUsername() != null) {
+            user.setUsername(userInfoDto.getUsername());
+        }
+        if (userInfoDto.getEmail() != null) {
+            user.setEmail(userInfoDto.getEmail());
+        }
+        if (userInfoDto.getRoles() != null) {
+            user.setRoles(userInfoDto.getRoles());
+        }
+        userRepository.save(user);
+        
+        return new ResponseEntity<>(new UserInfoDto(Optional.of(user)), HttpStatus.OK);
+    }
+
 }
