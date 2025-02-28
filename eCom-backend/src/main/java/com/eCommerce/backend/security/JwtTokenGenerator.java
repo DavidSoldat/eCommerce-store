@@ -31,15 +31,16 @@ public class JwtTokenGenerator {
         String email = authentication.getName();
         Date currDate = new Date();
 
-        List<String> roles = authentication.getAuthorities().stream()
+        String role = authentication.getAuthorities().stream()
+                .findFirst() // Get first role (since it's a single role now)
                 .map(GrantedAuthority::getAuthority)
-                .toList();
+                .orElse("ROLE_USER"); // Default role if none found
 
         Date expireDate = new Date(currDate.getTime() + SecurityConstants.JWT_EXPIRATION);
 
         return Jwts.builder()
                 .setSubject(email)
-                .claim("roles", roles)
+                .claim("role", role)
                 .setIssuedAt(currDate)
                 .setExpiration(expireDate)
                 .signWith(key, SignatureAlgorithm.HS256)

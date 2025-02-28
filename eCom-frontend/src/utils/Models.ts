@@ -3,8 +3,15 @@ export interface UserEntity {
   username: string;
   email: string;
   password: string;
-  roles: string;
+  role: string;
   reviews: Review[] | [];
+}
+
+export interface UserInfo {
+  id: number;
+  username: string;
+  email: string;
+  role: string;
 }
 
 export interface Product {

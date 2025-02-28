@@ -3,8 +3,9 @@ import { Box } from "@mui/material";
 import { forwardRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FlattenedUserRep } from "../../utils/Types";
+import { FlattenedUserRep, UserRep } from "../../utils/Types";
 import { editUserSchema } from "../../utils/zodSchemas";
+import { editUser } from "../../utils/auth";
 
 const style = {
   position: "absolute",
@@ -20,13 +21,7 @@ const style = {
 };
 
 export const EditModal = forwardRef(
-  (
-    {
-      user,
-      handleUpdateUser,
-    }: { user: FlattenedUserRep | null; handleUpdateUser: () => void },
-    ref,
-  ) => {
+  ({ user }: { user: UserRep | null }, ref) => {
     type FormData = z.infer<typeof editUserSchema>;
     const {
       register,
@@ -39,7 +34,7 @@ export const EditModal = forwardRef(
 
     function onSubmit(data: FormData) {
       console.log("submitted data", data);
-      handleUpdateUser();
+      editUser(data);
     }
 
     return (
@@ -57,6 +52,7 @@ export const EditModal = forwardRef(
                 <input
                   {...register("email")}
                   type="email"
+                  disabled={true}
                   id="email"
                   placeholder="Enter email"
                   autoComplete="off"

@@ -2,24 +2,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { z } from "zod";
-import { setUser } from "../../redux/userSlice";
-import { login, loginGoogle } from "../../utils/auth";
-import { UserRedux } from "../../utils/Types";
+import { loginGoogle, loginUser } from "../../utils/auth";
 import { loginSchema } from "../../utils/zodSchemas";
+import { setUser } from "../../redux/userSlice";
+import { RootState } from "../../redux/store";
+import { FaGoogle } from "react-icons/fa6";
 
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const userLocal = localStorage.getItem("user");
+  const user = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
-    if (userLocal) {
+    if (user.email !== null) {
       navigate("/");
     }
-  }, [navigate, userLocal]);
+  }, [navigate, user]);
 
   type FormData = z.infer<typeof loginSchema>;
   const {
@@ -32,16 +33,20 @@ export default function Login() {
 
   const onSubmit = async (data: FormData) => {
     const { password, email } = data;
-    const { email: userEmail, username, roles } = await login(email, password);
-    const user: UserRedux = {
-      username: username,
-      email: userEmail,
-      role: roles[0].name,
-    };
-    localStorage.setItem("user", JSON.stringify(user));
-    dispatch(setUser(user));
-    navigate("/");
-    toast.success("Login successful!");
+    try {
+      const userData = await loginUser(email, password);
+
+      if (userData) {
+        toast.success("Login successful!");
+        dispatch(setUser(userData));
+        navigate("/");
+      } else {
+        throw new Error("Login failed");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred during login.");
+    }
   };
 
   const handleGoogleLogin = async () => {
@@ -98,11 +103,12 @@ export default function Login() {
         Login
       </button>
       <button
-        className="mx-auto w-full rounded-60 border px-4 py-2 hover:bg-blue-50"
+        className="mx-auto flex w-full items-center justify-center gap-3 rounded-60 border px-4 py-2 hover:bg-blue-50"
         type="button"
         onClick={handleGoogleLogin}
       >
-        Login with Google
+        <FaGoogle />
+        Continue with Google
       </button>
     </form>
   );

@@ -58,34 +58,26 @@ public class Oauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
 
         Optional<UserEntity> userOptional = userRepository.findByEmail(email);
+
         if (userOptional.isEmpty()) {
             UserEntity newUser = new UserEntity();
             newUser.setEmail(email);
             newUser.setUsername(username);
-            Role roles = roleRepository.findByName("ROLE_USER").get();
-            newUser.setRoles(Collections.singletonList(roles));
+            Role role = roleRepository.findByName("ROLE_USER").get();
+            newUser.setRole(role);
 
             userRepository.save(newUser);
         }
 
-        // Fetch user again to ensure we have the latest data
         UserEntity user = userRepository.findByEmail(email).get();
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getName());
 
-        // Create authorities from role names without accessing the reviews
-        List<SimpleGrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
-
-        // Create a clean authentication token with just the needed information
-        // We use email as the principal, not the full UserEntity
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                email, null, authorities
+                email, null, List.of(authority)
         );
 
-        // Generate JWT from this clean token
         String jwt = jwtTokenGenerator.generateToken(authToken);
 
-        // Set cookie and redirect
         Cookie cookie = new Cookie("token", jwt);
         cookie.setHttpOnly(true);
         cookie.setPath("/");

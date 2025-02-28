@@ -16,7 +16,6 @@ export default function OAuthHandler() {
         if (!user) throw new Error("User not found");
         console.log("oauth user", user);
         dispatch(setUser(user));
-        localStorage.setItem("user", JSON.stringify(user));
         navigate("/");
         toast.success("OAuth login successful!");
       } catch (error) {

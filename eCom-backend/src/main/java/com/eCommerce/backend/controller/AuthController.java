@@ -1,9 +1,6 @@
 package com.eCommerce.backend.controller;
 
-import com.eCommerce.backend.Dto.LoginDto;
-import com.eCommerce.backend.Dto.RegisterDto;
-import com.eCommerce.backend.Dto.UserInfoDto;
-import com.eCommerce.backend.Dto.UsersResponseDto;
+import com.eCommerce.backend.Dto.*;
 import com.eCommerce.backend.model.Role;
 import com.eCommerce.backend.model.UserEntity;
 import com.eCommerce.backend.repository.RoleRepository;
@@ -18,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -68,8 +67,8 @@ public class AuthController {
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
-        Role roles = roleRepository.findByName("ROLE_USER").get();
-        user.setRoles(Collections.singletonList(roles));
+        Role role = roleRepository.findByName("ROLE_USER").get();
+        user.setRole(role);
 
         userRepository.save(user);
 
@@ -91,11 +90,11 @@ public class AuthController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = tokenGenerator.generateToken(authentication);
 
-            // Store JWT in cookie
             Cookie cookie = new Cookie("token", token);
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
             cookie.setPath("/");
+//            cookie.setMaxAge();
             cookie.setDomain("localhost");
 
             response.addCookie(cookie);
@@ -109,17 +108,19 @@ public class AuthController {
     @GetMapping("/users")
     public ResponseEntity<UsersResponseDto> getAllUsers() {
         List<UserEntity> users = userRepository.findAll();
-        List<UserInfoDto> userInfoDtos = users.stream()
-                    .map(user -> new UserInfoDto(user.getId(),user.getUsername(), user.getEmail(), user.getRoles()))
+        List<UserInfoDto> userInfoDto = users.stream()
+                    .map(user -> new UserInfoDto(user))
                 .toList();
         return new ResponseEntity<>(
-                new UsersResponseDto("Users retrieved successfully!", true, userInfoDtos),
+                new UsersResponseDto("Users retrieved successfully!", true, userInfoDto),
                 HttpStatus.OK
         );
     }
 
     @GetMapping("/me")
     public ResponseEntity<?> getUserInfo(@CookieValue(name = "token", required = false) String token) {
+
+        log.info(token);
         if (token == null || !tokenGenerator.validateToken(token)) {
             return new ResponseEntity<>("Invalid or missing token", HttpStatus.UNAUTHORIZED);
         }
@@ -131,9 +132,9 @@ public class AuthController {
         if (user == null) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
+        log.info(user.toString());
 
-        UserInfoDto userInfo = new UserInfoDto(user.getId(), user.getUsername(), user.getEmail(), user.getRoles());
-
+        UserInfoDto userInfo = new UserInfoDto(user);
         return new ResponseEntity<>(userInfo, HttpStatus.OK);
     }
 
@@ -148,22 +149,19 @@ public class AuthController {
     }
 
     @PatchMapping("/users/{userId}")
-    public ResponseEntity<UserInfoDto> editUser(@PathVariable Long userId, @RequestBody UserInfoDto userInfoDto) {
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<UserInfoDto> editUser(@PathVariable Long userId, @RequestBody EditUserDto editUserDto) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (userInfoDto.getUsername() != null) {
-            user.setUsername(userInfoDto.getUsername());
-        }
-        if (userInfoDto.getEmail() != null) {
-            user.setEmail(userInfoDto.getEmail());
-        }
-        if (userInfoDto.getRoles() != null) {
-            user.setRoles(userInfoDto.getRoles());
-        }
-        userRepository.save(user);
+        user.setUsername(editUserDto.getUsername());
+        Role role = roleRepository.findByName(editUserDto.getRole())
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+        user.setRole(role);
+
+
         
-        return new ResponseEntity<>(new UserInfoDto(Optional.of(user)), HttpStatus.OK);
+        return new ResponseEntity<>(new UserInfoDto(user), HttpStatus.OK);
     }
 
 }

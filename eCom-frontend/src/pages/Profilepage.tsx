@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { RootState } from "../redux/store";
 
 export default function Profilepage() {
-  const user = useSelector((state: RootState) => state.user.user);
+  const user = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
 
   const role = user?.role === "ROLE_ADMIN";

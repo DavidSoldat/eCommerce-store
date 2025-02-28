@@ -18,16 +18,6 @@ export interface RegisterResponse {
   status: number;
 }
 
-export interface UserRedux {
-  username: string;
-  email: string;
-  role: string;
-}
-
-export interface UserState {
-  user: UserRedux | null;
-}
-
 export interface Token {
   token: string | null;
 }
@@ -41,21 +31,4 @@ export interface CountUpProps {
   start?: number;
 }
 
-export interface RolesRep {
-  id: number;
-  name: string;
-}
 
-export interface UserRep {
-  id: number;
-  email: string;
-  username: string;
-  roles: RolesRep[];
-}
-
-export interface FlattenedUserRep {
-  id: number;
-  email: string;
-  username: string;
-  roles: string;
-}

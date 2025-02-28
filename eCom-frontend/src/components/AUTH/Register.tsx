@@ -1,16 +1,20 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { z } from "zod";
 
 import { useEffect } from "react";
 import toast from "react-hot-toast";
+import { FaGoogle } from "react-icons/fa6";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { setUser } from "../../redux/userSlice";
+import { loginGoogle, loginUser, registerUser } from "../../utils/auth";
 import { registerSchema } from "../../utils/zodSchemas";
-import { RegisterResponse } from "../../utils/Types";
 
 export default function Register() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   type FormData = z.infer<typeof registerSchema>;
   const {
     register,
@@ -20,54 +24,54 @@ export default function Register() {
     resolver: zodResolver(registerSchema),
   });
 
-  const user = localStorage.getItem("user");
+  const user = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
-    if (user) {
+    if (user.email !== null) {
       navigate("/");
     }
   }, [navigate, user]);
 
-  async function registerUser(
-    email: string,
-    password: string,
-    confirmPassword: string,
-  ) {
-    try {
-      const response: RegisterResponse = await axios.post(
-        "http://localhost:8080/api/auth/register",
-        {
-          email,
-          password,
-          confirmPassword,
-        },
-      );
-
-      console.log("this is response: " + response);
-
-      if (response.status >= 200 && response.status < 300) {
-        console.log(response.data);
-        toast.success("User registered successfully!");
-        navigate("/login");
-      } else {
-        throw new Error(response.data || "Registration failed");
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error(
-          "Error during registering: ",
-          error.response?.data || error.message,
-        );
-        toast.error(error.response?.data);
-      } else {
-        console.error("Error during registering", error);
-      }
-    }
-  }
-
   const onSubmit = async (data: FormData) => {
     const { email, password, confirmPassword } = data;
-    registerUser(email, password, confirmPassword);
+
+    try {
+      const registerResponse = await registerUser(
+        email,
+        password,
+        confirmPassword,
+      );
+
+      if (registerResponse) {
+        toast.success("User registered successfully!");
+
+        console.log("email and password: ", email, password);
+        const userData = await loginUser(email, password);
+
+        if (userData) {
+          toast.success("Logged in successfully!");
+          dispatch(setUser(userData));
+
+          navigate("/");
+        } else {
+          throw new Error("Login failed after registration");
+        }
+      } else {
+        throw new Error(registerResponse?.data || "Registration failed");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred during registration or login.");
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      loginGoogle();
+    } catch (error) {
+      toast.error("Failed to initiate Google login.");
+      console.error(error);
+    }
   };
 
   return (
@@ -135,6 +139,14 @@ export default function Register() {
         className="max-w-mx-auto w-full rounded-60 bg-black px-4 py-2 text-white hover:bg-gray-800"
       >
         Register
+      </button>
+      <button
+        className="mx-auto flex w-full items-center justify-center gap-3 rounded-60 border px-4 py-2 hover:bg-blue-50"
+        type="button"
+        onClick={handleGoogleLogin}
+      >
+        <FaGoogle />
+        Continue with Google
       </button>
     </form>
   );

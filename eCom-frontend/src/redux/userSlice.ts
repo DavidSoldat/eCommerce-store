@@ -1,23 +1,38 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserRedux, UserState } from "../utils/Types";
 
-const initialState: UserState = {
-  user: JSON.parse(localStorage.getItem("user") || "null"),
+interface UserState {
+  id: number | null;
+  email: string | null;
+  username: string | null;
+  role: string | null;
+}
+
+const initialState: UserState | null = {
+  id: null,
+  email: null,
+  username: null,
+  role: null,
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<UserRedux | null>) => {
-      state.user = action.payload;
+    setUser: (state, action: PayloadAction<UserState>) => {
+      state.id = action.payload.id;
+      state.email = action.payload.email;
+      state.username = action.payload.username;
+      state.role = action.payload.role;
     },
-    removeUser: (state) => {
-      state.user = null;
-      localStorage.removeItem("user");
+    logout: (state) => {
+      state.id = null;
+      state.email = null;
+      state.username = null;
+      state.role = null;
     },
   },
 });
 
-export const { setUser, removeUser } = userSlice.actions;
+export const { setUser, logout } = userSlice.actions;
+
 export default userSlice.reducer;

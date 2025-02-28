@@ -5,13 +5,12 @@ import { Divider, Modal } from "@mui/material";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
+import { EditModal } from "../components/UI/EditModal";
 import ProductsTable from "../components/UI/ProductsTable";
 import UsersTable from "../components/UI/UsersTable";
 import { RootState } from "../redux/store";
-import { Product } from "../utils/Models";
-import { FlattenedUserRep, UserRep } from "../utils/Types";
+import { Product, UserInfo } from "../utils/Models";
 import { flattenUser } from "../utils/helpers";
-import { EditModal } from "../components/UI/EditModal";
 
 export default function AdminDashboard() {
   const prods: Product[] = [
@@ -136,17 +135,15 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const [panel, setPanel] = useState("stats");
   const [products] = useState(prods);
-  const [users, setUsers] = useState<FlattenedUserRep[]>([]);
+  const [users, setUsers] = useState<UserInfo[]>([]);
   const [openModal, setOpenModal] = useState(false);
-  const [selectedEdit, setSelectedEdit] = useState<FlattenedUserRep | null>(
-    null,
-  );
-  const user = useSelector((state: RootState) => state?.user?.user);
+  const [selectedEdit, setSelectedEdit] = useState<UserInfo | null>(null);
+  const user = useSelector((state: RootState) => state?.user);
 
   const fetchData = async () => {
     try {
       const response = await getUsers();
-      const users = response.data.data.map((user: UserRep) =>
+      const users = response.data.data.map((user: UserInfo) =>
         flattenUser(user),
       );
       setUsers(users);
@@ -155,10 +152,6 @@ export default function AdminDashboard() {
       toast.error("Error fetching users");
     }
   };
-
-  function handleUpdateUser() {
-    fetchData();
-  }
 
   useEffect(() => {
     fetchData();
@@ -223,7 +216,7 @@ export default function AdminDashboard() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <EditModal user={selectedEdit} handleUpdateUser={handleUpdateUser} />
+        <EditModal user={selectedEdit} />
       </Modal>
     </div>
   );

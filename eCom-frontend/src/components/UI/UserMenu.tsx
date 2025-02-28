@@ -12,13 +12,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router";
 import { RootState } from "../../redux/store";
 import { removeToken } from "../../redux/tokenSlice";
-import { removeUser } from "../../redux/userSlice";
+import { logout } from "../../redux/userSlice";
 
 export default function UserMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.user.user);
+  const user = useSelector((state: RootState) => state.user);
+  const logedOn = user?.email;
 
   const dispatch = useDispatch();
   const isAdmin = user?.role === "ROLE_ADMIN";
@@ -32,9 +33,8 @@ export default function UserMenu() {
   };
 
   const handleCloseLogout = () => {
-    localStorage.removeItem("user");
     dispatch(removeToken());
-    dispatch(removeUser());
+    dispatch(logout());
     navigate("/login");
     setAnchorEl(null);
   };
@@ -50,7 +50,7 @@ export default function UserMenu() {
 
   return (
     <div>
-      {user ? (
+      {logedOn ? (
         <div>
           <Button
             sx={{ minWidth: 0, padding: 0, margin: 0, color: "black" }}
@@ -88,6 +88,7 @@ export default function UserMenu() {
                 {user?.username || "Velura user"}
               </MenuItem>
             )}
+
             <MenuItem
               onClick={handleCloseLogout}
               className="flex justify-center gap-2"

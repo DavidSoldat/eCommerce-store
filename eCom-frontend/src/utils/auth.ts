@@ -1,21 +1,24 @@
 import axios from "axios";
 import toast from "react-hot-toast";
-import { FlattenedUserRep } from "./Types";
+import { UserInfo } from "./Models";
 
 const api = axios.create({
   baseURL: "http://localhost:8080/api/auth",
   withCredentials: true,
 });
 
-export const login = async (email: string, password: string) => {
+export const loginUser = async (email: string, password: string) => {
   try {
-    await api.post("/login", {
+    const loginResponse = await api.post("/login", {
       email,
       password,
     });
 
-    console.log("Login successful");
-    return getUserInfo();
+    if (loginResponse.status >= 200 && loginResponse.status < 300) {
+      return await getUserInfo();
+    } else {
+      throw new Error("Login failed");
+    }
   } catch (error) {
     if (axios.isAxiosError(error)) {
       toast.error(error.response?.data || error.message);
@@ -30,9 +33,42 @@ export const login = async (email: string, password: string) => {
   }
 };
 
+export const registerUser = async (
+  email: string,
+  password: string,
+  confirmPassword: string,
+) => {
+  try {
+    const response = await api.post("/register", {
+      email,
+      password,
+      confirmPassword,
+    });
+
+    if (response.status >= 200 && response.status < 300) {
+      return await getUserInfo();
+    } else {
+      throw new Error(response.data || "Registration failed");
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      toast.error(error.response?.data || error.message);
+      console.error(
+        "Error during registration: ",
+        error.response?.data || error.message,
+      );
+    } else {
+      console.error("Error during registration", error);
+      toast.error("Error during registration");
+    }
+  }
+};
+
 export const getUserInfo = async () => {
   try {
-    const response = await api.get("http://localhost:8080/api/auth/me");
+    const response = await api.get("http://localhost:8080/api/auth/me", {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -61,11 +97,12 @@ export const deleteUser = async (users: number[]) => {
   }
 };
 
-export const editUser = async (userData: FlattenedUserRep) => {
+export const editUser = async (userData: UserInfo) => {
   const userId = userData.id;
   try {
-    console.log("User id: ", userId);
     console.log("User: ", userData);
+    const response = api.patch(`/users/${userId}`, userData);
+    console.log(response);
   } catch (error) {
     console.error(error);
   }
