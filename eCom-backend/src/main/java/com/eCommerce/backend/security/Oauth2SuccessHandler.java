@@ -80,7 +80,10 @@ public class Oauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         Cookie cookie = new Cookie("token", jwt);
         cookie.setHttpOnly(true);
+        cookie.setSecure(true);
         cookie.setPath("/");
+        cookie.setMaxAge(SecurityConstants.TOKEN_MAXAGE);
+        cookie.setDomain("localhost");
 
         response.addCookie(cookie);
 

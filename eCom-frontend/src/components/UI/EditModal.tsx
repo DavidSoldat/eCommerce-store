@@ -3,9 +3,10 @@ import { Box } from "@mui/material";
 import { forwardRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FlattenedUserRep, UserRep } from "../../utils/Types";
-import { editUserSchema } from "../../utils/zodSchemas";
+
 import { editUser } from "../../utils/auth";
+import { UserInfo } from "../../utils/Models";
+import { editUserSchema } from "../../utils/zodSchemas";
 
 const style = {
   position: "absolute",
@@ -21,7 +22,10 @@ const style = {
 };
 
 export const EditModal = forwardRef(
-  ({ user }: { user: UserRep | null }, ref) => {
+  (
+    { user, handleClose }: { user: UserInfo | null; handleClose: () => void },
+    ref,
+  ) => {
     type FormData = z.infer<typeof editUserSchema>;
     const {
       register,
@@ -34,6 +38,7 @@ export const EditModal = forwardRef(
 
     function onSubmit(data: FormData) {
       console.log("submitted data", data);
+      handleClose();
       editUser(data);
     }
 
@@ -89,17 +94,17 @@ export const EditModal = forwardRef(
               <div className="flex items-center gap-3">
                 <label htmlFor="roles">Roles</label>
                 <select
-                  {...register("roles")}
+                  {...register("role")}
                   id="roles"
-                  className={`flex-1 rounded-13 border px-3 py-1 ${errors.roles ? "border-red-500 text-sm" : ""}`}
+                  className={`flex-1 rounded-13 border px-3 py-1 ${errors.role ? "border-red-500 text-sm" : ""}`}
                 >
                   <option value="ROLE_USER">User</option>
                   <option value="ROLE_ADMIN">Admin</option>
                 </select>
               </div>
-              {errors.roles && (
+              {errors.role && (
                 <span className="self-end text-xs text-red-500">
-                  {errors.roles.message}
+                  {errors.role.message}
                 </span>
               )}
             </div>

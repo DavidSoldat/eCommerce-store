@@ -101,7 +101,7 @@ export const editUser = async (userData: UserInfo) => {
   const userId = userData.id;
   try {
     console.log("User: ", userData);
-    const response = api.patch(`/users/${userId}`, userData);
+    const response = await api.patch(`/users/${userId}`, userData);
     console.log(response);
   } catch (error) {
     console.error(error);
@@ -111,4 +111,13 @@ export const editUser = async (userData: UserInfo) => {
 export function loginGoogle() {
   window.location.href =
     "http://localhost:8080/api/auth/oauth2/authorization/google";
+}
+
+export async function logoutUser() {
+  try {
+    const response = await api.post("/logout");
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
 }

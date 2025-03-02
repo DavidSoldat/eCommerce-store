@@ -11,8 +11,8 @@ import { RiAdminLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router";
 import { RootState } from "../../redux/store";
-import { removeToken } from "../../redux/tokenSlice";
 import { logout } from "../../redux/userSlice";
+import { logoutUser } from "../../utils/auth";
 
 export default function UserMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -32,8 +32,9 @@ export default function UserMenu() {
     setAnchorEl(null);
   };
 
-  const handleCloseLogout = () => {
-    dispatch(removeToken());
+  const handleCloseLogout = async () => {
+    const response = await logoutUser();
+    console.log(response);
     dispatch(logout());
     navigate("/login");
     setAnchorEl(null);

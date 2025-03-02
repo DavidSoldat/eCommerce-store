@@ -2,17 +2,17 @@ import { Button, IconButton, Paper } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
-import { UserRep } from "../../utils/Types";
 import { deleteUser } from "../../utils/auth";
+import { UserInfo } from "../../utils/Models";
 
 export default function UsersTable({
   data,
   handleOpenModal,
   setSelectedEdit,
 }: {
-  data: UserRep[] | [];
+  data: UserInfo[] | [];
   handleOpenModal: () => void;
-  setSelectedEdit: (user: UserRep) => void;
+  setSelectedEdit: (user: UserInfo) => void;
 }) {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [rows, setRows] = useState(data);
@@ -22,7 +22,7 @@ export default function UsersTable({
     { field: "username", headerName: "Username", flex: 1 },
     { field: "email", headerName: "Email", flex: 1 },
     {
-      field: "roles",
+      field: "role",
       headerName: "User role",
       flex: 1,
     },

@@ -14,7 +14,6 @@ export default function OAuthHandler() {
       try {
         const user = await getUserInfo();
         if (!user) throw new Error("User not found");
-        console.log("oauth user", user);
         dispatch(setUser(user));
         navigate("/");
         toast.success("OAuth login successful!");

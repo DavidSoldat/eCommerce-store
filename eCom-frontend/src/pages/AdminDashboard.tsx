@@ -10,7 +10,6 @@ import ProductsTable from "../components/UI/ProductsTable";
 import UsersTable from "../components/UI/UsersTable";
 import { RootState } from "../redux/store";
 import { Product, UserInfo } from "../utils/Models";
-import { flattenUser } from "../utils/helpers";
 
 export default function AdminDashboard() {
   const prods: Product[] = [
@@ -138,14 +137,13 @@ export default function AdminDashboard() {
   const [users, setUsers] = useState<UserInfo[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [selectedEdit, setSelectedEdit] = useState<UserInfo | null>(null);
+
   const user = useSelector((state: RootState) => state?.user);
 
   const fetchData = async () => {
     try {
       const response = await getUsers();
-      const users = response.data.data.map((user: UserInfo) =>
-        flattenUser(user),
-      );
+      const users = response.data.data;
       setUsers(users);
     } catch (error) {
       console.error("Error fetching users", error);
@@ -216,7 +214,7 @@ export default function AdminDashboard() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <EditModal user={selectedEdit} />
+        <EditModal user={selectedEdit} handleClose={handleCloseModal} />
       </Modal>
     </div>
   );

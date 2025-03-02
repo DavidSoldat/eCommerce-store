@@ -1,31 +1,26 @@
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet } from "react-router";
 import { RootState } from "../../redux/store";
+import { setUser } from "../../redux/userSlice";
+import { getUserInfo } from "../../utils/auth";
 import Footer from "../HOME/Footer";
 import Navi from "../HOME/Navi";
-import { getUserInfo } from "../../utils/auth";
-import { setUser } from "../../redux/userSlice";
-import { useEffect } from "react";
 
 export default function Layout() {
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.user);
 
-  const verifyUser = async () => {
-    try {
-      const response = await getUserInfo();
-      console.log(response);
-      if (response.data) {
-        dispatch(setUser(response.data));
-      }
-    } catch (error) {
-      console.error("Error verifying user", error);
-    }
-  };
-
   useEffect(() => {
-    verifyUser();
+    const fetchUserInfo = async () => {
+      const userData = await getUserInfo();
+      if (userData) {
+        dispatch(setUser(userData)); // Update Redux store with user data
+      }
+    };
+
+    fetchUserInfo();
   }, [dispatch]);
 
   return (

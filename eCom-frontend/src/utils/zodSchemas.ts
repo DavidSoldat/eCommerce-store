@@ -27,5 +27,5 @@ export const editUserSchema = z.object({
   id: z.number().nonnegative(),
   email: z.string().email("Invalid email").nonempty("Email is required"),
   username: z.string().nonempty("Username is required"),
-  roles: z.array(z.string()).nonempty("Roles are required"),
+  role: z.string().nonempty("Role is required"),
 });

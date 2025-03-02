@@ -6,9 +6,11 @@ import com.eCommerce.backend.model.UserEntity;
 import com.eCommerce.backend.repository.RoleRepository;
 import com.eCommerce.backend.repository.UserRepository;
 import com.eCommerce.backend.security.JwtTokenGenerator;
+import com.eCommerce.backend.security.SecurityConstants;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,11 +92,12 @@ public class AuthController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = tokenGenerator.generateToken(authentication);
 
+
             Cookie cookie = new Cookie("token", token);
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
             cookie.setPath("/");
-//            cookie.setMaxAge();
+            cookie.setMaxAge(SecurityConstants.TOKEN_MAXAGE);
             cookie.setDomain("localhost");
 
             response.addCookie(cookie);
@@ -103,6 +106,18 @@ public class AuthController {
         } catch (BadCredentialsException e) {
             return new ResponseEntity<>("Invalid email or password", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("token", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok().body("Logged out successfully");
     }
 
     @GetMapping("/users")
@@ -120,7 +135,6 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<?> getUserInfo(@CookieValue(name = "token", required = false) String token) {
 
-        log.info(token);
         if (token == null || !tokenGenerator.validateToken(token)) {
             return new ResponseEntity<>("Invalid or missing token", HttpStatus.UNAUTHORIZED);
         }
@@ -132,7 +146,6 @@ public class AuthController {
         if (user == null) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
-        log.info(user.toString());
 
         UserInfoDto userInfo = new UserInfoDto(user);
         return new ResponseEntity<>(userInfo, HttpStatus.OK);
@@ -151,17 +164,20 @@ public class AuthController {
     @PatchMapping("/users/{userId}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<UserInfoDto> editUser(@PathVariable Long userId, @RequestBody EditUserDto editUserDto) {
+
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+        if (editUserDto.getUsername() != null) {
+            user.setUsername(editUserDto.getUsername());
+        }
 
-        user.setUsername(editUserDto.getUsername());
-        Role role = roleRepository.findByName(editUserDto.getRole())
-                .orElseThrow(() -> new RuntimeException("Role not found"));
-        user.setRole(role);
+        if (editUserDto.getRole() != null) {
+            Role role = roleRepository.findByName(editUserDto.getRole())
+                    .orElseThrow(() -> new RuntimeException("Role not found"));
+            user.setRole(role);
+        }
+        UserEntity updatedUser = userRepository.save(user);
 
-
-        
-        return new ResponseEntity<>(new UserInfoDto(user), HttpStatus.OK);
+        return new ResponseEntity<>(new UserInfoDto(updatedUser), HttpStatus.OK);
     }
-
 }
