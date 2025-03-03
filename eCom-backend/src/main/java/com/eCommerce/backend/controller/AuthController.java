@@ -1,38 +1,31 @@
 package com.eCommerce.backend.controller;
 
-import com.eCommerce.backend.Dto.*;
+import com.eCommerce.backend.dto.*;
 import com.eCommerce.backend.model.Role;
 import com.eCommerce.backend.model.UserEntity;
 import com.eCommerce.backend.repository.RoleRepository;
 import com.eCommerce.backend.repository.UserRepository;
 import com.eCommerce.backend.security.JwtTokenGenerator;
 import com.eCommerce.backend.security.SecurityConstants;
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @RestController

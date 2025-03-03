@@ -18,6 +18,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_sequence_generator")
     @SequenceGenerator(name = "product_sequence_generator", allocationSize = 1, sequenceName = "product_sequence")
     private Long id;
+
     private String productName;
     private Double productPrice;
     private String productCategory;
@@ -26,14 +27,14 @@ public class Product {
     private Double productDiscount;
     private Integer productQuantity;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "product_sizes",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "size_id"))
     private Set<Size> productSizes = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "product_colors",
             joinColumns = @JoinColumn(name = "product_id"),
@@ -45,6 +46,6 @@ public class Product {
     @Column(name = "image_url")
     private List<String> productImages;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Review> reviews = new HashSet<>();
 }

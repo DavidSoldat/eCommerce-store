@@ -16,7 +16,7 @@ public class Color {
     @SequenceGenerator(name = "color_sequence", sequenceName = "color_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "color_sequence")
     private Long id;
-    private String color;
+    private String name;
 
 
 }

@@ -1,17 +1,17 @@
 export default function Newsletter() {
   return (
-    <div className='bg-black rounded-20 px-6 py-8 flex flex-col gap-3 max-w-[1240px] mx-auto md:justify-between md:items-center md:flex-row md:px-11 mb-10'>
-      <h2 className='uppercase text-2xl md:text-3xl font-extrabold font-[IntegralCF] md:w-1/2 text-white mb-2'>
+    <div className="mx-auto mb-10 flex max-w-[1240px] flex-col gap-3 rounded-20 bg-black px-6 py-8 md:flex-row md:items-center md:justify-between md:px-11">
+      <h2 className="mb-2 font-[IntegralCF] text-2xl font-extrabold uppercase text-white md:w-1/2 md:text-3xl">
         stay up to date about our latest offers
       </h2>
-      <div className='md:w-1/3 flex md:flex-col md:flex-nowrap gap-3 flex-wrap'>
+      <div className="flex flex-wrap gap-3 md:w-1/3 md:flex-col md:flex-nowrap">
         <input
-          type='email'
-          name='email'
-          className='rounded-60 bg-white text-black py-3 text-sm font-medium w-full px-4'
-          placeholder=' Enter your email address'
+          type="email"
+          name="email"
+          className="w-full rounded-60 bg-white px-4 py-3 text-sm font-medium text-black"
+          placeholder=" Enter your email address"
         />
-        <button className='bg-white rounded-60 text-black w-full py-3 text-sm font-medium hover:bg-[#f0f0f0]'>
+        <button className="w-full rounded-60 bg-white py-3 text-sm font-medium text-black hover:bg-[#f0f0f0]">
           Subscribe to Newsletter
         </button>
       </div>

@@ -9,131 +9,13 @@ import { EditModal } from "../components/UI/EditModal";
 import ProductsTable from "../components/UI/ProductsTable";
 import UsersTable from "../components/UI/UsersTable";
 import { RootState } from "../redux/store";
-import { Product, UserInfo } from "../utils/Models";
+import { UserInfo } from "../utils/Models";
+import { getProducts } from "../utils/products";
 
 export default function AdminDashboard() {
-  const prods: Product[] = [
-    {
-      id: 1,
-      productName: "Jon",
-      productDescription: "davidsoldat00@gmail.com",
-      productSizes: ["s", "l"],
-      productQuantity: 20,
-      productColors: ["red", "green", "blue"],
-      productDiscount: 10,
-      productRating: 4.3,
-      productCategory: "man",
-      productPrice: 120,
-      reviews: [],
-    },
-    {
-      id: 2,
-      productDescription: "Lannister",
-      productName: "Cersei",
-      productSizes: ["s", "l"],
-      productQuantity: 20,
-      productColors: ["red", "green", "blue"],
-      productDiscount: 10,
-      productRating: 4.3,
-      productCategory: "woman",
-      productPrice: 120,
-      reviews: [],
-    },
-    {
-      id: 3,
-      productDescription: "Lannister",
-      productName: "Jaime",
-      productSizes: ["s", "l"],
-      productQuantity: 20,
-      productColors: ["red", "green", "blue"],
-      productDiscount: 10,
-      productRating: 4.3,
-      productCategory: "man",
-      productPrice: 120,
-      reviews: [],
-    },
-    {
-      id: 4,
-      productDescription: "Stark",
-      productName: "Arya",
-      productSizes: ["s", "l"],
-      productQuantity: 20,
-      productColors: ["red", "green", "blue"],
-      productDiscount: 10,
-      productRating: 4.3,
-      productCategory: "man",
-      productPrice: 120,
-      reviews: [],
-    },
-    {
-      id: 5,
-      productDescription: "Targaryen",
-      productName: "Daenerys",
-      productSizes: ["s", "l"],
-      productQuantity: 20,
-      productColors: ["red", "green", "blue"],
-      productDiscount: 10,
-      productRating: 4.3,
-      productCategory: "man",
-      productPrice: 120,
-      reviews: [],
-    },
-    {
-      id: 6,
-      productDescription: "Melisandre",
-      productName: "some name",
-      productSizes: ["s", "l"],
-      productQuantity: 20,
-      productColors: ["red", "green", "blue"],
-      productDiscount: 10,
-      productRating: 4.3,
-      productCategory: "woman",
-      productPrice: 120,
-      reviews: [],
-    },
-    {
-      id: 7,
-      productDescription: "Clifford",
-      productName: "Ferrara",
-      productSizes: ["s", "l"],
-      productQuantity: 20,
-      productColors: ["red", "green", "blue"],
-      productDiscount: 10,
-      productRating: 4.3,
-      productCategory: "man",
-      productPrice: 120,
-      reviews: [],
-    },
-    {
-      id: 8,
-      productDescription: "Frances",
-      productName: "Rossini",
-      productSizes: ["s", "l"],
-      productQuantity: 20,
-      productColors: ["red", "green", "blue"],
-      productDiscount: 10,
-      productRating: 4.3,
-      productCategory: "man",
-      productPrice: 120,
-      reviews: [],
-    },
-    {
-      id: 9,
-      productDescription: "Roxie",
-      productName: "Harvey",
-      productSizes: ["s", "l"],
-      productQuantity: 20,
-      productColors: ["red", "green", "blue"],
-      productDiscount: 10,
-      productRating: 4.3,
-      productCategory: "woman",
-      productPrice: 120,
-      reviews: [],
-    },
-  ];
   const navigate = useNavigate();
   const [panel, setPanel] = useState("stats");
-  const [products] = useState(prods);
+  const [products, setProducts] = useState([]);
   const [users, setUsers] = useState<UserInfo[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [selectedEdit, setSelectedEdit] = useState<UserInfo | null>(null);
@@ -142,9 +24,12 @@ export default function AdminDashboard() {
 
   const fetchData = async () => {
     try {
-      const response = await getUsers();
-      const users = response.data.data;
+      const userResponse = await getUsers();
+      const productsResponse = await getProducts();
+      const users = userResponse.data.data;
+      const products = productsResponse.data.data;
       setUsers(users);
+      setProducts(products);
     } catch (error) {
       console.error("Error fetching users", error);
       toast.error("Error fetching users");

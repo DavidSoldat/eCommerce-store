@@ -1,4 +1,4 @@
-package com.eCommerce.backend.Dto;
+package com.eCommerce.backend.dto;
 
 import com.eCommerce.backend.model.UserEntity;
 import lombok.AllArgsConstructor;

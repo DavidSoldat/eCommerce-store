@@ -3,7 +3,7 @@ import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { Product } from "../../utils/Models";
-import { deleteProducts } from "../../utils/manageProducts";
+import { deleteProducts } from "../../utils/products";
 
 export default function ProductsTable({
   products,

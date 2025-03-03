@@ -14,19 +14,29 @@ export interface UserInfo {
   role: string;
 }
 
+export interface Size {
+  id: number;
+  name: string;
+}
+
+export interface Color {
+  id: number;
+  name: string;
+}
+
 export interface Product {
   id: number;
   productName: string;
-  productDescription: string;
-  productCategory: string;
   productPrice: number;
-  productDiscount: number;
+  productCategory: string;
+  productDescription: string;
   productRating: number;
-  productColors: string[];
-  productSizes: string[];
-  productImages?: string[] | [];
+  productDiscount: number;
   productQuantity: number;
-  reviews: Review[] | [];
+  productSizes: Size[];
+  productColors: Color[];
+  productImages: string[];
+  reviews: Review[];
 }
 
 export interface Review {

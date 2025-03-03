@@ -17,5 +17,5 @@ public class Size {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "size_sequence")
     private Long id;
     private String name;
-
 }
+
