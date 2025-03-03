@@ -135,8 +135,11 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<?> getUserInfo(@CookieValue(name = "token", required = false) String token) {
 
-        if (token == null || !tokenGenerator.validateToken(token)) {
-            return new ResponseEntity<>("Invalid or missing token", HttpStatus.UNAUTHORIZED);
+        if(token == null) {
+            return new ResponseEntity<>("Token is missing", HttpStatus.OK);
+        }
+        if ( !tokenGenerator.validateToken(token)) {
+            return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
         }
 
         Claims claims = tokenGenerator.getClaimsFromToken(token);
@@ -163,7 +166,7 @@ public class AuthController {
 
     @PatchMapping("/users/{userId}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<UserInfoDto> editUser(@PathVariable Long userId, @RequestBody EditUserDto editUserDto) {
+    public ResponseEntity<String> editUser(@PathVariable Long userId, @RequestBody EditUserDto editUserDto) {
 
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -176,8 +179,9 @@ public class AuthController {
                     .orElseThrow(() -> new RuntimeException("Role not found"));
             user.setRole(role);
         }
-        UserEntity updatedUser = userRepository.save(user);
 
-        return new ResponseEntity<>(new UserInfoDto(updatedUser), HttpStatus.OK);
+        userRepository.save(user);
+
+        return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
     }
 }

@@ -2,6 +2,7 @@ package com.eCommerce.backend.controller;
 
 import com.eCommerce.backend.model.Product.Product;
 import com.eCommerce.backend.service.ProductService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +23,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public void addProduct(@RequestBody Product product) {
-        productService.addProduct(product);
+    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
+        Product savedProduct = productService.addProduct(product);
+        return ResponseEntity.ok(savedProduct);
     }
 }

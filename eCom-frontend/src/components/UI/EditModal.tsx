@@ -23,7 +23,15 @@ const style = {
 
 export const EditModal = forwardRef(
   (
-    { user, handleClose }: { user: UserInfo | null; handleClose: () => void },
+    {
+      user,
+      handleClose,
+      fetchData,
+    }: {
+      user: UserInfo | null;
+      handleClose: () => void;
+      fetchData: () => void;
+    },
     ref,
   ) => {
     type FormData = z.infer<typeof editUserSchema>;
@@ -36,10 +44,16 @@ export const EditModal = forwardRef(
       defaultValues: user as FormData,
     });
 
-    function onSubmit(data: FormData) {
-      console.log("submitted data", data);
-      handleClose();
-      editUser(data);
+    async function onSubmit(data: FormData) {
+      try {
+        const response = await editUser(data);
+        if (response?.status === 200) {
+          handleClose();
+          fetchData();
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     return (

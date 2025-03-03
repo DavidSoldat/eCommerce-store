@@ -15,8 +15,9 @@ export default function Layout() {
   useEffect(() => {
     const fetchUserInfo = async () => {
       const userData = await getUserInfo();
+      if (userData === "Token is missing") return;
       if (userData) {
-        dispatch(setUser(userData)); // Update Redux store with user data
+        dispatch(setUser(userData));
       }
     };
 
@@ -25,7 +26,7 @@ export default function Layout() {
 
   return (
     <div className="mt-20 flex min-h-screen flex-col md:mt-0">
-      {!user && (
+      {user.email === null && (
         <div className="bg-black py-2 text-center text-xs font-extralight text-white">
           Sign up and get 20% off to your first order.{" "}
           <Link

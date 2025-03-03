@@ -16,6 +16,6 @@ public class Size {
     @SequenceGenerator(name = "size_sequence", sequenceName = "size_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "size_sequence")
     private Long id;
-    private String size;
+    private String name;
 
 }

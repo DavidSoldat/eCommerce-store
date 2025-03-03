@@ -37,6 +37,13 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+
+        if (path.startsWith("/api/products")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = getJWTFromCookie(request);
 
         if (StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {

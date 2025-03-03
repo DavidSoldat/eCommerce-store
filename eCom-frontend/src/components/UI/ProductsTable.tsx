@@ -2,10 +2,14 @@ import { Button, IconButton, Paper } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
-import { MdDeleteForever } from "react-icons/md";
 import { Product } from "../../utils/Models";
+import { deleteProducts } from "../../utils/manageProducts";
 
-export default function ProductsTable({ products }: { products: Product[] }) {
+export default function ProductsTable({
+  products,
+}: {
+  products: Product[] | [];
+}) {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [rows, setRows] = useState(products);
 
@@ -41,16 +45,20 @@ export default function ProductsTable({ products }: { products: Product[] }) {
           >
             <FaEdit size={20} />
           </IconButton>
-          <IconButton onClick={() => handleDelete(params.row.id)}>
-            <MdDeleteForever color="red" size={20} />
-          </IconButton>
         </div>
       ),
     },
   ];
 
-  const handleDelete = (id: number) => {
-    setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+  const handleDelete = (ids: number[]) => {
+    try {
+      deleteProducts(ids);
+      setRows((prevRows) =>
+        prevRows.filter((row) => !selectedRows.includes(row.id)),
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const paginationModel = { page: 0, pageSize: 5 };
@@ -76,11 +84,7 @@ export default function ProductsTable({ products }: { products: Product[] }) {
         color="error"
         sx={{ width: 200, marginTop: 2 }}
         disabled={selectedRows.length === 0}
-        onClick={() =>
-          setRows((prevRows) =>
-            prevRows.filter((row) => !selectedRows.includes(row.id as number)),
-          )
-        }
+        onClick={() => handleDelete(selectedRows)}
       >
         Delete Selected
       </Button>

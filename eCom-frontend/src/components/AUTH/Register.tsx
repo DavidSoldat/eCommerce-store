@@ -45,7 +45,6 @@ export default function Register() {
       if (registerResponse) {
         toast.success("User registered successfully!");
 
-        console.log("email and password: ", email, password);
         const userData = await loginUser(email, password);
 
         if (userData) {
@@ -57,7 +56,7 @@ export default function Register() {
           throw new Error("Login failed after registration");
         }
       } else {
-        throw new Error(registerResponse?.data || "Registration failed");
+        throw new Error(registerResponse || "Registration failed");
       }
     } catch (error) {
       console.error(error);

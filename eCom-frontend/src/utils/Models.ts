@@ -15,7 +15,7 @@ export interface UserInfo {
 }
 
 export interface Product {
-  id?: number;
+  id: number;
   productName: string;
   productDescription: string;
   productCategory: string;

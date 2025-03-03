@@ -46,7 +46,7 @@ export const registerUser = async (
     });
 
     if (response.status >= 200 && response.status < 300) {
-      return await getUserInfo();
+      return response;
     } else {
       throw new Error(response.data || "Registration failed");
     }
@@ -100,9 +100,8 @@ export const deleteUser = async (users: number[]) => {
 export const editUser = async (userData: UserInfo) => {
   const userId = userData.id;
   try {
-    console.log("User: ", userData);
     const response = await api.patch(`/users/${userId}`, userData);
-    console.log(response);
+    return response;
   } catch (error) {
     console.error(error);
   }

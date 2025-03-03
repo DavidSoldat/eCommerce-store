@@ -2,6 +2,7 @@ package com.eCommerce.backend.service;
 
 import com.eCommerce.backend.model.Product.Product;
 import com.eCommerce.backend.repository.ProductRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,11 +19,12 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public void addProduct(Product product) {
+    public Product addProduct(@NotNull Product product) {
         Optional<Product> productOptional = productRepository.findById(product.getId());
         if(productOptional.isPresent()) {
             throw new IllegalStateException("Product already exists!");
         }
-        productRepository.save(product);
+
+        return productRepository.save(product);
     }
 }

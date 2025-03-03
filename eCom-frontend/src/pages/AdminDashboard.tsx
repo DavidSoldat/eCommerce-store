@@ -160,7 +160,7 @@ export default function AdminDashboard() {
     if (!isAdmin) {
       navigate("/");
     }
-  }, [navigate, user?.role]);
+  }, [navigate, user]);
 
   function handleOpenModal() {
     setOpenModal(true);
@@ -214,7 +214,11 @@ export default function AdminDashboard() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <EditModal user={selectedEdit} handleClose={handleCloseModal} />
+        <EditModal
+          user={selectedEdit}
+          handleClose={handleCloseModal}
+          fetchData={fetchData}
+        />
       </Modal>
     </div>
   );
