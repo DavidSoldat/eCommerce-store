@@ -85,7 +85,8 @@ export const getUserInfo = async () => {
 };
 
 export const getUsers = async () => {
-  return await api.get("/users", { withCredentials: true });
+  const response = await api.get("/users", { withCredentials: true });
+  return response.data.data;
 };
 
 export const deleteUser = async (users: number[]) => {

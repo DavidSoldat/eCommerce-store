@@ -18,11 +18,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-
-
 
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
@@ -37,20 +32,12 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        String path = request.getRequestURI();
-
-        if (path.startsWith("/api/products")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         String token = getJWTFromCookie(request);
 
         if (StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
             Claims claims = tokenGenerator.getClaimsFromToken(token);
             String email = claims.getSubject();
-            String role = claims.get("role", String.class); //
-
+            String role = claims.get("role", String.class);
 
             GrantedAuthority authority = new SimpleGrantedAuthority(
                     role.startsWith("ROLE_") ? role : "ROLE_" + role

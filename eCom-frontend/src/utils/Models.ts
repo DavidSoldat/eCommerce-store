@@ -14,16 +14,6 @@ export interface UserInfo {
   role: string;
 }
 
-export interface Size {
-  id: number;
-  name: string;
-}
-
-export interface Color {
-  id: number;
-  name: string;
-}
-
 export interface Product {
   id: number;
   productName: string;
@@ -31,10 +21,11 @@ export interface Product {
   productCategory: string;
   productDescription: string;
   productRating: number;
+  genderCategory: string;
   productDiscount: number;
   productQuantity: number;
-  productSizes: Size[];
-  productColors: Color[];
+  productSizes: string[];
+  productColors: string[];
   productImages: string[];
   reviews: Review[];
 }

@@ -24,10 +24,13 @@ export default function AdminDashboard() {
 
   const fetchData = async () => {
     try {
-      const userResponse = await getUsers();
-      const productsResponse = await getProducts();
-      const users = userResponse.data.data;
-      const products = productsResponse.data.data;
+      const [userResponse, productsResponse] = await Promise.all([
+        getUsers(),
+        getProducts(),
+      ]);
+
+      const users = userResponse;
+      const products = productsResponse;
       setUsers(users);
       setProducts(products);
     } catch (error) {
@@ -41,9 +44,11 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => {
-    const isAdmin = user?.role === "ROLE_ADMIN";
-    if (!isAdmin) {
-      navigate("/");
+    if (user.email !== null) {
+      const isAdmin = user.role === "ROLE_ADMIN";
+      if (!isAdmin) {
+        navigate("/");
+      }
     }
   }, [navigate, user]);
 

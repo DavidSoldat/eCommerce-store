@@ -1,5 +1,6 @@
 package com.eCommerce.backend.controller;
 
+import com.eCommerce.backend.dto.ProductDto;
 import com.eCommerce.backend.model.Product.Product;
 import com.eCommerce.backend.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,13 +21,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getProducts();
+    public List<ProductDto> getAllProducts() {
+        return productService.getAllProducts();
     }
 
     @PostMapping
     public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-        log.info(product.toString());
         Product savedProduct = productService.addProduct(product);
         return ResponseEntity.ok(savedProduct);
     }

@@ -14,16 +14,16 @@ export default function ProductsTable({
   const [rows, setRows] = useState(products);
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 70 },
+    { field: "id", headerName: "ID", width: 90 },
     { field: "productName", headerName: "Name", flex: 1 },
-    { field: "productPrice", headerName: "Price", width: 70 },
+    { field: "productPrice", headerName: "Price", width: 105 },
     { field: "productDescription", headerName: "Description", flex: 1 },
-    { field: "productSizes", headerName: "Sizes", width: 70 },
+    { field: "productSizes", headerName: "Sizes", width: 105 },
     { field: "productColors", headerName: "Colors", flex: 1 },
-    { field: "productQuantity", headerName: "Quantity", width: 70 },
-    { field: "productDiscount", headerName: "Discount", width: 70 },
-    { field: "productRating", headerName: "Rating", width: 70 },
-    { field: "productCategory", headerName: "Category", width: 70 },
+    { field: "productQuantity", headerName: "Quantity", width: 105 },
+    { field: "productDiscount", headerName: "Discount", width: 105 },
+    { field: "productCategory", headerName: "Category", width: 105 },
+    { field: "genderCategory", headerName: "Gender", width: 105 },
 
     {
       field: "action",
