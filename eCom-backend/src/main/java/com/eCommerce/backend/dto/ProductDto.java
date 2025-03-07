@@ -1,8 +1,6 @@
 package com.eCommerce.backend.dto;
 
-import com.eCommerce.backend.model.Product.Color;
-import com.eCommerce.backend.model.Product.Product;
-import com.eCommerce.backend.model.Product.Size;
+import com.eCommerce.backend.model.Product.*;
 import lombok.Data;
 
 import java.util.List;
@@ -14,7 +12,7 @@ public class ProductDto {
     private Long id;
     private String productName;
     private Double productPrice;
-    private String productCategory;
+    private Category category;
     private String productDescription;
     private Double productRating;
     private Double productDiscount;
@@ -23,12 +21,13 @@ public class ProductDto {
     private Set<String> productSizes;
     private Set<String> productColors;
     private List<String> productImages;
+    private Brand brand;
 
     public ProductDto(Product product) {
         this.id = product.getId();
         this.productName = product.getProductName();
         this.productPrice = product.getProductPrice();
-        this.productCategory = product.getProductCategory();
+        this.category = product.getCategory();
         this.productDescription = product.getProductDescription();
         this.productRating = product.getProductRating();
         this.productDiscount = product.getProductDiscount();
@@ -43,6 +42,7 @@ public class ProductDto {
                 .map(Color::getName)
                 .collect(Collectors.toSet());
         this.productImages = product.getProductImages();
+        this.brand = product.getBrand();
     }
 }
 

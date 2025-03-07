@@ -12,10 +12,11 @@ export default function ItemCard({
 }) {
   const [value] = useState<number | null>(4.5);
 
+  const productId = 24;
   return (
     <Link
-      to={`/shop/${category}/product`}
-      className={`flex w-fit ${small === true ? "max-w-40" : ""} flex-col gap-1 rounded-13 border border-transparent hover:border hover:shadow-md md:max-w-fit`}
+      to={`/shop/${category}/${productId}`}
+      className={`flex w-fit ${small === true ? "max-w-40" : ""} min-w-[190px] flex-col gap-1 rounded-13 border border-transparent hover:border hover:shadow-md md:max-w-fit`}
     >
       <img src={item} alt="product" className="w-full rounded-13" />
       <div className="px-2 pb-2">

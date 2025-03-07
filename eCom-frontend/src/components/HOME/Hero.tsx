@@ -15,7 +15,7 @@ export default function Hero() {
       <div className="flex flex-col md:flex-row">
         <div className="flex flex-col gap-5 px-4 md:my-10 md:w-3/5 md:gap-8">
           <h1 className="font-[IntegralCF] text-4xl font-extrabold uppercase leading-8 md:text-6xl">
-            find clother that matches your style
+            find clothes that matches your style
           </h1>
           <p className="text-sm text-black opacity-60 md:text-base">
             Browse through our diverse range of meticulously crafted garments,

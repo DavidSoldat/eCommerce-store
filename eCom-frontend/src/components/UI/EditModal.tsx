@@ -5,21 +5,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { editUser } from "../../utils/auth";
+import { editModalStyle } from "../../utils/constants";
 import { UserInfo } from "../../utils/Models";
 import { editUserSchema } from "../../utils/zodSchemas";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 500,
-  bgcolor: "background.paper",
-  border: "1px solid #000",
-  borderRadius: "20px",
-  boxShadow: 24,
-  p: 4,
-};
 
 export const EditModal = forwardRef(
   (
@@ -57,7 +45,7 @@ export const EditModal = forwardRef(
     }
 
     return (
-      <Box sx={style} ref={ref} tabIndex={0}>
+      <Box sx={editModalStyle} ref={ref} tabIndex={0}>
         <div className="flex w-full flex-col items-center gap-10">
           <h3 className="text-xl font-semibold">Edit user {user?.id}</h3>
 

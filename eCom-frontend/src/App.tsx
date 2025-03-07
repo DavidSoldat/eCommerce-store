@@ -50,7 +50,10 @@ export default function App() {
               <Route path="/oauth-callback" element={<OAuthHandler />} />
               <Route path="/shop" element={<Shoppage />} />
               <Route path="/shop/:category" element={<CategoryPage />} />
-              <Route path="/shop/:category/product" element={<Productpage />} />
+              <Route
+                path="/shop/:category/:productId"
+                element={<Productpage />}
+              />
               <Route path="/cart" element={<Cartpage />} />
               <Route path="*" element={<NotFoundpage />} />
             </Route>

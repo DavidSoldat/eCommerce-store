@@ -5,7 +5,7 @@ import Newsletter from "../components/UI/Newsletter";
 import Reviews from "../components/HOME/Reviews";
 import ItemsSection from "../components/UI/ItemSection";
 
-export default function Homepage() {
+export default function   Homepage() {
   return (
     <div>
       <Hero />

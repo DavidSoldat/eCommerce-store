@@ -1,8 +1,10 @@
-package com.eCommerce.backend.model;
+package com.eCommerce.backend.model.Product;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Data
 @Entity
@@ -14,4 +16,7 @@ public class Brand {
     @GeneratedValue(generator = "brand_sequence")
     private Long id;
     private String name;
+
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
+    private Set<Product> products;
 }

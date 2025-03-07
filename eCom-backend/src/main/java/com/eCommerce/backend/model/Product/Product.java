@@ -4,7 +4,9 @@ import com.eCommerce.backend.model.Review;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,12 +22,19 @@ public class Product {
         private Long id;
         private String productName;
         private Double productPrice;
-        private String productCategory;
         private String productDescription;
         private Double productRating;
         private Double productDiscount;
         private Integer productQuantity;
         private Character genderCategory;
+
+        @ManyToOne
+        @JoinColumn(name = "category_id")
+        private Category category;
+
+        @CreationTimestamp
+        @Column(updatable = false, nullable = false)
+        private LocalDateTime createdAt;
 
         @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
         @JoinTable(
@@ -48,4 +57,8 @@ public class Product {
 
         @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
         private Set<Review> reviews = new HashSet<>();
+
+        @ManyToOne
+        @JoinColumn(name = "brand_id")
+        private Brand brand;
     }
