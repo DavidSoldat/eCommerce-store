@@ -25,7 +25,7 @@ export default function ImagesGallery({
             src={selectedImage || images[0]}
             alt="big image"
             className="aspect-square max-h-80 w-full rounded-20 object-cover"
-            onClick={() => handleSelectImage(images[0])}
+            onClick={() => handleSelectImage(selectedImage || images[0])}
           />
         </div>
 

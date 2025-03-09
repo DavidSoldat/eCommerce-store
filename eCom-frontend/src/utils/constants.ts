@@ -32,9 +32,9 @@ export const imageModalStyle = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "fit",
-  bgcolor: "background.paper",
-  border: "1px solid #000",
+  width: "fill",
+  p: 4,
+  bgcolor: "white",
   borderRadius: "20px",
   boxShadow: 24,
 };
