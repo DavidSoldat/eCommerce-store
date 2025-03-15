@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-
 @Data
 @Entity
 @Table(name = "brands")
@@ -17,6 +15,4 @@ public class Brand {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
-    private Set<Product> products;
 }

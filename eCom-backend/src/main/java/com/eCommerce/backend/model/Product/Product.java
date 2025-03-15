@@ -36,26 +36,26 @@ public class Product {
         @Column(updatable = false, nullable = false)
         private LocalDateTime createdAt;
 
-        @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+        @ManyToMany
         @JoinTable(
                 name = "product_sizes",
                 joinColumns = @JoinColumn(name = "product_id"),
                 inverseJoinColumns = @JoinColumn(name = "size_id"))
         private Set<Size> productSizes = new HashSet<>();
 
-        @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+        @ManyToMany
         @JoinTable(
                 name = "product_colors",
                 joinColumns = @JoinColumn(name = "product_id"),
                 inverseJoinColumns = @JoinColumn(name = "color_id"))
         private Set<Color> productColors = new HashSet<>();
 
-        @ElementCollection(fetch = FetchType.LAZY)
+        @ElementCollection
         @CollectionTable(name = "productImages", joinColumns = @JoinColumn(name = "product_id"))
         @Column(name = "image_url")
         private List<String> productImages;
 
-        @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+        @OneToMany(mappedBy = "product")
         private Set<Review> reviews = new HashSet<>();
 
         @ManyToOne

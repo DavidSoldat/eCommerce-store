@@ -8,11 +8,13 @@ import { UserInfo } from "../../utils/Models";
 export default function UsersTable({
   data,
   handleOpenModal,
-  setSelectedEdit,
+  setSelectedUser,
+  setModalType,
 }: {
   data: UserInfo[] | [];
   handleOpenModal: () => void;
-  setSelectedEdit: (user: UserInfo) => void;
+  setSelectedUser: (user: UserInfo) => void;
+  setModalType: (type: string) => void;
 }) {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [rows, setRows] = useState(data);
@@ -40,8 +42,9 @@ export default function UsersTable({
         >
           <IconButton
             onClick={(event) => {
-              setSelectedEdit(params.row);
+              setSelectedUser(params.row);
               handleOpenModal();
+              setModalType("editUser");
               event.stopPropagation();
             }}
           >

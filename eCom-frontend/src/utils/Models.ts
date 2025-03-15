@@ -30,10 +30,51 @@ export interface Product {
   reviews: Review[];
 }
 
+export interface ProductDetailsDto {
+  productId: number;
+  productName: string;
+  productPrice: number;
+  productDescription: string;
+  productRating: number;
+  productDiscount: number;
+  productQuantity: number;
+  genderCategory: string;
+  createdAt: string;
+  brandName: string;
+  categoryName: string;
+  colors: string[];
+  sizes: string[];
+  images: string[];
+  reviews: string[];
+}
+
+export interface EditProductDto {
+  productId: number;
+  productName: string;
+  productPrice: number;
+  productDescription: string;
+  productDiscount: number;
+  genderCategory: string;
+  brandName: string;
+  categoryName: string;
+  colors: string[];
+  sizes: string[];
+}
+
 export interface Review {
   id?: number;
   reviewAuthor: UserEntity;
   reviewText: string;
   reviewRating: number;
   product: Product;
+}
+
+export interface Brand {
+  id: number;
+  name: string;
+}
+
+export interface Category {
+  id: number;
+  name: string;
 }

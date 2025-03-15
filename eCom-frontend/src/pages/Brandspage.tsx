@@ -26,10 +26,10 @@ export default function Brandspage() {
       <Divider />
 
       <div className="min-h-screen p-8">
-        <h1 className="mb-8 text-center text-3xl font-bold">Brands</h1>
+        <h1 className="mb-8 text-center text-3xl font-bold">Our brands</h1>
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {Object.entries(brands).map(([letter, brands]) => (
-            <div key={letter} className="rounded-lg bg-gray-50 p-6 shadow-sm">
+            <div key={letter} className="rounded-lg bg-[#f0f0f0] p-6 shadow-sm">
               <h2 className="mb-4 text-2xl font-bold text-gray-800">
                 {letter}
               </h2>

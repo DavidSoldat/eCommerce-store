@@ -9,7 +9,7 @@ import { editModalStyle } from "../../utils/constants";
 import { UserInfo } from "../../utils/Models";
 import { editUserSchema } from "../../utils/zodSchemas";
 
-export const EditModal = forwardRef(
+export const EditUserModal = forwardRef(
   (
     {
       user,

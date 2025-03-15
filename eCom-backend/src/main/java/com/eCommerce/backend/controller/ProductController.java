@@ -1,6 +1,6 @@
 package com.eCommerce.backend.controller;
 
-import com.eCommerce.backend.dto.ProductDto;
+import com.eCommerce.backend.dto.ProductDetailsDto;
 import com.eCommerce.backend.model.Product.Product;
 import com.eCommerce.backend.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductDto> getAllProducts() {
+    public List<ProductDetailsDto> getAllProducts() {
         return productService.getAllProducts();
     }
 

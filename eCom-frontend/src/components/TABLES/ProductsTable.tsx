@@ -2,13 +2,19 @@ import { Button, IconButton, Paper } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
-import { Product } from "../../utils/Models";
+import { Product, ProductDetailsDto } from "../../utils/Models";
 import { deleteProducts } from "../../utils/products";
 
 export default function ProductsTable({
   products,
+  handleOpenModal,
+  setSelectedProduct,
+  setModalType,
 }: {
   products: Product[] | [];
+  handleOpenModal: () => void;
+  setSelectedProduct: (product: ProductDetailsDto) => void;
+  setModalType: (modal: string) => void;
 }) {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [rows, setRows] = useState(products);
@@ -18,16 +24,17 @@ export default function ProductsTable({
     { field: "productName", headerName: "Name", flex: 1 },
     { field: "productPrice", headerName: "Price", width: 105 },
     { field: "productDescription", headerName: "Description", flex: 1 },
-    { field: "productSizes", headerName: "Sizes", width: 105 },
-    { field: "productColors", headerName: "Colors", flex: 1 },
+    { field: "brandName", headerName: "Brand", flex: 1 },
+    { field: "sizes", headerName: "Sizes", width: 105 },
+    { field: "colors", headerName: "Colors", flex: 1 },
     { field: "productQuantity", headerName: "Quantity", width: 105 },
     { field: "productDiscount", headerName: "Discount", width: 105 },
-    { field: "productCategory", headerName: "Category", width: 105 },
+    { field: "categoryName", headerName: "Category", width: 105 },
     { field: "genderCategory", headerName: "Gender", width: 105 },
 
     {
       field: "action",
-      headerName: "Action",
+      headerName: "Edit",
       width: 90,
       sortable: false,
       filterable: false,
@@ -39,7 +46,9 @@ export default function ProductsTable({
         >
           <IconButton
             onClick={(event) => {
-              console.log("Edit", params.row.id);
+              setSelectedProduct(params.row);
+              handleOpenModal();
+              setModalType("editProduct");
               event.stopPropagation();
             }}
           >
@@ -61,6 +70,10 @@ export default function ProductsTable({
     }
   };
 
+  const handleAddProduct = () => {
+    console.log("d");
+  };
+
   const paginationModel = { page: 0, pageSize: 5 };
   return (
     <>
@@ -79,15 +92,25 @@ export default function ProductsTable({
           }}
         />
       </Paper>
-      <Button
-        variant="contained"
-        color="error"
-        sx={{ width: 200, marginTop: 2 }}
-        disabled={selectedRows.length === 0}
-        onClick={() => handleDelete(selectedRows)}
-      >
-        Delete Selected
-      </Button>
+      <div className="flex justify-between">
+        <Button
+          variant="contained"
+          color="error"
+          sx={{ width: 200, marginTop: 2 }}
+          disabled={selectedRows.length === 0}
+          onClick={() => handleDelete(selectedRows)}
+        >
+          Delete Selected
+        </Button>
+        <Button
+          variant="contained"
+          color="success"
+          sx={{ width: 200, marginTop: 2 }}
+          onClick={() => handleAddProduct()}
+        >
+          Add new
+        </Button>
+      </div>
     </>
   );
 }

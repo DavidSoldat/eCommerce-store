@@ -40,14 +40,14 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/products", "/api/auth/login", "/api/auth/register", "/api/auth/oauth2/**").permitAll()
-                        .requestMatchers("/api/auth/logout", "/api/auth/me").authenticated()
-                        .requestMatchers("/api/auth/users", "/api/auth/users/**").hasRole("ADMIN")
+                        .requestMatchers("/api/products", "/api/auth/login", "/api/auth/register", "/api/auth/oauth2/**", "/api/auth/me").permitAll()
+                        .requestMatchers("/api/auth/logout" ).authenticated()
+                        .requestMatchers("/api/auth/users", "/api/auth/users/**", "/api/brands", "/api/categories").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/api/auth/loginGoogle")
-                        .authorizationEndpoint(authz -> authz.baseUri("/api/auth/oauth2/authorization"))
+                        .authorizationEndpoint(auth -> auth.baseUri("/api/auth/oauth2/authorization"))
                         .redirectionEndpoint(redir -> redir.baseUri("/api/auth/oauth2/code/*"))
                         .successHandler(oauth2SuccessHandler)
                 )

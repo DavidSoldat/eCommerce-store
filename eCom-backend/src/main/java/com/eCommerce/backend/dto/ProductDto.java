@@ -3,6 +3,7 @@ package com.eCommerce.backend.dto;
 import com.eCommerce.backend.model.Product.*;
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,10 +34,9 @@ public class ProductDto {
         this.productDiscount = product.getProductDiscount();
         this.productQuantity = product.getProductQuantity();
         this.genderCategory = product.getGenderCategory();
-        this.productSizes = product.getProductSizes()
-                .stream()
+        this.productSizes = new HashSet<>(product.getProductSizes().stream()
                 .map(Size::getName)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toSet()));
         this.productColors = product.getProductColors()
                 .stream()
                 .map(Color::getName)
