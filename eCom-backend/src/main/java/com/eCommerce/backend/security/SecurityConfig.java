@@ -20,14 +20,12 @@ import org.springframework.web.cors.CorsConfigurationSource;
 public class SecurityConfig {
 
     private final JwtAuthEntryPoint authEntryPoint;
-    private final CustomUserDetailsService userDetailsService;
     private final CorsConfigurationSource corsConfigurationSource;
     private final Oauth2SuccessHandler oauth2SuccessHandler;
 
     @Autowired
     public SecurityConfig(JwtAuthEntryPoint authEntryPoint, CustomUserDetailsService userDetailsService, CorsConfigurationSource corsConfigurationSource, Oauth2SuccessHandler oAuth2SuccessHandler) {
         this.authEntryPoint = authEntryPoint;
-        this.userDetailsService = userDetailsService;
         this.corsConfigurationSource = corsConfigurationSource;
         this.oauth2SuccessHandler = oAuth2SuccessHandler;
     }
