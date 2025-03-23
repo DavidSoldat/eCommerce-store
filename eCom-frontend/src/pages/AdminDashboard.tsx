@@ -31,7 +31,6 @@ export default function AdminDashboard() {
 
   const user = useSelector((state: RootState) => state?.user);
 
-  console.log(selectedBrand);
   const fetchData = async () => {
     try {
       const [

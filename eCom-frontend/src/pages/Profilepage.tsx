@@ -1,13 +1,93 @@
-import { useEffect } from "react";
+import { Divider, Modal } from "@mui/material";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { ChangePasswordModal } from "../components/MODALS/ChangePasswordModal";
 import { RootState } from "../redux/store";
-import { Divider } from "@mui/material";
+import { capitalize } from "../utils/helpers";
+
+// export default function Profilepage() {
+//   const user = useSelector((state: RootState) => state.user);
+//   const [openModal, setOpenModal] = useState(false);
+
+//   const navigate = useNavigate();
+
+//   const role = user?.role === "ROLE_ADMIN";
+
+//   useEffect(() => {
+//     if (user === null || role === true) {
+//       navigate("/");
+//     }
+//   }, [navigate, role, user]);
+
+//   function handleOpenModal() {
+//     setOpenModal(true);
+//   }
+
+//   function handleCloseModal() {
+//     setOpenModal(false);
+//   }
+
+//   const handleDeleteAccount = () => {
+//     const isConfirmed = window.confirm(
+//       "Are you sure you want to delete your account? This action cannot be undone.",
+//     );
+
+//     if (isConfirmed) {
+//       toast.success("Account deleted!");
+//     } else {
+//       toast.error("Deletion cancelled.");
+//     }
+//   };
+
+//   return (
+//     <div className="mx-auto max-w-[1240px] px-4">
+//       <Divider />
+//       <div className="my-10 flex flex-col gap-3">
+//         <h2 className="text-2xl font-semibold">User Profile</h2>
+//         <div className="flex flex-col gap-3 rounded-md bg-[#f9f9f9] p-5">
+//           <h3 className="text-xl font-semibold">User ID</h3>
+//           <p>{user?.id}</p>
+//           <h3 className="text-xl font-semibold">Name</h3>
+//           <p>{capitalize(user?.username || "")}</p>
+//           <h3 className="text-xl font-semibold">Email: </h3>
+//           <p>{user?.email}</p>
+//         </div>
+//         <div className="flex flex-col gap-3 rounded-md bg-[#f9f9f9] p-5">
+//           <button
+//             className="rounded-md px-4 py-2 text-lg font-semibold text-blue-400 hover:text-blue-800"
+//             onClick={handleOpenModal}
+//           >
+//             Change password
+//           </button>
+//           <Divider />
+//           <button
+//             className="rounded-md px-4 py-2 text-lg font-semibold text-red-400 hover:text-red-800"
+//             onClick={handleDeleteAccount}
+//           >
+//             Delete account
+//           </button>
+//         </div>
+//       </div>
+//       <Modal
+//         open={openModal}
+//         onClose={handleCloseModal}
+//         aria-labelledby="modal-modal-title"
+//         aria-describedby="modal-modal-description"
+//       >
+//         <ChangePasswordModal handleClose={handleCloseModal} />
+//       </Modal>
+//     </div>
+//   );
+// }
 
 export default function Profilepage() {
   const user = useSelector((state: RootState) => state.user);
-  const navigate = useNavigate();
+  const [openChangePasswordModal, setOpenChangePasswordModal] = useState(false);
+  const [openDeleteAccountModal, setOpenDeleteAccountModal] = useState(false);
 
+  const navigate = useNavigate();
   const role = user?.role === "ROLE_ADMIN";
 
   useEffect(() => {
@@ -16,16 +96,108 @@ export default function Profilepage() {
     }
   }, [navigate, role, user]);
 
+  const handleOpenChangePasswordModal = () => {
+    setOpenChangePasswordModal(true);
+  };
+
+  const handleOpenDeleteAccountModal = () => {
+    setOpenDeleteAccountModal(true);
+  };
+
+  const handleCloseModals = () => {
+    setOpenChangePasswordModal(false);
+    setOpenDeleteAccountModal(false);
+  };
+
+  const handleDeleteAccount = () => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete your account? This action cannot be undone.",
+    );
+
+    if (isConfirmed) {
+      toast.success("Account deleted!");
+      // Add your account deletion logic here
+    } else {
+      toast.error("Deletion cancelled.");
+    }
+    handleCloseModals();
+  };
+
   return (
     <div className="mx-auto max-w-[1240px] px-4">
       <Divider />
-      <div className="my-10 flex flex-col gap-5">
+      <div className="my-10 flex flex-col gap-3">
         <h2 className="text-2xl font-semibold">User Profile</h2>
-        <div>
-          <h4>User: {user?.username}</h4>
-          <p>Email: {user?.email}</p>
+        <div className="flex flex-col gap-3 rounded-md bg-[#f9f9f9] p-5">
+          <h3 className="text-xl font-semibold">User ID</h3>
+          <p>#{user?.id}</p>
+          <h3 className="text-xl font-semibold">Name</h3>
+          <p>{capitalize(user?.username || "")}</p>
+          <h3 className="text-xl font-semibold">Email: </h3>
+          <p>{user?.email}</p>
+        </div>
+        <div className="flex flex-col gap-3 rounded-md bg-[#f9f9f9] p-5">
+          <button
+            className="w-fit rounded-md px-4 py-2 text-lg font-semibold text-blue-400 hover:text-blue-800"
+            onClick={handleOpenChangePasswordModal}
+          >
+            Change password
+          </button>
+          <Divider />
+          <button
+            className="w-fit rounded-md px-4 py-2 text-lg font-semibold text-red-400 hover:text-red-800"
+            onClick={handleOpenDeleteAccountModal}
+          >
+            Delete account
+          </button>
         </div>
       </div>
+
+      <Modal
+        open={openChangePasswordModal}
+        onClose={handleCloseModals}
+        aria-labelledby="change-password-modal-title"
+        aria-describedby="change-password-modal-description"
+      >
+        <ChangePasswordModal handleClose={handleCloseModals} />
+      </Modal>
+
+      <Modal
+        open={openDeleteAccountModal}
+        onClose={handleCloseModals}
+        aria-labelledby="delete-account-modal-title"
+        aria-describedby="delete-account-modal-description"
+      >
+        <div className="fixed left-1/2 top-1/2 w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-lg bg-white p-5 text-center shadow-lg">
+          <h2
+            id="delete-account-modal-title"
+            className="mb-4 text-xl font-semibold"
+          >
+            Delete Account
+          </h2>
+          <p
+            id="delete-account-modal-description"
+            className="mb-6 text-gray-700"
+          >
+            Are you sure you want to delete your account? This action cannot be
+            undone.
+          </p>
+          <div className="flex justify-center gap-4">
+            <button
+              onClick={handleDeleteAccount}
+              className="rounded-md bg-red-500 px-4 py-2 text-white transition-colors hover:bg-red-600"
+            >
+              Yes, Delete
+            </button>
+            <button
+              onClick={handleCloseModals}
+              className="rounded-md bg-gray-300 px-4 py-2 text-black transition-colors hover:bg-gray-400"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
