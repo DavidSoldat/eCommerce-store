@@ -7,81 +7,6 @@ import { ChangePasswordModal } from "../components/MODALS/ChangePasswordModal";
 import { RootState } from "../redux/store";
 import { capitalize } from "../utils/helpers";
 
-// export default function Profilepage() {
-//   const user = useSelector((state: RootState) => state.user);
-//   const [openModal, setOpenModal] = useState(false);
-
-//   const navigate = useNavigate();
-
-//   const role = user?.role === "ROLE_ADMIN";
-
-//   useEffect(() => {
-//     if (user === null || role === true) {
-//       navigate("/");
-//     }
-//   }, [navigate, role, user]);
-
-//   function handleOpenModal() {
-//     setOpenModal(true);
-//   }
-
-//   function handleCloseModal() {
-//     setOpenModal(false);
-//   }
-
-//   const handleDeleteAccount = () => {
-//     const isConfirmed = window.confirm(
-//       "Are you sure you want to delete your account? This action cannot be undone.",
-//     );
-
-//     if (isConfirmed) {
-//       toast.success("Account deleted!");
-//     } else {
-//       toast.error("Deletion cancelled.");
-//     }
-//   };
-
-//   return (
-//     <div className="mx-auto max-w-[1240px] px-4">
-//       <Divider />
-//       <div className="my-10 flex flex-col gap-3">
-//         <h2 className="text-2xl font-semibold">User Profile</h2>
-//         <div className="flex flex-col gap-3 rounded-md bg-[#f9f9f9] p-5">
-//           <h3 className="text-xl font-semibold">User ID</h3>
-//           <p>{user?.id}</p>
-//           <h3 className="text-xl font-semibold">Name</h3>
-//           <p>{capitalize(user?.username || "")}</p>
-//           <h3 className="text-xl font-semibold">Email: </h3>
-//           <p>{user?.email}</p>
-//         </div>
-//         <div className="flex flex-col gap-3 rounded-md bg-[#f9f9f9] p-5">
-//           <button
-//             className="rounded-md px-4 py-2 text-lg font-semibold text-blue-400 hover:text-blue-800"
-//             onClick={handleOpenModal}
-//           >
-//             Change password
-//           </button>
-//           <Divider />
-//           <button
-//             className="rounded-md px-4 py-2 text-lg font-semibold text-red-400 hover:text-red-800"
-//             onClick={handleDeleteAccount}
-//           >
-//             Delete account
-//           </button>
-//         </div>
-//       </div>
-//       <Modal
-//         open={openModal}
-//         onClose={handleCloseModal}
-//         aria-labelledby="modal-modal-title"
-//         aria-describedby="modal-modal-description"
-//       >
-//         <ChangePasswordModal handleClose={handleCloseModal} />
-//       </Modal>
-//     </div>
-//   );
-// }
-
 export default function Profilepage() {
   const user = useSelector((state: RootState) => state.user);
   const [openChangePasswordModal, setOpenChangePasswordModal] = useState(false);
@@ -126,30 +51,32 @@ export default function Profilepage() {
   return (
     <div className="mx-auto max-w-[1240px] px-4">
       <Divider />
-      <div className="my-10 flex flex-col gap-3">
+      <div className="my-10 flex flex-col gap-3 md:my-20">
         <h2 className="text-2xl font-semibold">User Profile</h2>
-        <div className="flex flex-col gap-3 rounded-md bg-[#f9f9f9] p-5">
-          <h3 className="text-xl font-semibold">User ID</h3>
-          <p>#{user?.id}</p>
-          <h3 className="text-xl font-semibold">Name</h3>
-          <p>{capitalize(user?.username || "")}</p>
-          <h3 className="text-xl font-semibold">Email: </h3>
-          <p>{user?.email}</p>
-        </div>
-        <div className="flex flex-col gap-3 rounded-md bg-[#f9f9f9] p-5">
-          <button
-            className="w-fit rounded-md px-4 py-2 text-lg font-semibold text-blue-400 hover:text-blue-800"
-            onClick={handleOpenChangePasswordModal}
-          >
-            Change password
-          </button>
-          <Divider />
-          <button
-            className="w-fit rounded-md px-4 py-2 text-lg font-semibold text-red-400 hover:text-red-800"
-            onClick={handleOpenDeleteAccountModal}
-          >
-            Delete account
-          </button>
+        <div className="flex w-full flex-col gap-3 md:flex-row">
+          <div className="flex flex-col gap-3 rounded-md bg-[#f0f0f0] p-5 md:w-3/5">
+            <h3 className="text-xl font-semibold">User ID</h3>
+            <p>#{user?.id}</p>
+            <h3 className="text-xl font-semibold">Name</h3>
+            <p>{capitalize(user?.username || "")}</p>
+            <h3 className="text-xl font-semibold">Email: </h3>
+            <p>{user?.email}</p>
+          </div>
+          <div className="flex flex-col gap-3 rounded-md bg-[#f0f0f0] p-5 md:w-2/5 md:justify-center">
+            <button
+              className="w-fit rounded-md px-4 py-2 text-lg font-semibold text-blue-400 hover:text-blue-800"
+              onClick={handleOpenChangePasswordModal}
+            >
+              Change password
+            </button>
+            <Divider />
+            <button
+              className="w-fit rounded-md px-4 py-2 text-lg font-semibold text-red-400 hover:text-red-800"
+              onClick={handleOpenDeleteAccountModal}
+            >
+              Delete account
+            </button>
+          </div>
         </div>
       </div>
 

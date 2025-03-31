@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Cart } from "../utils/Models";
 
 interface UserState {
   id: number | null;
   email: string | null;
   username: string | null;
   role: string | null;
+  cart: Cart | null;
 }
 
 const initialState: UserState | null = {
@@ -12,6 +14,7 @@ const initialState: UserState | null = {
   email: null,
   username: null,
   role: null,
+  cart: null,
 };
 
 const userSlice = createSlice({
@@ -23,12 +26,14 @@ const userSlice = createSlice({
       state.email = action.payload.email;
       state.username = action.payload.username;
       state.role = action.payload.role;
+      state.cart = action.payload.cart;
     },
     logout: (state) => {
       state.id = null;
       state.email = null;
       state.username = null;
       state.role = null;
+      state.cart = null;
     },
   },
 });

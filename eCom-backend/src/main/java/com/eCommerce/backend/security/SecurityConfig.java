@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/products", "/api/auth/login", "/api/auth/register", "/api/auth/oauth2/**", "/api/auth/me").permitAll()
+                        .requestMatchers("/api/products", "/api/auth/login", "/api/auth/register", "/api/auth/oauth2/**", "/api/auth/me", "/api/brands").permitAll()
                         .requestMatchers("/api/auth/logout" ).authenticated()
                         .requestMatchers("/api/auth/users", "/api/auth/users/**", "/api/brands", "/api/categories").hasRole("ADMIN")
                         .anyRequest().authenticated()

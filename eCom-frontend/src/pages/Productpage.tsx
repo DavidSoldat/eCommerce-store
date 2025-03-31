@@ -5,14 +5,14 @@ import { useParams } from "react-router";
 import ImageGallery from "../components/PRODUCT/ImageGallery";
 import ItemCard from "../components/PRODUCT/ItemCard";
 import BreadCrumbs from "../components/UI/BreadCrumbs";
+import Newsletter from "../components/UI/Newsletter";
 import Review from "../components/UI/Review";
 import {
   imageModalStyle,
   initialReviewsToShow,
   totalReviews,
 } from "../utils/constants";
-import { discount } from "../utils/helpers";
-import Newsletter from "../components/UI/Newsletter";
+import { calculateDiscount } from "../utils/helpers";
 
 export default function Productpage() {
   const { category } = useParams();
@@ -119,7 +119,11 @@ export default function Productpage() {
                   </Box>
                   <div className="flex gap-3 text-2xl font-bold text-black">
                     <p>
-                      ${discount(product.productPrice, product.productDiscount)}
+                      $
+                      {calculateDiscount(
+                        product.productPrice,
+                        product.productDiscount,
+                      )}
                     </p>
                     <p className="line-through opacity-30">
                       ${product.productPrice}

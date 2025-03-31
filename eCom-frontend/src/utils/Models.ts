@@ -78,3 +78,16 @@ export interface Category {
   id: number;
   name: string;
 }
+
+export interface CartItem {
+  id: number;
+  cart: Cart;
+  product: Product;
+  quantity: number;
+}
+
+export interface Cart {
+  id: number;
+  userId: number;
+  cartItems: CartItem[];
+}

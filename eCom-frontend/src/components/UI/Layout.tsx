@@ -23,7 +23,6 @@ export default function Layout() {
       }
       if (userData) {
         dispatch(setUser(userData));
-        console.log(userData);
         setLoading(false);
       }
       setLoading(false);

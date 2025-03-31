@@ -14,5 +14,4 @@ public class Brand {
     @GeneratedValue(generator = "brand_sequence")
     private Long id;
     private String name;
-
 }

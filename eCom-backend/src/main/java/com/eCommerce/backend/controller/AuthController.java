@@ -1,12 +1,14 @@
 package com.eCommerce.backend.controller;
 
 import com.eCommerce.backend.dto.*;
+import com.eCommerce.backend.model.Cart;
 import com.eCommerce.backend.model.Role;
 import com.eCommerce.backend.model.UserEntity;
 import com.eCommerce.backend.repository.RoleRepository;
 import com.eCommerce.backend.repository.UserRepository;
 import com.eCommerce.backend.security.JwtTokenGenerator;
 import com.eCommerce.backend.security.SecurityConstants;
+import com.eCommerce.backend.service.CartService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,8 +40,7 @@ public class AuthController {
     private final JwtTokenGenerator tokenGenerator;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
-                          RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenGenerator tokenGenerator) {
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenGenerator tokenGenerator) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -84,8 +85,7 @@ public class AuthController {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = tokenGenerator.generateToken(authentication);
-
-
+            
             Cookie cookie = new Cookie("token", token);
             cookie.setHttpOnly(true);
             cookie.setSecure(true);

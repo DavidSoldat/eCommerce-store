@@ -18,11 +18,13 @@ const HamburgerMenu = () => {
 
   const handleMan = () => {
     setIsOpen(!isOpen);
+    localStorage.setItem("gender", "man");
     dispatch(setGenderCategory("man"));
   };
 
   const handleWoman = () => {
     setIsOpen(!isOpen);
+    localStorage.setItem("gender", "woman");
     dispatch(setGenderCategory("woman"));
   };
 
