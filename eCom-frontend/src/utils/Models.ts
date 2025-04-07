@@ -91,3 +91,13 @@ export interface Cart {
   userId: number;
   cartItems: CartItem[];
 }
+
+export interface CartItemModel {
+  image: string;
+  title: string;
+  size: string;
+  color: string;
+  discount: number;
+  price: number;
+  quantity: number;
+}

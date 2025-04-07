@@ -1,20 +1,27 @@
-import { useState } from "react";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { calculateDiscount } from "../../utils/helpers";
+import { CartItemModel } from "../../utils/Models";
 
-export default function CartItem({ product }) {
+export default function CartItem({
+  product,
+  updateQuantity,
+  removeItem,
+}: {
+  product: CartItemModel;
+  updateQuantity: (title: string, newQuantity: number) => void;
+  removeItem: (title: string) => void;
+}) {
   const { image, title, size, color, discount, price, quantity } = product;
+
   function handleDecrease() {
-    if (selectedQuantity > 1) {
-      setSelectedQuantity((prev) => prev - 1);
+    if (quantity > 1) {
+      updateQuantity(title, quantity - 1);
     }
   }
 
   function handleIncrease() {
-    setSelectedQuantity((prev) => prev + 1);
+    updateQuantity(title, quantity + 1);
   }
-
-  const [selectedQuantity, setSelectedQuantity] = useState<number>(quantity);
 
   return (
     <div className="flex gap-x-4 md:justify-between">
@@ -29,7 +36,7 @@ export default function CartItem({ product }) {
         <div className="flex flex-col">
           <div className="flex items-center justify-between">
             <h3 className="text-base font-bold">{title}</h3>
-            <button>
+            <button onClick={() => removeItem(title)}>
               <RiDeleteBin5Fill size={20} color="#ff3333" />
             </button>
           </div>
@@ -54,7 +61,7 @@ export default function CartItem({ product }) {
             <button className="px-3" onClick={handleDecrease}>
               -
             </button>
-            <span className="px-3">{selectedQuantity}</span>
+            <span className="px-3">{quantity}</span>
             <button className="px-3" onClick={handleIncrease}>
               +
             </button>

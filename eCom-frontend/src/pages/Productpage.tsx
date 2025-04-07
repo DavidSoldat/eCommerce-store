@@ -281,14 +281,13 @@ export default function Productpage() {
         </div>
         <Newsletter />
       </div>
-      <Modal
-        open={openModal}
-        onClose={handleCloseModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <Modal open={openModal} onClose={handleCloseModal}>
         <Box sx={imageModalStyle}>
-          <img src={selectedImage as string} alt="images" />
+          <img
+            src={selectedImage as string}
+            alt="full-screen image"
+            className="h-full w-full object-contain"
+          />
         </Box>
       </Modal>
     </>

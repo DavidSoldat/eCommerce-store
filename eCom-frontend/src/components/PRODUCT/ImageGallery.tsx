@@ -19,30 +19,25 @@ export default function ImagesGallery({
 
   return (
     <div className="flex w-full flex-col items-center md:w-2/5">
-      <div className="w-full md:max-h-[480px]">
-        <div className="w-full">
-          <img
-            src={selectedImage || images[0]}
-            alt="big image"
-            className="aspect-square max-h-80 w-full rounded-20 object-cover"
-            onClick={() => handleSelectImage(selectedImage || images[0])}
-          />
-        </div>
+      <div className="w-full">
+        <img
+          src={selectedImage || images[0]}
+          alt="big image"
+          className="h-[350px] w-full rounded-20 object-cover"
+          onClick={() => handleSelectImage(selectedImage || images[0])}
+        />
+      </div>
 
-        <div className="mt-4 flex gap-3">
-          {images.map((img, index) => (
-            <img
-              key={index}
-              src={img}
-              alt={`Thumbnail ${index + 1}`}
-              className="aspect-square w-full cursor-pointer rounded-20 border hover:border-gray-800"
-              style={{
-                width: `calc((100% - 2 * 0.75rem) / 3)`,
-              }}
-              onClick={() => setSelectedImage(img)}
-            />
-          ))}
-        </div>
+      <div className="mt-4 flex w-full gap-3">
+        {images.map((img, index) => (
+          <img
+            key={index}
+            src={img}
+            alt={`Thumbnail ${index + 1}`}
+            className="h-[120px] w-1/3 cursor-pointer rounded-20 border object-cover hover:border-gray-800"
+            onClick={() => setSelectedImage(img)}
+          />
+        ))}
       </div>
     </div>
   );

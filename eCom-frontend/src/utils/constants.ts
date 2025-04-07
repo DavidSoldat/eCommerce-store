@@ -32,9 +32,18 @@ export const imageModalStyle = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "fill",
-  p: 4,
-  bgcolor: "white",
-  borderRadius: "20px",
-  boxShadow: 24,
+  width: "90vw",
+  maxWidth: "800px",
+  height: "auto",
+  maxHeight: "800px",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  outline: "none",
+  background: "transparent",
+
+  "@media (max-width: 768px)": {
+    maxHeight: "70vh",
+    width: "95vw",
+  },
 };

@@ -1,4 +1,5 @@
 import heroImg from "../../assets/hero.png";
+import { motion } from "framer-motion";
 import vector from "../../assets/brandLogos/Vector.png";
 import vectorSm from "../../assets/brandLogos/Vector-sm.png";
 import calivnKlein from "../../assets/brandLogos/calvinKlein.png";
@@ -60,11 +61,28 @@ export default function Hero() {
         </div>
 
         <div className="hidden md:relative md:block md:w-2/5">
-          <img src={vector} alt="vector" className="absolute right-1 top-16" />
+          {/* <img src={vector} alt="vector" className="absolute right-1 top-16" />
           <img
             src={vectorSm}
             alt="vector"
             className="absolute bottom-1/3 left-8"
+          /> */}
+          <motion.img
+            src={vector}
+            alt="vector"
+            className="absolute right-1 top-16"
+            initial={{ rotate: 0 }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+          />
+
+          <motion.img
+            src={vectorSm}
+            alt="vector"
+            className="absolute bottom-1/3 left-8"
+            initial={{ rotate: 0 }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, ease: "easeInOut" }}
           />
         </div>
         <div className="relative mt-2 w-full bg-cover md:hidden">
