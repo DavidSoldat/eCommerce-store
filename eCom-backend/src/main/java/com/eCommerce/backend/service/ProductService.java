@@ -75,4 +75,11 @@ public class ProductService {
     private ProductDetailsDto mapToProductDetailsDTO(Product product) {
         return new ProductDetailsDto(product);
     }
+
+    public void removeProduct(Long productId) {
+        productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        productRepository.deleteById(productId);
+    }
 }

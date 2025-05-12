@@ -16,5 +16,4 @@ public class Category {
     @GeneratedValue(generator = "category_sequence")
     private Long id;
     private String name;
-
 }

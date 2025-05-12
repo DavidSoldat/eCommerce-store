@@ -1,5 +1,7 @@
 package com.eCommerce.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,8 +23,10 @@ public class Cart {
 
     @OneToOne
     @JoinColumn(name="user_id")
+    @JsonBackReference
     private UserEntity user;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<CartItem> cartItems = new ArrayList<>();
 }

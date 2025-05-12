@@ -4,6 +4,7 @@ import com.eCommerce.backend.dto.*;
 import com.eCommerce.backend.model.Cart;
 import com.eCommerce.backend.model.Role;
 import com.eCommerce.backend.model.UserEntity;
+import com.eCommerce.backend.repository.CartRepository;
 import com.eCommerce.backend.repository.RoleRepository;
 import com.eCommerce.backend.repository.UserRepository;
 import com.eCommerce.backend.security.JwtTokenGenerator;
@@ -35,15 +36,17 @@ import java.util.List;
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final CartRepository cartRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenGenerator tokenGenerator;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenGenerator tokenGenerator) {
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenGenerator tokenGenerator, CartRepository cartRepository) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.cartRepository = cartRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenGenerator = tokenGenerator;
     }
@@ -66,7 +69,12 @@ public class AuthController {
         Role role = roleRepository.findByName("ROLE_USER").get();
         user.setRole(role);
 
+        Cart cart = new Cart();
+        cart.setUser(user);
+        user.setCart(cart);
+
         userRepository.save(user);
+        cartRepository.save(cart);
 
         return new ResponseEntity<>("User registered successfully!", HttpStatus.OK);
     }
@@ -102,7 +110,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response) {
+    public ResponseEntity<String> logout(HttpServletResponse response) {
         Cookie cookie = new Cookie("token", null);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);

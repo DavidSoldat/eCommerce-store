@@ -18,4 +18,13 @@ public class CategoryService {
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
+
+    public void addCategory(Category category) {
+        categoryRepository.save(category);
+    }
+
+    public void removeCategory(Long categoryId) {
+        categoryRepository.findById(categoryId).orElseThrow(() -> new RuntimeException("Category not found"));
+        categoryRepository.deleteById(categoryId);
+    }
 }

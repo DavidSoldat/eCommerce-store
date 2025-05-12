@@ -1,5 +1,7 @@
 package com.eCommerce.backend.controller;
 
+import com.eCommerce.backend.dto.AddToCartRequest;
+import com.eCommerce.backend.dto.RemoveFromCartRequest;
 import com.eCommerce.backend.model.Cart;
 import com.eCommerce.backend.model.CartItem;
 import com.eCommerce.backend.service.CartService;
@@ -17,15 +19,16 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping("/{userId}")
-    public ResponseEntity<Cart> createCart(@PathVariable Long userId) {
-        Cart cart = cartService.createCartForUser(userId);
-        return new ResponseEntity<>(cart, HttpStatus.CREATED);
+
+    @PostMapping("/{userId}/add")
+    public ResponseEntity<Cart> addItemToCart(@PathVariable Long userId, @RequestBody AddToCartRequest request) {
+        Cart cart = cartService.addItemToCart(userId, request.getProductId(), request.getQuantity());
+        return new ResponseEntity<>(cart, HttpStatus.OK);
     }
 
-    @PostMapping("/{cartId}/items")
-    public ResponseEntity<Cart> addItemToCart(@PathVariable Long cartId, @RequestBody CartItem cartItem) {
-        Cart cart = cartService.addItemToCart(cartId, cartItem);
-        return new ResponseEntity<>(cart, HttpStatus.OK);
+    @DeleteMapping("/{userId}/remove")
+    public ResponseEntity<String> removeItemFromCart(@PathVariable Long userId, @RequestBody RemoveFromCartRequest request) {
+        cartService.removeItemFromCart(userId, request.getProductId());
+        return new ResponseEntity<>("Item removed from cart", HttpStatus.OK);
     }
 }
