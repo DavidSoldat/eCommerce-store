@@ -3,6 +3,9 @@ package com.eCommerce.backend.dto;
 import lombok.Data;
 
 @Data
-public class RemoveFromCartRequest {
+public class AddToCartDto {
+
     private Long productId;
+
+    private int quantity;
 }

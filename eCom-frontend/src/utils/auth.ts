@@ -72,7 +72,7 @@ export const getUserInfo = async () => {
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      toast.error(error.response?.data || error.message);
+      // toast.error(error.response?.data || error.message);
       console.error(
         "Error during fetching data: ",
         error.response?.data || error.message,
@@ -91,7 +91,7 @@ export const getUsers = async () => {
 
 export const deleteUsers = async (users: number[]) => {
   try {
-    return await api.delete(`/users/delete`, { data: users });
+    return await api.delete(`/users`, { data: users });
   } catch (error) {
     console.error(error);
   }
@@ -100,7 +100,7 @@ export const deleteUsers = async (users: number[]) => {
 export const deleteAccount = async () => {
   try {
     const response = await api.delete("/me", { withCredentials: true });
-    console.error(response);
+    console.log(response);
     return response;
   } catch (error) {
     console.error(error);

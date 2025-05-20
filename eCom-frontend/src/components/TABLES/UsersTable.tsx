@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { deleteUsers } from "../../utils/auth";
 import { UserInfo } from "../../utils/Models";
+import toast from "react-hot-toast";
 
 export default function UsersTable({
   data,
@@ -55,14 +56,24 @@ export default function UsersTable({
     },
   ];
 
-  const handleDelete = (ids: number[]) => {
+  const handleDelete = async (ids: number[]) => {
     try {
-      deleteUsers(ids);
-      setRows((prevRows) =>
-        prevRows.filter((row) => !selectedRows.includes(row.id)),
-      );
-    } catch (error) {
-      console.error(error);
+      await deleteUsers(ids);
+
+      setRows((prevRows) => prevRows.filter((row) => !ids.includes(row.id)));
+
+      toast.success("Users successfully deleted!");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error("Failed to delete users:", error);
+
+      if (error.response && error.response.data) {
+        toast.error(`Error deleting users: ${error.response.data}`);
+        alert(`Error deleting users: ${error.response.data}`);
+      } else {
+        toast.error("An unexpected error occurred during deletion.");
+        alert("An unexpected error occurred during deletion.");
+      }
     }
   };
 

@@ -14,14 +14,20 @@ public class UserInfoDto {
     private String username;
     private String email;
     private String role;
-    private Cart cart;
+    private CartDto cart;
+
 
         public UserInfoDto(UserEntity user) {
             this.id = user.getId();
             this.username = user.getUsername();
             this.email = user.getEmail();
             this.role = user.getRole().getName();
-            this.cart = user.getCart();
+
+            if (user.getCart() != null) {
+                this.cart = new CartDto(user.getCart());
+            } else {
+                this.cart = null;
+            }
         }
     }
 

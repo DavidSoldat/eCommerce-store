@@ -1,5 +1,6 @@
 package com.eCommerce.backend.service;
 
+import com.eCommerce.backend.exception.ResourceNotFoundException;
 import com.eCommerce.backend.model.Cart;
 import com.eCommerce.backend.model.CartItem;
 import com.eCommerce.backend.model.Product.Product;
@@ -8,6 +9,7 @@ import com.eCommerce.backend.repository.CartItemRepository;
 import com.eCommerce.backend.repository.CartRepository;
 import com.eCommerce.backend.repository.ProductRepository;
 import com.eCommerce.backend.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -27,38 +29,99 @@ public class CartService {
         this.cartItemRepository = cartItemRepository;
     }
 
-    public Cart addItemToCart(Long productId, Long userId, int quantity) {
-       UserEntity user = userRepository.findById(userId).orElseThrow();
-       Cart cart = user.getCart();
-       Product product = productRepository.findById(productId).orElseThrow();
+    public Cart getCartByUserEmail(String userEmail) {
+        UserEntity user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + userEmail));
+        return user.getCart();
+    }
 
-        Optional<CartItem> existingItem = cart.getCartItems().stream()
-                .filter(item -> item.getProduct().getId().equals((productId))).findFirst();
-
-        if(existingItem.isPresent()) {
-            CartItem item = existingItem.get();
-            item.setQuantity(item.getQuantity() + quantity);
-            cartItemRepository.save(item);
-        } else {
-            CartItem newItem = new CartItem();
-            newItem.setProduct(product);
-            newItem.setQuantity(quantity);
-            newItem.setCart(cart);
-            cartItemRepository.save(newItem);
+    @Transactional
+    public CartItem addItemToCart(String userEmail, Long productId, int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than zero.");
         }
+        UserEntity user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + userEmail));
+
+        Cart cart = user.getCart();
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + productId));
+
+        Optional<CartItem> existingCartItem = cartItemRepository.findByCartIdAndProductId(cart.getId(), productId);
+
+        CartItem cartItem;
+        if(existingCartItem.isPresent()) {
+            cartItem = existingCartItem.get();
+            cartItem.setQuantity(cartItem.getQuantity() + quantity);
+        } else {
+            cartItem = new CartItem();
+            cartItem.setCart(cart);
+            cartItem.setProduct(product);
+            cartItem.setQuantity(quantity);
+            cart.getCartItems().add(cartItem);
+        }
+        return cartItemRepository.save(cartItem);
+    }
+
+    @Transactional
+    public CartItem updateCartItemQuantity(String userEmail, long productId, int newQuantity) {
+        if (newQuantity <= 0) {
+            removeItemFromCart(userEmail, productId);
+            return null;
+        }
+
+        UserEntity user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + userEmail));
+        Cart cart = user.getCart();
+        if (cart == null) {
+            throw new ResourceNotFoundException("Cart not found for user: " + userEmail);
+        }
+
+        CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cart.getId(), productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found in cart."));
+
+        cartItem.setQuantity(newQuantity);
+        return cartItemRepository.save(cartItem);
+    }
+
+    @Transactional
+    public void removeItemFromCart(String userEmail, long productId) {
+        UserEntity user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + userEmail));
+        Cart cart = user.getCart();
+        if (cart == null) {
+            throw new ResourceNotFoundException("Cart not found for user: " + userEmail);
+        }
+
+        CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cart.getId(), productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found in cart."));
+
+        cart.getCartItems().remove(cartItem);
+        cartItemRepository.delete(cartItem);
+    }
+
+    @Transactional
+    public void clearCart(String userEmail) {
+        UserEntity user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + userEmail));
+        Cart cart = user.getCart();
+        if (cart == null) {
+            throw new ResourceNotFoundException("Cart not found for user: " + userEmail);
+        }
+
+        cartItemRepository.deleteAll(cart.getCartItems());
+        cart.getCartItems().clear();
+    }
+
+    @Transactional
+    public Cart getLoggedInUserCart(String userEmail) {
+        UserEntity user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + userEmail));
+        Cart cart = user.getCart();
+        if (cart == null) {
+            throw new ResourceNotFoundException("Cart not found for user.");
+        }
+
         return cart;
     }
 
-    public void removeItemFromCart(Long userId, Long productId) {
-        UserEntity user = userRepository.findById(userId).orElseThrow();
-        Cart cart = user.getCart();
-
-        CartItem itemToRemove = cart.getCartItems().stream()
-                .filter(item -> item.getProduct().getId().equals(productId))
-                .findFirst().
-                orElseThrow(() -> new RuntimeException("Product not found in cart"));
-
-        cart.getCartItems().remove(itemToRemove);
-        cartItemRepository.delete(itemToRemove);
-    }
 }

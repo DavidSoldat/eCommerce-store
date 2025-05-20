@@ -13,8 +13,10 @@ import com.eCommerce.backend.service.CartService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -53,6 +55,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
+    @Transactional
     public ResponseEntity<String> register(@Validated @RequestBody RegisterDto registerDto) {
         if(userRepository.existsByEmail(registerDto.getEmail())) {
             return new ResponseEntity<>("User with this email already exists!", HttpStatus.BAD_REQUEST);
@@ -67,7 +70,9 @@ public class AuthController {
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
-        Role role = roleRepository.findByName("ROLE_USER").get();
+        Role role = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("Default ROLE_USER not found. Please configure roles."));
+
         user.setRole(role);
 
         Cart cart = new Cart();
@@ -123,6 +128,7 @@ public class AuthController {
     }
 
     @GetMapping("/users")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<UsersResponseDto> getAllUsers() {
         List<UserEntity> users = userRepository.findAll();
         List<UserInfoDto> userInfoDto = users.stream()
@@ -157,6 +163,7 @@ public class AuthController {
     }
 
     @DeleteMapping("/me")
+    @Transactional
     public ResponseEntity<String> deleteOwnAccount(@CookieValue(name = "token", required = false) String token) {
         if (token == null) {
             return new ResponseEntity<>("Token is missing", HttpStatus.UNAUTHORIZED);
@@ -172,25 +179,32 @@ public class AuthController {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        userRepository.delete(user);
-
-        return ResponseEntity.ok("Your account has been deleted");
+        try {
+            userRepository.delete(user);
+            return ResponseEntity.ok("Your account has been deleted");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error deleting account");
+        }
     }
 
-    @DeleteMapping("/users/{userIds}")
+    @DeleteMapping("/users")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @Transactional
     public ResponseEntity<String> deleteUsers(@RequestBody List<Long> userIds) {
-        try{
+        try {
             userRepository.deleteAllById(userIds);
-            return new ResponseEntity<>("User successfully deleted!", HttpStatus.OK);
+            return new ResponseEntity<>("Users successfully deleted!", HttpStatus.OK);
+        } catch (DataIntegrityViolationException e) {
+            return new ResponseEntity<>("Cannot delete users due to existing related data (e.g., orders). Ensure cascading delete is configured or related data is removed first.", HttpStatus.CONFLICT);
         } catch (Exception e) {
-            return new ResponseEntity<>("Unable to delete user", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("An unexpected error occurred while deleting users.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PatchMapping("/users/{userId}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> editUser(@PathVariable Long userId, @RequestBody EditUserDto editUserDto) {
-
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         if (editUserDto.getUsername() != null) {
