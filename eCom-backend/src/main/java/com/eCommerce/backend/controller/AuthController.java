@@ -23,6 +23,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -155,10 +156,31 @@ public class AuthController {
         return new ResponseEntity<>(userInfo, HttpStatus.OK);
     }
 
+    @DeleteMapping("/me")
+    public ResponseEntity<String> deleteOwnAccount(@CookieValue(name = "token", required = false) String token) {
+        if (token == null) {
+            return new ResponseEntity<>("Token is missing", HttpStatus.UNAUTHORIZED);
+        }
+
+        if (!tokenGenerator.validateToken(token)) {
+            return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
+        }
+
+        Claims claims = tokenGenerator.getClaimsFromToken(token);
+        String email = claims.getSubject();
+
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        userRepository.delete(user);
+
+        return ResponseEntity.ok("Your account has been deleted");
+    }
+
     @DeleteMapping("/users/{userIds}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long[] userIds) {
+    public ResponseEntity<String> deleteUsers(@RequestBody List<Long> userIds) {
         try{
-            userRepository.deleteAllById(Arrays.asList(userIds));
+            userRepository.deleteAllById(userIds);
             return new ResponseEntity<>("User successfully deleted!", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Unable to delete user", HttpStatus.NOT_FOUND);

@@ -2,7 +2,7 @@ import { Button, IconButton, Paper } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
-import { deleteUser } from "../../utils/auth";
+import { deleteUsers } from "../../utils/auth";
 import { UserInfo } from "../../utils/Models";
 
 export default function UsersTable({
@@ -57,7 +57,7 @@ export default function UsersTable({
 
   const handleDelete = (ids: number[]) => {
     try {
-      deleteUser(ids);
+      deleteUsers(ids);
       setRows((prevRows) =>
         prevRows.filter((row) => !selectedRows.includes(row.id)),
       );

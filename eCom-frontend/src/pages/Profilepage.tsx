@@ -6,13 +6,18 @@ import { useNavigate } from "react-router";
 import { ChangePasswordModal } from "../components/MODALS/ChangePasswordModal";
 import { RootState } from "../redux/store";
 import { capitalize } from "../utils/helpers";
+import { deleteAccount } from "../utils/auth";
+import { logout } from "../redux/userSlice";
+import { useDispatch } from "react-redux";
 
 export default function Profilepage() {
   const user = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [openChangePasswordModal, setOpenChangePasswordModal] = useState(false);
   const [openDeleteAccountModal, setOpenDeleteAccountModal] = useState(false);
 
-  const navigate = useNavigate();
   const role = user?.role === "ROLE_ADMIN";
 
   useEffect(() => {
@@ -34,18 +39,22 @@ export default function Profilepage() {
     setOpenDeleteAccountModal(false);
   };
 
-  const handleDeleteAccount = () => {
-    const isConfirmed = window.confirm(
-      "Are you sure you want to delete your account? This action cannot be undone.",
-    );
+  const handleDeleteAccount = async () => {
+    try {
+      const response = await deleteAccount(); 
 
-    if (isConfirmed) {
-      toast.success("Account deleted!");
-      // Add your account deletion logic here
-    } else {
-      toast.error("Deletion cancelled.");
+      if (response?.status === 200) {
+        toast.success("Account deleted!");
+        dispatch(logout());
+        navigate("/");
+        handleCloseModals();
+      } else {
+        toast.error("Failed to delete account.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while deleting your account.");
+      console.error(error);
     }
-    handleCloseModals();
   };
 
   return (

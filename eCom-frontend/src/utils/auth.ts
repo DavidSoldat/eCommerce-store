@@ -89,9 +89,18 @@ export const getUsers = async () => {
   return response.data.data;
 };
 
-export const deleteUser = async (users: number[]) => {
+export const deleteUsers = async (users: number[]) => {
   try {
-    const response = await api.delete(`/users/delete/${users}`);
+    return await api.delete(`/users/delete`, { data: users });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const deleteAccount = async () => {
+  try {
+    const response = await api.delete("/me", { withCredentials: true });
+    console.error(response);
     return response;
   } catch (error) {
     console.error(error);

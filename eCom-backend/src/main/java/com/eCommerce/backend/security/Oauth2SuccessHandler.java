@@ -1,5 +1,6 @@
 package com.eCommerce.backend.security;
 
+import com.eCommerce.backend.model.Cart;
 import com.eCommerce.backend.model.Role;
 import com.eCommerce.backend.model.UserEntity;
 import com.eCommerce.backend.repository.RoleRepository;
@@ -65,6 +66,9 @@ public class Oauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             newUser.setUsername(username);
             Role role = roleRepository.findByName("ROLE_USER").get();
             newUser.setRole(role);
+            Cart cart = new Cart();
+            newUser.setCart(cart);
+            cart.setUser(newUser);
 
             userRepository.save(newUser);
         }
