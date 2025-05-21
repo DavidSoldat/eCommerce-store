@@ -26,7 +26,7 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<Product> addProduct(@RequestBody Product product) {
         Product savedProduct = productService.addProduct(product);
         return ResponseEntity.ok(savedProduct);

@@ -10,7 +10,6 @@ import com.eCommerce.backend.service.CartService;
 import io.jsonwebtoken.Claims;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -41,7 +40,7 @@ public class CartController {
             @RequestBody AddToCartDto addToCartDto) {
         try {
             String userEmail = getUserEmailFromToken(token);
-            CartItem cartItem = cartService.addItemToCart(userEmail, addToCartDto.getProductId(), addToCartDto.getQuantity());
+            CartItem cartItem = cartService.addItemToCart(userEmail, addToCartDto.getProductId(), addToCartDto.getColor(), addToCartDto.getSize(), addToCartDto.getQuantity());
             return new ResponseEntity<>(cartItem, HttpStatus.CREATED);
         } catch (UnauthorizedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);

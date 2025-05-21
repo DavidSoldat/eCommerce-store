@@ -10,6 +10,11 @@ export async function deleteProducts(ids: number[]) {
   console.log(ids);
 }
 
+export async function getProductDetails(productId: number) {
+  const response = await api.get(`/products/${productId}`);
+  return response.data
+}
+
 export async function getProducts() {
   const response = await api.get("/products");
   return response.data;

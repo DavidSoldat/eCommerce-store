@@ -36,7 +36,7 @@ public class CartService {
     }
 
     @Transactional
-    public CartItem addItemToCart(String userEmail, Long productId, int quantity) {
+    public CartItem addItemToCart(String userEmail, Long productId, Long color, Long size, int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be greater than zero.");
         }

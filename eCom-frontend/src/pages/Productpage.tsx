@@ -1,9 +1,8 @@
 import { Box, Divider, Modal, Rating } from "@mui/material";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useParams } from "react-router";
 import ImageGallery from "../components/PRODUCT/ImageGallery";
-import ItemCard from "../components/PRODUCT/ItemCard";
 import BreadCrumbs from "../components/UI/BreadCrumbs";
 import Newsletter from "../components/UI/Newsletter";
 import Review from "../components/UI/Review";
@@ -13,35 +12,37 @@ import {
   totalReviews,
 } from "../utils/constants";
 import { calculateDiscount } from "../utils/helpers";
+import { ProductColors, ProductDetailsDto } from "../utils/Models";
+import { getProductDetails } from "../utils/products";
 
 export default function Productpage() {
-  const { category } = useParams();
-  const product = {
-    productName: "one life graphic t shirt",
-    productImages: [],
-    productRating: 4.5,
-    productPrice: 300,
-    productQuantity: 1,
-    productCategory: category as string,
-    productDiscount: 40,
-    reviews: [],
-    productDescription:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit.Voluptate similique ut debitis. Rem dicta vitae harum veniam totam incidunt mnis nemo rerum molestias nobis aliquid reiciendisfugiat, pariatur, iure sequi. Lorem ipsum, dolor sit ametconsectetur adipisicing elit. Natus quos molestiae iste repellat quae quia odit dolor adipisci earum nostrum. Cupiditate dolorum nisi molestias eligendi hic et commodi dolores perspiciatis! Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis, asperiores nostrum? Provident, dolores sapiente temporibus  suscipit reprehenderit molestiae commodi ab blanditiis voluptate corrupti iusto corporis ea voluptatibus unde quidem fuga. Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum nostrum, fuga excepturi quam harum, temporibus fugit optio ipsa quod iste distinctio. Fugit magni sequi saepe obcaecati similique, quo asperiores laudantium.",
-    productColors: ["#4F4631", "#314F4A", "#31344F"],
-    productSizes: ["small", "medium", "large"],
-  };
-
+  const { productId } = useParams();
+  const [product, setProduct] = useState<ProductDetailsDto | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [selectedSize, setSelectedSize] = useState(product.productSizes[0]);
-  const [selectedQuantity, setSelectedQuantity] = useState<number>(
-    product.productQuantity || 1,
+  const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
+  const [selectedSize, setSelectedSize] = useState<ProductColors | null>(null);
+  const [selectedColor, setSelectedColor] = useState<ProductColors | null>(
+    null,
   );
-  const [selectedColor, setSelectedColor] = useState(product.productColors[0]);
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [showFullText, setShowFullText] = useState(false);
+  const [rating, setRating] = useState(4.5);
 
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const response = await getProductDetails(Number(productId));
+      setProduct(response);
+      setSelectedColor(response.productColors[0]);
+      setSelectedSize(response.productSizes[0]);
+      setSelectedQuantity(1);
+      setRating(response.productRating);
+    };
+
+    fetchProduct();
+  }, [productId]);
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
@@ -69,7 +70,7 @@ export default function Productpage() {
     setShowAllReviews(!showAllReviews);
   };
 
-  const truncatedText = product.productDescription.slice(0, 130) + "...";
+  const truncatedText = product?.productDescription.slice(0, 130) + "...";
 
   const toggleShowFullText = () => {
     setShowFullText(!showFullText);
@@ -81,6 +82,15 @@ export default function Productpage() {
 
   function handleCloseModal() {
     setOpenModal(false);
+  }
+
+  function handleAddToCart() {
+    console.log("Add to cart: ", {
+      productId,
+      selectedColor,
+      selectedSize,
+      selectedQuantity,
+    });
   }
 
   return (
@@ -100,7 +110,7 @@ export default function Productpage() {
               <div className="flex flex-col gap-4 md:w-3/5">
                 <div className="flex flex-col gap-3">
                   <h2 className="font-[IntegralCF] text-2xl font-bold uppercase">
-                    {product.productName}
+                    {product?.productName}
                   </h2>
                   <Box
                     sx={{ "& > legend": { mt: 2 } }}
@@ -109,33 +119,35 @@ export default function Productpage() {
                     <Rating
                       name="read-only"
                       precision={0.5}
-                      value={product.productRating}
+                      value={rating}
                       size="medium"
                       readOnly
                     />
                     <span className="text-base text-black opacity-60">
-                      {product.productRating}/5
+                      {rating}/5
                     </span>
                   </Box>
                   <div className="flex gap-3 text-2xl font-bold text-black">
                     <p>
                       $
                       {calculateDiscount(
-                        product.productPrice,
-                        product.productDiscount,
+                        product?.productPrice as number,
+                        product?.productDiscount as number,
                       )}
                     </p>
                     <p className="line-through opacity-30">
-                      ${product.productPrice}
+                      $
+                      {Math.round((product?.productPrice as number) * 100) /
+                        100}
                     </p>
                     <div className="flex items-center rounded-60 bg-red-50 px-3">
                       <span className="text-sm font-medium text-red-500">
-                        -{product.productDiscount}%
+                        -{product?.productDiscount as number}%
                       </span>
                     </div>
                   </div>
                   <p className="text-black opacity-60">
-                    {product.productDescription.slice(0, 100)}
+                    {product?.productDescription.slice(0, 100)}
                   </p>
                 </div>
 
@@ -144,18 +156,16 @@ export default function Productpage() {
                 <div className="flex flex-col gap-3">
                   <h4 className="text-black opacity-60">Choose Colors</h4>
                   <div className="flex gap-x-3">
-                    {product.productColors.map((color, i) => (
+                    {product?.productColors.map((color: ProductColors) => (
                       <div
-                        key={i}
+                        key={color.id}
                         className={`flex h-10 w-10 cursor-pointer items-center justify-center rounded-full ring-1 ring-gray-300 ${
-                          selectedColor === color[i]
-                            ? "ring-4 ring-gray-300"
-                            : ""
+                          selectedColor === color ? "ring-4 ring-gray-300" : ""
                         }`}
-                        style={{ backgroundColor: color }}
-                        onClick={() => setSelectedColor(color[i])}
+                        style={{ backgroundColor: color.name }}
+                        onClick={() => setSelectedColor(color)}
                       >
-                        {selectedColor === color[i] && (
+                        {selectedColor === color && (
                           <span className="font-bold text-white">&#10003;</span>
                         )}
                       </div>
@@ -168,15 +178,15 @@ export default function Productpage() {
                 <div className="flex flex-col gap-3">
                   <h4 className="text-black opacity-60">Choose Size</h4>
                   <div className="flex flex-wrap gap-x-3">
-                    {product.productSizes.map((size, i) => (
+                    {product?.productSizes.map((size: ProductColors) => (
                       <button
-                        key={i}
+                        key={size.id}
                         className={`rounded-60 bg-[#f0f0f0] px-5 py-3 capitalize ${
                           selectedSize === size ? "bg-black text-white" : ""
                         }`}
                         onClick={() => setSelectedSize(size)}
                       >
-                        {size}
+                        {size.name}
                       </button>
                     ))}
                   </div>
@@ -202,7 +212,10 @@ export default function Productpage() {
                       +
                     </button>
                   </div>
-                  <button className="flex flex-grow items-center justify-center rounded-60 bg-black px-5 py-3 capitalize text-white">
+                  <button
+                    className="flex flex-grow items-center justify-center rounded-60 bg-black px-5 py-3 capitalize text-white"
+                    onClick={() => handleAddToCart()}
+                  >
                     <p>Add to Cart</p>
                   </button>
                 </div>
@@ -213,10 +226,10 @@ export default function Productpage() {
 
             <div className="flex flex-col gap-3">
               <h4 className="text-black opacity-60">Product details</h4>
-              <p className="hidden md:block">{product.productDescription}</p>
+              <p className="hidden md:block">{product?.productDescription}</p>
 
               <p className="md:hidden">
-                {showFullText ? product.productDescription : truncatedText}
+                {showFullText ? product?.productDescription : truncatedText}
               </p>
 
               <button
@@ -270,11 +283,11 @@ export default function Productpage() {
                 ref={scrollContainerRef}
                 className="scrollbar-hide hideScroll flex w-full flex-nowrap space-x-4 overflow-x-auto py-2 md:justify-center"
               >
+                {/* <ItemCard category={category as string} />
                 <ItemCard category={category as string} />
                 <ItemCard category={category as string} />
                 <ItemCard category={category as string} />
-                <ItemCard category={category as string} />
-                <ItemCard category={category as string} />
+                <ItemCard category={category as string} /> */}
               </div>
             </div>
           </div>

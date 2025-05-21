@@ -1,6 +1,6 @@
 export function calculateDiscount(price: number, discountPercentage: number) {
   const discountAmount = (price * discountPercentage) / 100;
-  return price - discountAmount;
+  return Math.round((price - discountAmount) * 100) / 100;
 }
 
 export function formatNumber(num: number) {

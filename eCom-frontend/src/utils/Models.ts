@@ -14,6 +14,11 @@ export interface UserInfo {
   role: string;
 }
 
+export interface ProductColors {
+  id: number;
+  name: string;
+}
+
 export interface Product {
   id: number;
   productName: string;
@@ -24,14 +29,14 @@ export interface Product {
   genderCategory: string;
   productDiscount: number;
   productQuantity: number;
-  productSizes: string[];
-  productColors: string[];
+  productSizes: ProductColors[];
+  productColors: ProductColors[];
   productImages: string[];
   reviews: Review[];
 }
 
 export interface ProductDetailsDto {
-  productId: number;
+  id: number;
   productName: string;
   productPrice: number;
   productDescription: string;
@@ -42,8 +47,8 @@ export interface ProductDetailsDto {
   createdAt: string;
   brandName: string;
   categoryName: string;
-  colors: string[];
-  sizes: string[];
+  productSizes: ProductColors[];
+  productColors: ProductColors[];
   images: string[];
   reviews: string[];
 }

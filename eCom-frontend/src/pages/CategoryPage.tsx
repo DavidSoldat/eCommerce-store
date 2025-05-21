@@ -1,6 +1,6 @@
 import { Divider } from "@mui/material";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { GiSettingsKnobs } from "react-icons/gi";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useSelector } from "react-redux";
@@ -9,6 +9,8 @@ import ItemCard from "../components/PRODUCT/ItemCard";
 import BreadCrumbs from "../components/UI/BreadCrumbs";
 import Newsletter from "../components/UI/Newsletter";
 import { RootState } from "../redux/store";
+import { getProducts } from "../utils/products";
+import { ProductDetailsDto } from "../utils/Models";
 
 export default function CategoryPage() {
   const { category } = useParams();
@@ -16,6 +18,7 @@ export default function CategoryPage() {
   const genderCategory = useSelector(
     (state: RootState) => state.genderCategory.genderCategory,
   );
+  const [products, setProducts] = useState<ProductDetailsDto[] | []>([]);
 
   useEffect(() => {
     setSearchParams((prevParams) => {
@@ -24,6 +27,19 @@ export default function CategoryPage() {
       return newParams;
     });
   }, [genderCategory, setSearchParams]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await getProducts();
+        setProducts(response);
+      } catch (error) {
+        console.error("An error accured fetching products", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   function handleClick(itemCategory: string) {
     setSearchParams((prevParams) => {
@@ -79,13 +95,14 @@ export default function CategoryPage() {
             </div>
           </div>
           <div className="grid flex-1 grid-cols-2 justify-items-center sm:grid-cols-3 md:gap-3 lg:grid-cols-4">
-            <ItemCard category={category as string} small={true} />
-            <ItemCard category={category as string} small={true} />
-            <ItemCard category={category as string} small={true} />
-            <ItemCard category={category as string} small={true} />
-            <ItemCard category={category as string} small={true} />
-            <ItemCard category={category as string} small={true} />
-            <ItemCard category={category as string} small={true} />
+            {products.map((product: ProductDetailsDto) => (
+              <ItemCard
+                key={product.id}
+                category={category as string}
+                small={true}
+                product={product}
+              />
+            ))}
           </div>
         </div>
       </div>
