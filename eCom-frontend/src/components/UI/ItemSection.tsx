@@ -1,5 +1,8 @@
 import { Link } from "react-router";
 import ItemCard from "../PRODUCT/ItemCard";
+import { useEffect, useState } from "react";
+import { getProducts } from "../../utils/products";
+import { ProductDetailsDto } from "../../utils/Models";
 
 export default function ItemsSection({
   title,
@@ -8,6 +11,19 @@ export default function ItemsSection({
   title: string;
   small?: boolean;
 }) {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const res = await getProducts();
+        setProducts(res.slice(0, 4));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchItems();
+  }, []);
   return (
     <div
       className={`flex w-full flex-col justify-center gap-5 py-10 md:mx-auto md:max-w-[1240px] ${small ? "py-0" : ""}`}
@@ -21,17 +37,14 @@ export default function ItemsSection({
       <div className="flex flex-col gap-5 md:items-center">
         <div className="container mx-auto md:mx-0 md:w-full">
           <div className="scrollbar-hide flex space-x-4 overflow-x-auto md:hidden">
-            <ItemCard category={`${title}`} />
-            <ItemCard category={`${title}`} />
-            <ItemCard category={`${title}`} />
-            <ItemCard category={`${title}`} />
+            {products.map((prod: ProductDetailsDto) => (
+              <ItemCard category={`${title}`} key={prod.id} product={prod} />
+            ))}
           </div>
           <div className="hidden md:flex md:flex-wrap md:justify-around md:gap-5 lg:grid-cols-5 lg:justify-items-center">
-            <ItemCard category={`${title}`} />
-            <ItemCard category={`${title}`} />
-            <ItemCard category={`${title}`} />
-            <ItemCard category={`${title}`} />
-            <ItemCard category={`${title}`} />
+            {products.map((prod: ProductDetailsDto) => (
+              <ItemCard category={`${title}`} key={prod.id} product={prod} />
+            ))} 
           </div>
         </div>
         <Link

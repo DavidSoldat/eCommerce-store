@@ -45,7 +45,7 @@ export default function ItemCard({
           <p className="pb-2 text-lg font-semibold line-through opacity-50">
             ${Math.round(product.productPrice * 100) / 100}
           </p>
-          <p className="mb-2 rounded-13 bg-red-50 px-1 text-lg font-extrabold text-red-400">
+          <p className="mb-2 hidden rounded-13 bg-red-50 px-1 text-lg font-extrabold text-red-400 md:block">
             -{product.productDiscount}%
           </p>
         </div>
