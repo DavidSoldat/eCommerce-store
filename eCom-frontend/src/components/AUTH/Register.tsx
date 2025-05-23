@@ -85,6 +85,7 @@ export default function Register() {
             {...register("email")}
             type="email"
             id="email"
+            autoFocus={true}
             placeholder="Enter email"
             autoComplete="off"
             className={`rounded-13 border px-3 py-1 ${errors.email ? "border-red-500 text-sm" : ""}`}

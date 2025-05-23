@@ -1,31 +1,42 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box } from "@mui/material";
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { editModalStyle } from "../../utils/constants";
 import { Brand, Category, ProductDetailsDto } from "../../utils/Models";
-import { editProduct } from "../../utils/products";
+import { editProduct, getBrands, getCategories } from "../../utils/products";
 import { editProductSchema } from "../../utils/zodSchemas";
 
 export const EditProductModal = forwardRef(
   (
     {
       product,
-      brands,
-      categories,
       handleClose,
-      fetchData,
     }: {
       product: ProductDetailsDto | null;
-      brands: Brand[] | null;
-      categories: Category[] | null;
       handleClose: () => void;
-      fetchData: () => void;
     },
     ref,
   ) => {
+    const [brands, setBrands] = useState([]);
+    const [categories, setCategories] = useState([]);
+
+    const fetchData = async () => {
+      try {
+        const [bra, cat] = await Promise.all([getBrands(), getCategories()]);
+        setBrands(bra);
+        setCategories(cat);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    useEffect(() => {
+      fetchData();
+    }, []);
+
     type FormData = z.infer<typeof editProductSchema>;
     const {
       register,
@@ -38,10 +49,9 @@ export const EditProductModal = forwardRef(
 
     async function onSubmit(data: FormData) {
       try {
-        const response = await editProduct(data.productId, data);
+        const response = await editProduct(data.id, data);
         if (response?.status === 200) {
           handleClose();
-          fetchData();
         }
       } catch (error) {
         console.error(error);
@@ -51,13 +61,11 @@ export const EditProductModal = forwardRef(
     return (
       <Box sx={editModalStyle} ref={ref} tabIndex={0}>
         <div className="flex w-full flex-col items-center gap-10">
-          <h3 className="text-xl font-semibold">
-            Edit product {product?.productId}
-          </h3>
+          <h3 className="text-xl font-semibold">Edit product {product?.id}</h3>
 
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col items-start gap-5 rounded-13 border p-5"
+            className="flex w-full flex-col items-start gap-5 rounded-13 border p-5"
           >
             {/* name */}
             <div className="flex w-full flex-col">
@@ -162,8 +170,8 @@ export const EditProductModal = forwardRef(
                   id="brandName"
                   className={`flex-1 rounded-13 border px-3 py-1 ${errors.brandName ? "border-red-500 text-sm" : ""}`}
                 >
-                  {brands?.map((brand, i) => (
-                    <option key={i} value={brand.name}>
+                  {brands?.map((brand: Brand) => (
+                    <option key={brand.id} value={brand.name}>
                       {brand.name}
                     </option>
                   ))}
@@ -184,8 +192,10 @@ export const EditProductModal = forwardRef(
                   id="categoryName"
                   className={`flex-1 rounded-13 border px-3 py-1 ${errors.categoryName ? "border-red-500 text-sm" : ""}`}
                 >
-                  {categories?.map((category) => (
-                    <option value={category.name}>{category.name}</option>
+                  {categories?.map((category: Category) => (
+                    <option key={category.id} value={category.name}>
+                      {category.name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -204,8 +214,10 @@ export const EditProductModal = forwardRef(
                   id="categoryName"
                   className={`flex-1 rounded-13 border px-3 py-1 ${errors.categoryName ? "border-red-500 text-sm" : ""}`}
                 >
-                  {categories?.map((category) => (
-                    <option value={category.name}>{category.name}</option>
+                  {categories?.map((category: Category) => (
+                    <option key={category.id} value={category.name}>
+                      {category.name}
+                    </option>
                   ))}
                 </select>
               </div>

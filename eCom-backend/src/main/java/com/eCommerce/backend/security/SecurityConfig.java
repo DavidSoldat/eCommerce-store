@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/products", "/api/auth/login", "/api/auth/register", "/api/auth/oauth2/**", "/api/auth/me", "/api/brands").permitAll()
                         .requestMatchers("/api/auth/logout", "api/auth/users/me" ).authenticated()
-                        .requestMatchers("/api/auth/users", "/api/auth/users/**", "/api/brands", "/api/categories").hasRole("ADMIN")
+                        .requestMatchers("/api/auth/users", "/api/auth/users/**", "/api/categories").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2

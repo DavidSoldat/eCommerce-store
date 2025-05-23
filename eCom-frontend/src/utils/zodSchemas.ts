@@ -30,6 +30,11 @@ export const editUserSchema = z.object({
   role: z.string().nonempty("Role is required"),
 });
 
+const helperSchema = z.object({
+  id: z.number().int().positive(),
+  name: z.string().min(1),
+});
+
 export const addProductSchema = z.object({
   productId: z.number().nonnegative(),
   productName: z.string().nonempty(),
@@ -49,20 +54,21 @@ export const addProductSchema = z.object({
 });
 
 export const editProductSchema = z.object({
-  productId: z.number().nonnegative(),
+  id: z.number().nonnegative(),
   productName: z.string().nonempty(),
   productPrice: z.number().nonnegative(),
   productDescription: z.string().nonempty(),
   productDiscount: z.number(),
+  productQuantity: z.number(),
   genderCategory: z.string(),
   brandName: z.string(),
   categoryName: z.string(),
-  colors: z.string().array(),
-  sizes: z.string().array(),
+  productColors: helperSchema.array(),
+  productSizes: helperSchema.array(),
 });
 
 export const addBrandSchema = z.object({
-  brandName: z.string().nonempty(),
+  name: z.string().nonempty(),
 });
 
 export const changePasswordSchema = z.object({

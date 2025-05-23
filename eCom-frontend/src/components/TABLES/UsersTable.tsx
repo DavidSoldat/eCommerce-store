@@ -1,24 +1,22 @@
 import { Button, IconButton, Paper } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
-import { deleteUsers } from "../../utils/auth";
+import { deleteUsers, getUsers } from "../../utils/auth";
 import { UserInfo } from "../../utils/Models";
 import toast from "react-hot-toast";
 
 export default function UsersTable({
-  data,
   handleOpenModal,
   setSelectedUser,
   setModalType,
 }: {
-  data: UserInfo[] | [];
   handleOpenModal: () => void;
   setSelectedUser: (user: UserInfo) => void;
   setModalType: (type: string) => void;
 }) {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-  const [rows, setRows] = useState(data);
+  const [rows, setRows] = useState([]);
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 70 },
@@ -56,11 +54,26 @@ export default function UsersTable({
     },
   ];
 
+  const fetchUsers = async () => {
+    try {
+      const response = await getUsers();
+      setRows(response);
+    } catch (error) {
+      console.error(error);
+      toast.error(error as string);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   const handleDelete = async (ids: number[]) => {
     try {
       await deleteUsers(ids);
-
-      setRows((prevRows) => prevRows.filter((row) => !ids.includes(row.id)));
+      setRows((prevRows) =>
+        prevRows.filter((row: UserInfo) => !ids.includes(row.id)),
+      );
 
       toast.success("Users successfully deleted!");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -69,10 +82,8 @@ export default function UsersTable({
 
       if (error.response && error.response.data) {
         toast.error(`Error deleting users: ${error.response.data}`);
-        alert(`Error deleting users: ${error.response.data}`);
       } else {
         toast.error("An unexpected error occurred during deletion.");
-        alert("An unexpected error occurred during deletion.");
       }
     }
   };

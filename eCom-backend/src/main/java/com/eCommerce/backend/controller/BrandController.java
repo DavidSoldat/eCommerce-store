@@ -1,5 +1,6 @@
 package com.eCommerce.backend.controller;
 
+import com.eCommerce.backend.dto.AddBrandDto;
 import com.eCommerce.backend.model.Product.Brand;
 import com.eCommerce.backend.service.BrandService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +28,14 @@ public class BrandController {
         return brandService.getAllBrands();
     }
 
-    @PostMapping
-    public List<Brand> addBrand(@RequestBody Brand brand) {
-        return brandService.addBrand(brand);
+    @PostMapping("/add")
+    public ResponseEntity<String> addBrand(@RequestBody AddBrandDto data) {
+        Brand brand = new Brand();
+        log.info("Received data:", data.getName());
+        brand.setName(data.getName());
+        log.info("Saved brand", brand.getName());
+        brandService.addBrand(brand);
+        return new ResponseEntity<>("New brand added", HttpStatus.OK);
     }
 
     @DeleteMapping

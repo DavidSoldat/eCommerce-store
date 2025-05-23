@@ -1,27 +1,40 @@
 import { Button, IconButton, Paper } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { Brand } from "../../utils/Models";
-import { deleteBrands } from "../../utils/products";
+import { deleteBrands, getBrands } from "../../utils/products";
+import toast from "react-hot-toast";
 
 export default function BrandsTable({
-  brands,
   handleOpenModal,
   setSelectedBrand,
   setModalType,
 }: {
-  brands: Brand[] | [];
   handleOpenModal: () => void;
   setSelectedBrand: (brand: Brand) => void;
   setModalType: (type: string) => void;
 }) {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-  const [rows, setRows] = useState(brands);
+  const [rows, setRows] = useState([]);
+
+  const fetchBrands = async () => {
+    try {
+      const response = await getBrands();
+      setRows(response);
+    } catch (error) {
+      console.error("Error fetching brands: ", error);
+      toast.error(error as string);
+    }
+  };
+
+  useEffect(() => {
+    fetchBrands();
+  }, []);
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID" },
-    { field: "name", headerName: "Brand", flex: 1 },
+    { field: "name", headerName: "Name", flex: 1 },
     {
       field: "action",
       headerName: "Edit",
@@ -53,7 +66,7 @@ export default function BrandsTable({
     try {
       deleteBrands(ids);
       setRows((prevRows) =>
-        prevRows.filter((row) => !selectedRows.includes(row.id)),
+        prevRows.filter((row: Brand) => !selectedRows.includes(row.id)),
       );
     } catch (error) {
       console.error(error);
@@ -61,7 +74,6 @@ export default function BrandsTable({
   };
 
   const handleAddBrand = () => {
-    console.log("dd");
     handleOpenModal();
     setModalType("addBrand");
   };

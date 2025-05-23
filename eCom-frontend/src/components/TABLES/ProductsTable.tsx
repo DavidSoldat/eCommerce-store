@@ -1,23 +1,22 @@
 import { Button, IconButton, Paper } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FaEdit } from "react-icons/fa";
 import { Product, ProductDetailsDto } from "../../utils/Models";
-import { deleteProducts } from "../../utils/products";
+import { deleteProducts, getProducts } from "../../utils/products";
 
 export default function ProductsTable({
-  products,
   handleOpenModal,
   setSelectedProduct,
   setModalType,
 }: {
-  products: Product[] | [];
   handleOpenModal: () => void;
   setSelectedProduct: (product: ProductDetailsDto) => void;
   setModalType: (modal: string) => void;
 }) {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-  const [rows, setRows] = useState(products);
+  const [rows, setRows] = useState([]);
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 90 },
@@ -59,11 +58,25 @@ export default function ProductsTable({
     },
   ];
 
+  const fetchProducts = async () => {
+    try {
+      const response = await getProducts();
+      setRows(response);
+    } catch (error) {
+      console.error(error);
+      toast.error(error as string);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
   const handleDelete = (ids: number[]) => {
     try {
       deleteProducts(ids);
       setRows((prevRows) =>
-        prevRows.filter((row) => !selectedRows.includes(row.id)),
+        prevRows.filter((row: Product) => !selectedRows.includes(row.id)),
       );
     } catch (error) {
       console.error(error);

@@ -69,6 +69,7 @@ export default function Login() {
           <input
             {...register("email")}
             type="email"
+            autoFocus={true}
             id="email"
             placeholder="Enter email"
             autoComplete="off"

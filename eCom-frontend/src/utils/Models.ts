@@ -54,16 +54,17 @@ export interface ProductDetailsDto {
 }
 
 export interface EditProductDto {
-  productId: number;
+  id: number;
   productName: string;
   productPrice: number;
   productDescription: string;
   productDiscount: number;
+  productQuantity: number;
   genderCategory: string;
   brandName: string;
   categoryName: string;
-  colors: string[];
-  sizes: string[];
+  productSizes: ProductColors[];
+  productColors: ProductColors[];
 }
 
 export interface Review {

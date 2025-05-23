@@ -6,6 +6,7 @@ import { Box } from "@mui/material";
 import { editModalStyle } from "../../utils/constants";
 import { addBrand } from "../../utils/products";
 import { forwardRef } from "react";
+import toast from "react-hot-toast";
 
 export const AddBrandModal = forwardRef(
   ({ handleClose }: { handleClose: () => void }, ref) => {
@@ -22,10 +23,13 @@ export const AddBrandModal = forwardRef(
       try {
         const response = await addBrand(data);
         if (response?.status === 200) {
-          handleClose();
+          toast.success(response);
+          console.log("response " + response);
         }
       } catch (error) {
         console.error(error);
+      } finally {
+        handleClose();
       }
     }
 
@@ -40,20 +44,20 @@ export const AddBrandModal = forwardRef(
           >
             <div className="flex w-full flex-col">
               <div className="flex items-center gap-3">
-                <label htmlFor="brandName">Brand</label>
+                <label htmlFor="name">Brand</label>
                 <input
-                  {...register("brandName")}
-                  type="brandName"
-                  disabled={true}
-                  id="brandName"
-                  placeholder="Enter brandName"
+                  {...register("name")}
+                  type="name"
+                  autoFocus={true}
+                  id="name"
+                  placeholder="Enter name"
                   autoComplete="off"
-                  className={`flex-1 rounded-13 border px-3 py-1 ${errors.brandName ? "border-red-500 text-sm" : ""}`}
+                  className={`flex-1 rounded-13 border px-3 py-1 ${errors.name ? "border-red-500 text-sm" : ""}`}
                 />
               </div>
-              {errors.brandName && (
+              {errors.name && (
                 <span className="self-end text-xs text-red-500">
-                  {errors.brandName.message}
+                  {errors.name.message}
                 </span>
               )}
             </div>

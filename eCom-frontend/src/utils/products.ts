@@ -12,7 +12,7 @@ export async function deleteProducts(ids: number[]) {
 
 export async function getProductDetails(productId: number) {
   const response = await api.get(`/products/${productId}`);
-  return response.data
+  return response.data;
 }
 
 export async function getProducts() {
@@ -35,9 +35,9 @@ export async function deleteBrands(ids: number[]) {
   console.log(ids);
 }
 
-export async function addBrand({ brandName }: { brandName: string }) {
-  const response = await api.get("/brands");
-  console.log(brandName);
+export async function addBrand({ name }: { name: string }) {
+  const response = await api.post("/brands/add", { name });
+  console.log("adding brand " + name);
   return response.data;
 }
 

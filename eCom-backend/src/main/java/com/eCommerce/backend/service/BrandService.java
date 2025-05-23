@@ -24,9 +24,9 @@ public class BrandService {
         return brandRepository.findAll();
     }
 
-    public List<Brand> addBrand(Brand brand) {
+    public void addBrand(Brand brand) {
         brandRepository.save(brand);
-        return brandRepository.findAll();
+        brandRepository.findAll();
     }
 
     public void removeBrand(Long brandId) {
