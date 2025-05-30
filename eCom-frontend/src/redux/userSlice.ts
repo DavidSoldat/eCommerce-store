@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Cart } from "../utils/Models";
+import { Cart } from "../utils/DTO";
 
 interface UserState {
   id: number | null;

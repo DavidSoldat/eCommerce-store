@@ -1,7 +1,7 @@
 import { Divider } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getBrands } from "../utils/products";
 import { groupBrandsByLetter } from "../utils/helpers";
+import { getBrands } from "../utils/api/products";
 
 export default function Brandspage() {
   // const brands = {

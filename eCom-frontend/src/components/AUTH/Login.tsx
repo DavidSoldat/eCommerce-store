@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { z } from "zod";
-import { loginGoogle, loginUser } from "../../utils/auth";
+import { loginGoogle, loginUser } from "../../utils/api/auth";
 import { loginSchema } from "../../utils/zodSchemas";
 import { setUser } from "../../redux/userSlice";
 import { RootState } from "../../redux/store";

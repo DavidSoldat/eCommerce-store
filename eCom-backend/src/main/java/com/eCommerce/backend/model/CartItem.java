@@ -1,8 +1,9 @@
 package com.eCommerce.backend.model;
 
+import com.eCommerce.backend.model.Product.Color;
 import com.eCommerce.backend.model.Product.Product;
+import com.eCommerce.backend.model.Product.Size;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +27,14 @@ public class CartItem {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "size_id")
+    private Size selectedSize;
+
+    @ManyToOne
+    @JoinColumn(name = "color_id")
+    private Color selectedColor;
 
     private int quantity;
 }

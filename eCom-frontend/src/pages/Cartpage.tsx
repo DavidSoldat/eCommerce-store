@@ -1,7 +1,5 @@
 import { Divider } from "@mui/material";
-import cartItem0 from "../assets/items/cartItem0.png";
-import cartItem1 from "../assets/items/cartItem1.png";
-import cartItem2 from "../assets/items/cartItem2.png";
+import { useEffect, useState } from "react";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { Link } from "react-router";
@@ -9,43 +7,34 @@ import BreadCrumbs from "../components/UI/BreadCrumbs";
 import CartItem from "../components/UI/CartItem";
 import Newsletter from "../components/UI/Newsletter";
 import { RootState } from "../redux/store";
-import { useEffect, useState } from "react";
-import { CartItemModel } from "../utils/Models";
+import {
+  clearCartItems,
+  getUserCart,
+  removeItemFromCart,
+} from "../utils/api/cart";
+import { convertCartDto } from "../utils/helpers";
+import { CartItemModel } from "../utils/types";
+import { RemoveFromCartDto } from "../utils/DTO";
+import toast from "react-hot-toast";
 
 export default function Cartpage() {
   const [cartItems, setCartItems] = useState<CartItemModel[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  async function getCart() {
+    try {
+      const result = await getUserCart();
+      const data = convertCartDto(result);
+      setCartItems(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    const items: CartItemModel[] = [
-      {
-        image: cartItem0,
-        title: "Gradient Graphic T-shirt",
-        size: "Large",
-        color: "White",
-        discount: 15,
-        price: 145,
-        quantity: 1,
-      },
-      {
-        image: cartItem1,
-        title: "Checkered Shirt",
-        size: "Medium",
-        color: "Red",
-        discount: 10,
-        price: 180,
-        quantity: 1,
-      },
-      {
-        image: cartItem2,
-        title: "Skinny Fit Jeans",
-        size: "Large",
-        color: "Blue",
-        discount: 5,
-        price: 240,
-        quantity: 1,
-      },
-    ];
-    setCartItems(items);
+    getCart();
   }, []);
 
   const user = useSelector((state: RootState) => state.user);
@@ -59,11 +48,24 @@ export default function Cartpage() {
     );
   };
 
-  const removeItem = (title: string) => {
+  const removeItem = async (data: RemoveFromCartDto) => {
+    await removeItemFromCart(data);
+    getCart();
+    toast.success("Item removed from cart");
     setCartItems((prevItems) =>
-      prevItems.filter((item) => item.title !== title),
+      prevItems.filter((item) => item.id !== data.productId),
     );
   };
+
+  const clearCart = async () => {
+    try {
+      await clearCartItems();
+      setCartItems([]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0,
@@ -114,16 +116,17 @@ export default function Cartpage() {
             <article className="mt-2 flex flex-col gap-4 md:flex-row">
               <section className="flex flex-col gap-y-3 rounded-20 border p-3 md:w-3/5">
                 <ul className="flex flex-col gap-y-3">
-                  {cartItems.map((item, index) => (
-                    <li key={index} className="flex flex-col gap-y-3">
-                      <CartItem
-                        product={item}
-                        updateQuantity={updateQuantity}
-                        removeItem={removeItem}
-                      />
-                      <Divider />
-                    </li>
-                  ))}
+                  {!loading &&
+                    cartItems.map((item) => (
+                      <li key={item.id} className="flex flex-col gap-y-3">
+                        <CartItem
+                          product={item}
+                          updateQuantity={updateQuantity}
+                          removeItem={removeItem}
+                        />
+                        <Divider />
+                      </li>
+                    ))}
                 </ul>
               </section>
 
@@ -152,9 +155,17 @@ export default function Cartpage() {
                   <p>Total</p>
                   <span className="text-xl font-bold">${total.toFixed(2)}</span>
                 </div>
-                <button className="flex w-full items-center justify-center rounded-60 bg-black py-3 text-white">
+                <button className="flex w-full items-center justify-center rounded-60 bg-black py-3 text-white hover:bg-gray-800">
                   <span className="flex items-center justify-between gap-2 text-sm">
                     Go to Checkout <FaArrowRightLong color="white" />
+                  </span>
+                </button>
+                <button
+                  className="flex w-full items-center justify-center rounded-60 border border-red-500 py-3 text-red-500 hover:bg-gray-50 hover:font-bold"
+                  onClick={clearCart}
+                >
+                  <span className="flex items-center justify-between gap-2 text-sm">
+                    Clear cart
                   </span>
                 </button>
               </div>

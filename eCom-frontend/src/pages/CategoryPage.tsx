@@ -9,8 +9,8 @@ import ItemCard from "../components/PRODUCT/ItemCard";
 import BreadCrumbs from "../components/UI/BreadCrumbs";
 import Newsletter from "../components/UI/Newsletter";
 import { RootState } from "../redux/store";
-import { getProducts } from "../utils/products";
-import { ProductDetailsDto } from "../utils/Models";
+import { CategoryDto, ProductDetailsDto } from "../utils/DTO";
+import { getCategories, getProducts } from "../utils/api/products";
 
 export default function CategoryPage() {
   const { category } = useParams();
@@ -19,6 +19,7 @@ export default function CategoryPage() {
     (state: RootState) => state.genderCategory.genderCategory,
   );
   const [products, setProducts] = useState<ProductDetailsDto[] | []>([]);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     setSearchParams((prevParams) => {
@@ -31,8 +32,12 @@ export default function CategoryPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await getProducts();
-        setProducts(response);
+        const [productsResponse, categoriesResponse] = await Promise.all([
+          getProducts(),
+          getCategories(),
+        ]);
+        setProducts(productsResponse);
+        setCategories(categoriesResponse);
       } catch (error) {
         console.error("An error accured fetching products", error);
       }
@@ -49,18 +54,18 @@ export default function CategoryPage() {
     });
   }
 
-  const manCategories = [
-    "T-shirts",
-    "Sweaters",
-    "Hoodies",
-    "Jeans",
-    "Trousers",
-    "Jackets",
-  ];
-  const womanCategories = ["Skrits", "Leggings", "Dresses", ...manCategories];
+  // const manCategories = [
+  //   "T-shirts",
+  //   "Sweaters",
+  //   "Hoodies",
+  //   "Jeans",
+  //   "Trousers",
+  //   "Jackets",
+  // ];
+  // const womanCategories = ["Skrits", "Leggings", "Dresses", ...manCategories];
 
-  const itemCategories =
-    genderCategory === "man" ? manCategories : womanCategories;
+  // const itemCategories =
+  //   genderCategory === "man" ? manCategories : womanCategories;
 
   return (
     <div className="mx-auto max-w-[1240px] px-4">
@@ -77,13 +82,13 @@ export default function CategoryPage() {
             </div>
             <Divider />
             <div className="my-5 px-5">
-              {itemCategories.map((category, i) => (
+              {categories.map((category: CategoryDto) => (
                 <button
-                  className={`flex w-full justify-between p-2 text-gray-500 ${searchParams.get("category") === category ? "bg-gray-200" : "hover:bg-[#f0f0f0] hover:text-black"}`}
-                  key={i}
-                  onClick={() => handleClick(category)}
+                  className={`flex w-full justify-between p-2 text-gray-500 ${searchParams.get("category") === category.name ? "bg-gray-200" : "hover:bg-[#f0f0f0] hover:text-black"}`}
+                  key={category.id}
+                  onClick={() => handleClick(category.name)}
                 >
-                  {category}
+                  {category.name}
                   <span>
                     <MdOutlineKeyboardArrowRight size={22} />
                   </span>

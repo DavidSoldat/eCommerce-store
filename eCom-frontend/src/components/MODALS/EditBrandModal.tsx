@@ -1,33 +1,43 @@
-import { z } from "zod";
-import { addBrandSchema } from "../../utils/zodSchemas";
+import { forwardRef } from "react";
+import { Brand } from "../../utils/types";
+import { editBrandSchema } from "../../utils/zodSchemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box } from "@mui/material";
 import { editModalStyle } from "../../utils/constants";
-import { addBrand } from "../../utils/api/products";
-import { forwardRef } from "react";
+import { z } from "zod";
+import { editBrand } from "../../utils/api/products";
 import toast from "react-hot-toast";
 
-export const AddBrandModal = forwardRef(
-  ({ handleClose }: { handleClose: () => void }, ref) => {
-    type FormData = z.infer<typeof addBrandSchema>;
+export const EditBrandModal = forwardRef(
+  (
+    {
+      brand,
+      handleClose,
+    }: {
+      brand: Brand | null;
+      handleClose: () => void;
+    },
+    ref,
+  ) => {
+    type FormData = z.infer<typeof editBrandSchema>;
     const {
       register,
       handleSubmit,
       formState: { errors },
     } = useForm<FormData>({
-      resolver: zodResolver(addBrandSchema),
+      resolver: zodResolver(editBrandSchema),
+      defaultValues: brand as FormData,
     });
 
     async function onSubmit(data: FormData) {
       try {
-        const response = await addBrand(data);
-        if (response?.status === 200) {
-          toast.success(response);
-          console.log("response " + response);
-        }
+        const response = await editBrand(data);
+        console.log(response);
+        toast.success("Brand name updated");
       } catch (error) {
         console.error(error);
+        toast.error("Error updating brand");
       } finally {
         handleClose();
       }
@@ -36,7 +46,7 @@ export const AddBrandModal = forwardRef(
     return (
       <Box sx={editModalStyle} ref={ref} tabIndex={0}>
         <div className="flex w-full flex-col items-center gap-10">
-          <h3 className="text-xl font-semibold">Add new brand</h3>
+          <h3 className="text-xl font-semibold">Edit brand {brand?.id}</h3>
 
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -44,11 +54,10 @@ export const AddBrandModal = forwardRef(
           >
             <div className="flex w-full flex-col">
               <div className="flex items-center gap-3">
-                <label htmlFor="name">Brand</label>
+                <label htmlFor="name">Name</label>
                 <input
                   {...register("name")}
                   type="name"
-                  autoFocus={true}
                   id="name"
                   placeholder="Enter name"
                   autoComplete="off"

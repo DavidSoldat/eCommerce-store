@@ -1,10 +1,11 @@
 package com.eCommerce.backend.service;
 
+import com.eCommerce.backend.dto.EditBrandDto;
+import com.eCommerce.backend.exception.ResourceNotFoundException;
 import com.eCommerce.backend.model.Product.Brand;
 import com.eCommerce.backend.repository.BrandRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,10 +27,16 @@ public class BrandService {
 
     public void addBrand(Brand brand) {
         brandRepository.save(brand);
-        brandRepository.findAll();
     }
 
     public void removeBrand(Long brandId) {
         brandRepository.deleteById(brandId);
+    }
+
+    public void editBrand(EditBrandDto data) {
+        Brand brand = brandRepository.findById(data.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Brand not found "));
+        brand.setName(data.getName());
+        brandRepository.save(brand);
     }
 }

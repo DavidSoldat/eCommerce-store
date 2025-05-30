@@ -5,9 +5,17 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { editModalStyle } from "../../utils/constants";
-import { Brand, Category, ProductDetailsDto } from "../../utils/Models";
-import { editProduct, getBrands, getCategories } from "../../utils/products";
+import { Brand, Category, Color, Size } from "../../utils/types";
+
+import {
+  editProduct,
+  getBrands,
+  getCategories,
+  getColorsAndSizes,
+} from "../../utils/api/products";
+import { ProductDetailsDto } from "../../utils/DTO";
 import { editProductSchema } from "../../utils/zodSchemas";
+import { capitalize } from "../../utils/helpers";
 
 export const EditProductModal = forwardRef(
   (
@@ -22,11 +30,19 @@ export const EditProductModal = forwardRef(
   ) => {
     const [brands, setBrands] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [colors, setColors] = useState<Color[] | []>([]);
+    const [sizes, setSizes] = useState<Size[] | []>([]);
 
     const fetchData = async () => {
       try {
-        const [bra, cat] = await Promise.all([getBrands(), getCategories()]);
+        const [bra, cat, { colors, sizes }] = await Promise.all([
+          getBrands(),
+          getCategories(),
+          getColorsAndSizes(),
+        ]);
         setBrands(bra);
+        setColors(colors);
+        setSizes(sizes);
         setCategories(cat);
       } catch (error) {
         console.error(error);
@@ -205,25 +221,49 @@ export const EditProductModal = forwardRef(
                 </span>
               )}
             </div>
-            {/*  */}
+            {/* colors */}
             <div className="flex w-full flex-col">
               <div className="flex items-center gap-3">
-                <label htmlFor="categoryName">Category</label>
+                <label htmlFor="productColors">Colors</label>
                 <select
-                  {...register("categoryName")}
-                  id="categoryName"
-                  className={`flex-1 rounded-13 border px-3 py-1 ${errors.categoryName ? "border-red-500 text-sm" : ""}`}
+                  {...register("productColors")}
+                  id="productColors"
+                  className={`flex-1 rounded-13 border px-3 py-1 ${errors.productColors ? "border-red-500 text-sm" : ""}`}
                 >
-                  {categories?.map((category: Category) => (
-                    <option key={category.id} value={category.name}>
-                      {category.name}
-                    </option>
-                  ))}
+                  {colors &&
+                    colors?.map((color: Color) => (
+                      <option key={color.id} value={color.name}>
+                        {capitalize(color.name)}
+                      </option>
+                    ))}
                 </select>
               </div>
-              {errors.categoryName && (
+              {errors.productColors && (
                 <span className="self-end text-xs text-red-500">
-                  {errors.categoryName.message}
+                  {errors.productColors.message}
+                </span>
+              )}
+            </div>
+            {/* sizes */}
+            <div className="flex w-full flex-col">
+              <div className="flex items-center gap-3">
+                <label htmlFor="productSizes">Sizes</label>
+                <select
+                  {...register("productSizes")}
+                  id="productSizes"
+                  className={`flex-1 rounded-13 border px-3 py-1 ${errors.productSizes ? "border-red-500 text-sm" : ""}`}
+                >
+                  {sizes &&
+                    sizes?.map((size: Size) => (
+                      <option key={size.id} value={size.name}>
+                        {capitalize(size.name)}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              {errors.productSizes && (
+                <span className="self-end text-xs text-red-500">
+                  {errors.productSizes.message}
                 </span>
               )}
             </div>

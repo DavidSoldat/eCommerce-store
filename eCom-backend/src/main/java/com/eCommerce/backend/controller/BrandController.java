@@ -1,12 +1,14 @@
 package com.eCommerce.backend.controller;
 
 import com.eCommerce.backend.dto.AddBrandDto;
+import com.eCommerce.backend.dto.EditBrandDto;
 import com.eCommerce.backend.model.Product.Brand;
 import com.eCommerce.backend.service.BrandService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,5 +44,12 @@ public class BrandController {
     public ResponseEntity<String> removeBrand(@RequestBody Long brandId) {
         brandService.removeBrand(brandId);
         return new ResponseEntity<>("Brand removed successfully!", HttpStatus.OK);
+    }
+
+    @PatchMapping("/edit")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<String> editBrand(@RequestBody EditBrandDto data) {
+        brandService.editBrand(data);
+        return new ResponseEntity<>("Brand saved", HttpStatus.OK);
     }
 }

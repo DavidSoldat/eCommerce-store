@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet } from "react-router";
 import { RootState } from "../../redux/store";
 import { setUser } from "../../redux/userSlice";
-import { getUserInfo } from "../../utils/auth";
+import { getUserInfo } from "../../utils/api/auth";
 import Footer from "../HOME/Footer";
 import Navi from "../HOME/Navi";
 

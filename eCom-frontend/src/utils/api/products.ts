@@ -1,5 +1,6 @@
 import axios from "axios";
-import { EditProductDto } from "./Models";
+import { Brand } from "../types";
+import { EditProductDto } from "../DTO";
 
 const api = axios.create({
   baseURL: "http://localhost:8080/api/",
@@ -41,7 +42,18 @@ export async function addBrand({ name }: { name: string }) {
   return response.data;
 }
 
+export async function editBrand(brand: Brand) {
+  const response = await api.patch("/brands/edit", brand);
+  console.log("editing brand: " + brand.name);
+  return response.data;
+}
+
 export async function getCategories() {
   const response = await api.get("/categories");
+  return response.data;
+}
+
+export async function getColorsAndSizes() {
+  const response = await api.get("/products/colorsAndSizes");
   return response.data;
 }

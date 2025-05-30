@@ -42,7 +42,6 @@ public class ProductService {
     }
 
     public Product addProduct(@NotNull Product product) {
-
         Set<Size> sizes = product.getProductSizes().stream()
                 .map(size -> sizeRepository.findById(size.getId()))
                 .filter(Optional::isPresent)

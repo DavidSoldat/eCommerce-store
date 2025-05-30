@@ -2,8 +2,8 @@ import { Button, IconButton, Paper } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
-import { deleteUsers, getUsers } from "../../utils/auth";
-import { UserInfo } from "../../utils/Models";
+import { deleteUsers, getUsers } from "../../utils/api/auth";
+import { UserInfo } from "../../utils/types";
 import toast from "react-hot-toast";
 
 export default function UsersTable({

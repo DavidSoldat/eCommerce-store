@@ -9,7 +9,7 @@ import { FaGoogle } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { setUser } from "../../redux/userSlice";
-import { loginGoogle, loginUser, registerUser } from "../../utils/auth";
+import { loginGoogle, loginUser, registerUser } from "../../utils/api/auth";
 import { registerSchema } from "../../utils/zodSchemas";
 
 export default function Register() {

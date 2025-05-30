@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 import { ChangePasswordModal } from "../components/MODALS/ChangePasswordModal";
 import { RootState } from "../redux/store";
 import { capitalize } from "../utils/helpers";
-import { deleteAccount } from "../utils/auth";
+import { deleteAccount } from "../utils/api/auth";
 import { logout } from "../redux/userSlice";
 import { useDispatch } from "react-redux";
 
@@ -41,7 +41,7 @@ export default function Profilepage() {
 
   const handleDeleteAccount = async () => {
     try {
-      const response = await deleteAccount(); 
+      const response = await deleteAccount();
 
       if (response?.status === 200) {
         toast.success("Account deleted!");

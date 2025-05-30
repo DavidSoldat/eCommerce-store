@@ -4,9 +4,9 @@ import { forwardRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { editUser } from "../../utils/auth";
+import { editUser } from "../../utils/api/auth";
 import { editModalStyle } from "../../utils/constants";
-import { UserInfo } from "../../utils/Models";
+import { UserInfo } from "../../utils/types";
 import { editUserSchema } from "../../utils/zodSchemas";
 
 export const EditUserModal = forwardRef(
@@ -14,11 +14,9 @@ export const EditUserModal = forwardRef(
     {
       user,
       handleClose,
-      fetchData,
     }: {
       user: UserInfo | null;
       handleClose: () => void;
-      fetchData: () => void;
     },
     ref,
   ) => {
@@ -37,7 +35,6 @@ export const EditUserModal = forwardRef(
         const response = await editUser(data);
         if (response?.status === 200) {
           handleClose();
-          fetchData();
         }
       } catch (error) {
         console.error(error);

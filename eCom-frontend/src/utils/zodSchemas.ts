@@ -71,6 +71,11 @@ export const addBrandSchema = z.object({
   name: z.string().nonempty(),
 });
 
+export const editBrandSchema = z.object({
+  id: z.number().nonnegative(),
+  name: z.string().nonempty(),
+});
+
 export const changePasswordSchema = z.object({
   oldPassword: z.string().min(6, "Password must be at least 6 characters"),
   newPassword: z.string().min(6, "Password must be at least 6 characters"),

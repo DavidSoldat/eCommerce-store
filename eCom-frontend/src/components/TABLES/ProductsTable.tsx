@@ -3,8 +3,9 @@ import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaEdit } from "react-icons/fa";
-import { Product, ProductDetailsDto } from "../../utils/Models";
-import { deleteProducts, getProducts } from "../../utils/products";
+import { Product } from "../../utils/types";
+import { ProductDetailsDto } from "../../utils/DTO";
+import { deleteProducts, getProducts } from "../../utils/api/products";
 
 export default function ProductsTable({
   handleOpenModal,

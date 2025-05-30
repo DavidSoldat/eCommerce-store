@@ -6,14 +6,18 @@ import ImageGallery from "../components/PRODUCT/ImageGallery";
 import BreadCrumbs from "../components/UI/BreadCrumbs";
 import Newsletter from "../components/UI/Newsletter";
 import Review from "../components/UI/Review";
+import { addToCart } from "../utils/api/cart";
 import {
   imageModalStyle,
   initialReviewsToShow,
   totalReviews,
 } from "../utils/constants";
+import { AddToCartDto, ProductDetailsDto } from "../utils/DTO";
 import { calculateDiscount } from "../utils/helpers";
-import { ProductColors, ProductDetailsDto } from "../utils/Models";
-import { getProductDetails } from "../utils/products";
+import { ProductColors } from "../utils/types";
+import { getProductDetails } from "../utils/api/products";
+import toast from "react-hot-toast";
+import ItemCard from "../components/PRODUCT/ItemCard";
 
 export default function Productpage() {
   const { productId } = useParams();
@@ -84,13 +88,22 @@ export default function Productpage() {
     setOpenModal(false);
   }
 
-  function handleAddToCart() {
-    console.log("Add to cart: ", {
-      productId,
-      selectedColor,
-      selectedSize,
-      selectedQuantity,
-    });
+  async function handleAddToCart() {
+    const productId = product?.id as number;
+    const data: AddToCartDto = {
+      id: productId,
+      color: selectedColor?.id as number,
+      size: selectedSize?.id as number,
+      quantity: selectedQuantity,
+    };
+
+    try {
+      await addToCart(data);
+      toast.success("Item added to cart.");
+    } catch (error) {
+      console.error(error);
+      toast.error(error as string);
+    }
   }
 
   return (
@@ -166,7 +179,9 @@ export default function Productpage() {
                         onClick={() => setSelectedColor(color)}
                       >
                         {selectedColor === color && (
-                          <span className="font-bold text-white">&#10003;</span>
+                          <span className="font-bold text-gray-300">
+                            &#10003;
+                          </span>
                         )}
                       </div>
                     ))}
@@ -213,7 +228,7 @@ export default function Productpage() {
                     </button>
                   </div>
                   <button
-                    className="flex flex-grow items-center justify-center rounded-60 bg-black px-5 py-3 capitalize text-white"
+                    className="flex flex-grow items-center justify-center rounded-60 bg-black px-5 py-3 capitalize text-white hover:bg-gray-800"
                     onClick={() => handleAddToCart()}
                   >
                     <p>Add to Cart</p>
@@ -279,16 +294,38 @@ export default function Productpage() {
                   </button>
                 </div>
               </div>
-              <div
-                ref={scrollContainerRef}
-                className="scrollbar-hide hideScroll flex w-full flex-nowrap space-x-4 overflow-x-auto py-2 md:justify-center"
-              >
-                {/* <ItemCard category={category as string} />
-                <ItemCard category={category as string} />
-                <ItemCard category={category as string} />
-                <ItemCard category={category as string} />
-                <ItemCard category={category as string} /> */}
-              </div>
+              {product && (
+                <div
+                  ref={scrollContainerRef}
+                  className="scrollbar-hide hideScroll flex w-full flex-nowrap space-x-4 overflow-x-auto py-2 md:justify-center"
+                >
+                  <ItemCard
+                    category={product?.categoryName as string}
+                    small={true}
+                    product={product as ProductDetailsDto}
+                  />
+                  <ItemCard
+                    category={product?.categoryName as string}
+                    small={true}
+                    product={product as ProductDetailsDto}
+                  />
+                  <ItemCard
+                    category={product?.categoryName as string}
+                    small={true}
+                    product={product as ProductDetailsDto}
+                  />
+                  <ItemCard
+                    category={product?.categoryName as string}
+                    small={true}
+                    product={product as ProductDetailsDto}
+                  />
+                  <ItemCard
+                    category={product?.categoryName as string}
+                    small={true}
+                    product={product as ProductDetailsDto}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>

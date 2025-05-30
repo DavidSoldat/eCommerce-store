@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router";
 import { RootState } from "../../redux/store";
 import { logout } from "../../redux/userSlice";
-import { logoutUser } from "../../utils/auth";
+import { logoutUser } from "../../utils/api/auth";
 
 export default function UserMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

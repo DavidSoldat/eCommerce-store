@@ -2,8 +2,8 @@ import { Button, IconButton, Paper } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
-import { Brand } from "../../utils/Models";
-import { deleteBrands, getBrands } from "../../utils/products";
+import { Brand } from "../../utils/types";
+import { deleteBrands, getBrands } from "../../utils/api/products";
 import toast from "react-hot-toast";
 
 export default function BrandsTable({

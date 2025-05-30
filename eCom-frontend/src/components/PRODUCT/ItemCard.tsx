@@ -1,7 +1,7 @@
 import { Box, Rating } from "@mui/material";
 import { Link } from "react-router";
 import item from "../../assets/items/item.png";
-import { ProductDetailsDto } from "../../utils/Models";
+import { ProductDetailsDto } from "../../utils/DTO";
 import { calculateDiscount } from "../../utils/helpers";
 
 export default function ItemCard({

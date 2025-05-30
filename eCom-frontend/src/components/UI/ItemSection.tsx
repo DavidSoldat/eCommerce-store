@@ -1,8 +1,8 @@
 import { Link } from "react-router";
 import ItemCard from "../PRODUCT/ItemCard";
 import { useEffect, useState } from "react";
-import { getProducts } from "../../utils/products";
-import { ProductDetailsDto } from "../../utils/Models";
+import { getProducts } from "../../utils/api/products";
+import { ProductDetailsDto } from "../../utils/DTO";
 
 export default function ItemsSection({
   title,
@@ -44,7 +44,7 @@ export default function ItemsSection({
           <div className="hidden md:flex md:flex-wrap md:justify-around md:gap-5 lg:grid-cols-5 lg:justify-items-center">
             {products.map((prod: ProductDetailsDto) => (
               <ItemCard category={`${title}`} key={prod.id} product={prod} />
-            ))} 
+            ))}
           </div>
         </div>
         <Link

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
-import { getUserInfo } from "../utils/auth";
+import { getUserInfo } from "../utils/api/auth";
 import { setUser } from "../redux/userSlice";
 
 export default function OAuthHandler() {
