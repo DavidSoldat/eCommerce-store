@@ -49,12 +49,14 @@ export default function Cartpage() {
   };
 
   const removeItem = async (data: RemoveFromCartDto) => {
-    await removeItemFromCart(data);
-    getCart();
-    toast.success("Item removed from cart");
-    setCartItems((prevItems) =>
-      prevItems.filter((item) => item.id !== data.productId),
-    );
+    try {
+      await removeItemFromCart(data);
+      await getCart();
+      toast.success("Item removed from cart");
+    } catch (error) {
+      console.error("Failed to remove item:", error);
+      toast.error("Failed to remove item");
+    }
   };
 
   const clearCart = async () => {

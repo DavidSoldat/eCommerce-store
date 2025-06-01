@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +22,8 @@ public class Product {
         @SequenceGenerator(name = "product_sequence_generator", allocationSize = 1, sequenceName = "product_sequence")
         private Long id;
         private String productName;
-        private Double productPrice;
+        @Column(name = "product_price", precision = 10, scale = 2)
+        private BigDecimal productPrice;
         private String productDescription;
         private Double productRating;
         private Double productDiscount;

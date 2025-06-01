@@ -5,6 +5,7 @@ import com.eCommerce.backend.model.Product.Product;
 import com.eCommerce.backend.model.Product.Size;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 public class ProductDetailsDto {
     private Long id;
     private String productName;
-    private Double productPrice;
+    private BigDecimal productPrice;
     private String productDescription;
     private Double productRating;
     private Double productDiscount;

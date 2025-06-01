@@ -3,6 +3,7 @@ package com.eCommerce.backend.dto;
 import com.eCommerce.backend.model.Product.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
 public class ProductDto {
     private Long id;
     private String productName;
-    private Double productPrice;
+    private BigDecimal productPrice;
     private Category category;
     private String productDescription;
     private Double productRating;
