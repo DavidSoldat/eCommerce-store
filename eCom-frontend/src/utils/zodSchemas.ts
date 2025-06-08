@@ -35,8 +35,8 @@ const helperSchema = z.object({
   name: z.string().min(1),
 });
 
-export const addProductSchema = z.object({
-  productId: z.number().nonnegative(),
+export const productSchema = z.object({
+  id: z.number().nonnegative(),
   productName: z.string().nonempty(),
   productPrice: z.number().nonnegative(),
   productDescription: z.string().nonempty(),
@@ -47,8 +47,8 @@ export const addProductSchema = z.object({
   createdAt: z.string(),
   brandName: z.string(),
   categoryName: z.string(),
-  colors: z.string().array(),
-  sizes: z.string().array(),
+  productColors: helperSchema.array(),
+  productSizes: helperSchema.array(),
   images: z.string().array(),
   reviews: z.string().array(),
 });

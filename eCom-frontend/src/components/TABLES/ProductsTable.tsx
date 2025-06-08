@@ -85,7 +85,8 @@ export default function ProductsTable({
   };
 
   const handleAddProduct = () => {
-    console.log("d");
+    handleOpenModal();
+    setModalType("addProduct");
   };
 
   const paginationModel = { page: 0, pageSize: 5 };

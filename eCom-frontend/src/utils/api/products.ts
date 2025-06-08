@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Brand } from "../types";
-import { EditProductDto } from "../DTO";
+import { EditProductDto, ProductDetailsDto } from "../DTO";
 
 const api = axios.create({
   baseURL: "http://localhost:8080/api/",
@@ -13,6 +13,11 @@ export async function deleteProducts(ids: number[]) {
 
 export async function getProductDetails(productId: number) {
   const response = await api.get(`/products/${productId}`);
+  return response.data;
+}
+
+export async function addProduct(product: ProductDetailsDto) {
+  const response = await api.get("/products", { data: product });
   return response.data;
 }
 

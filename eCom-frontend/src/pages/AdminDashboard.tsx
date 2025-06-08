@@ -4,15 +4,15 @@ import { Divider, Modal } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { AddBrandModal } from "../components/MODALS/AddBrandModal";
-import { EditProductModal } from "../components/MODALS/EditProductModal";
+import { EditBrandModal } from "../components/MODALS/EditBrandModal";
 import { EditUserModal } from "../components/MODALS/EditUserModal";
 import BrandsTable from "../components/TABLES/BrandsTable";
 import ProductsTable from "../components/TABLES/ProductsTable";
 import UsersTable from "../components/TABLES/UsersTable";
 import { RootState } from "../redux/store";
-import { EditBrandModal } from "../components/MODALS/EditBrandModal";
-import { Brand, UserInfo } from "../utils/types";
 import { ProductDetailsDto } from "../utils/DTO";
+import { Brand, UserInfo } from "../utils/types";
+import { ProductModal } from "../components/MODALS/EditProductModal";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -79,8 +79,9 @@ export default function AdminDashboard() {
     switch (modalType) {
       case "editProduct":
         return (
-          <EditProductModal
+          <ProductModal
             product={selectedProduct}
+            type={"edit"}
             handleClose={handleCloseModal}
           />
         );
@@ -97,6 +98,8 @@ export default function AdminDashboard() {
             handleClose={handleCloseModal}
           />
         );
+      case "addProduct":
+        return <ProductModal type={"add"} handleClose={handleCloseModal} />;
     }
   };
 
